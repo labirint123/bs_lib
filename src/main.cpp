@@ -2,10 +2,18 @@
 #include "bs.h"
 #include "Anim.h"
 #include "Animator.h"
+#include "Raleway.h"
+
 int main()
 {
     bs b;
     b.bsInit();
+
+    sf::Font font;
+    font.loadFromMemory(Raleway, Raleway_len);
+    sf::Text txt;
+    txt.setString("hi, its example of how good \nc++ really is :)");
+    txt.setFont(font);
 
     sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
     sf::CircleShape shape(100.f);
@@ -42,8 +50,9 @@ int main()
 
         window.clear(sf::Color(20, 5, 5));
         window.draw(shape);
+        window.draw(txt);
         window.display();
     }
-    
+
     return 0;
 }
