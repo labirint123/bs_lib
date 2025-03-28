@@ -3,17 +3,27 @@
 #include "bs.h"
 #include "BsLogger.h"
 #include <cmath>
+#include <iostream>
 unsigned int Animator::coreCount = 0;
 std::vector<ThreadPoolThread *> Animator::thread_pool;
 TickRateController Animator::trc;
 
-void Animator::linear(Anim *anim)
+void Animator::linear(Anim* anim)
 {
     double progress = anim->timePassed.getElapsedTime().asSeconds() - anim->progress;
     double pprogress = progress / anim->time.asSeconds();
-    if (anim->moveOffset.x * pprogress < 1 || anim->moveOffset.y * pprogress < 1)
+
+    float dx = anim->moveOffset.x * pprogress;
+    float dy = anim->moveOffset.y * pprogress;
+
+    if (std::abs(dx) < 1 && std::abs(dy) < 1)
         return;
-    anim->move(anim->moveOffset.x * pprogress, anim->moveOffset.y * pprogress);
+
+    if (std::abs(dx) >= 1)
+        anim->move(dx, 0);
+    if (std::abs(dy) >= 1)
+        anim->move(0, dy);
+
     anim->progress += progress;
 }
 
@@ -21,15 +31,25 @@ double CalcEaseOutCubic(double x)
 {
     return 1 - std::pow(1 - x, 3);
 }
-void Animator::easeOutCubic(Anim *anim)
+
+void Animator::easeOutCubic(Anim* anim)
 {
     double progress = anim->timePassed.getElapsedTime().asSeconds() - anim->progress;
     double prevProgress = CalcEaseOutCubic(anim->progress);
     double actProgress = CalcEaseOutCubic(anim->progress + progress);
     double diffProgress = actProgress - prevProgress;
-    if (anim->moveOffset.x * diffProgress < 1 || anim->moveOffset.y * diffProgress < 1)
+
+    float dx = anim->moveOffset.x * diffProgress;
+    float dy = anim->moveOffset.y * diffProgress;
+
+    if (std::abs(dx) < 1 && std::abs(dy) < 1)
         return;
-    anim->move(anim->moveOffset.x * diffProgress, anim->moveOffset.y * diffProgress);
+
+    if (std::abs(dx) >= 1)
+        anim->move(dx, 0);
+    if (std::abs(dy) >= 1)
+        anim->move(0, dy);
+
     anim->progress += progress;
 }
 
@@ -37,15 +57,25 @@ double CaclcEaseInCubic(double x)
 {
     return x * x * x;
 }
-void Animator::easeInCubic(Anim *anim)
+
+void Animator::easeInCubic(Anim* anim)
 {
     double progress = anim->timePassed.getElapsedTime().asSeconds() - anim->progress;
     double prevProgress = CaclcEaseInCubic(anim->progress);
     double actProgress = CaclcEaseInCubic(anim->progress + progress);
     double diffProgress = actProgress - prevProgress;
-    if (anim->moveOffset.x * diffProgress < 1 || anim->moveOffset.y * diffProgress < 1)
+
+    float dx = anim->moveOffset.x * diffProgress;
+    float dy = anim->moveOffset.y * diffProgress;
+
+    if (std::abs(dx) < 1 && std::abs(dy) < 1)
         return;
-    anim->move(anim->moveOffset.x * diffProgress, anim->moveOffset.y * diffProgress);
+
+    if (std::abs(dx) >= 1)
+        anim->move(dx, 0);
+    if (std::abs(dy) >= 1)
+        anim->move(0, dy);
+
     anim->progress += progress;
 }
 
@@ -53,15 +83,25 @@ double calcEaseInOutCubic(double x)
 {
     return x < 0.5 ? 4 * x * x * x : 1 - std::pow(-2 * x + 2, 3) / 2;
 }
-void Animator::easeInOutCubic(Anim *anim)
+
+void Animator::easeInOutCubic(Anim* anim)
 {
     double progress = anim->timePassed.getElapsedTime().asSeconds() - anim->progress;
     double prevProgress = calcEaseInOutCubic(anim->progress);
     double actProgress = calcEaseInOutCubic(anim->progress + progress);
     double diffProgress = actProgress - prevProgress;
-    if (anim->moveOffset.x * diffProgress < 1 || anim->moveOffset.y * diffProgress < 1)
+
+    float dx = anim->moveOffset.x * diffProgress;
+    float dy = anim->moveOffset.y * diffProgress;
+
+    if (std::abs(dx) < 1 && std::abs(dy) < 1)
         return;
-    anim->move(anim->moveOffset.x * diffProgress, anim->moveOffset.y * diffProgress);
+
+    if (std::abs(dx) >= 1)
+        anim->move(dx, 0);
+    if (std::abs(dy) >= 1)
+        anim->move(0, dy);
+
     anim->progress += progress;
 }
 
@@ -70,7 +110,7 @@ void Animator::StartCicle(const int ThreadIndex)
     BsLogger l;
     l.module = "AnimationThread(" + std::to_string(ThreadIndex) + ")";
     l.Log("started");
-    std::vector<Anim *> *anims = &Animator::thread_pool.at(ThreadIndex)->animations; // иногда тут вылетает
+    std::vector<Anim*> *anims = &Animator::thread_pool.at(ThreadIndex)->animations;
 
     while (!bs::IsProgrammEnd)
     {
@@ -78,6 +118,8 @@ void Animator::StartCicle(const int ThreadIndex)
         {
             if (anims->at(i)->timePassed.getElapsedTime().asSeconds() >= anims->at(i)->time.asSeconds())
             {
+                anims->at(i)->isFinised = 1;
+                anims->at(i)->progress = 0;
                 anims->erase(anims->begin() + i);
                 Animator::thread_pool.at(ThreadIndex)->TasksCount--;
                 continue;

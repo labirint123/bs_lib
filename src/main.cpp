@@ -3,7 +3,8 @@
 #include "Anim.h"
 #include "Animator.h"
 #include "Raleway.h"
-
+#include <vector>
+#include <iostream>
 int main()
 {
     bs b;
@@ -15,15 +16,31 @@ int main()
     txt.setString("hi, its example of how good \nc++ really is :)");
     txt.setFont(font);
 
-    sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setPosition(100, 100);
-    shape.setFillColor(sf::Color(200, 30, 10));
-    Anim a;
-    a.SetObj(shape);
-    a.SetMoveOffset(sf::Vector2f(200, 200));
-    a.SetTime(sf::seconds(1));
-    a.SetAnimationType(Anim::AnimationType::easeInOutCubic);
+    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
+
+    std::vector<sf::RectangleShape *> rects;
+    for (size_t i = 0; i < 4; i++)
+    {
+        rects.push_back(new sf::RectangleShape({80, 80}));
+        rects.at(i)->setFillColor(sf::Color::White);
+        rects.at(i)->setPosition(100, 100 * i + 100);
+        rects.at(i)->setFillColor(sf::Color(200, 30, 10));
+    }
+    std::vector<Anim *> anims;
+    for (size_t i = 0; i < 4; i++)
+    {
+        anims.push_back(new Anim);
+        anims.at(i)->SetAnimationType((Anim::AnimationType)i);
+        anims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
+        anims.at(i)->SetObj(*rects.at(i));
+        anims.at(i)->SetTime(sf::seconds(1));
+    }
+    for (size_t i = 0; i < 4; i++)
+    {
+        anims.at(i)->Start();
+    }
+    sf::Clock c;
+    c.restart();
     while (window.isOpen())
     {
         sf::Event event;
@@ -38,18 +55,25 @@ int main()
             {
                 if (event.type == sf::Event::KeyPressed)
                 {
-                    if (event.key.code == sf::Keyboard::E)
-                    {
-                        shape.setPosition(0, 0);
-
-                        a.Start();
-                    }
                 }
             }
         }
-
+        if (c.getElapsedTime().asSeconds() > 1.2)
+        {
+            for (size_t i = 0; i < 4; i++)
+            {
+                rects.at(i)->setPosition(100, 100 * i + 100);
+                anims.at(i)->Start();
+            }
+            c.restart();
+        }
         window.clear(sf::Color(20, 5, 5));
-        window.draw(shape);
+
+        for (size_t i = 0; i < 4; i++)
+        {
+            window.draw(*rects.at(i));
+        }
+
         window.draw(txt);
         window.display();
     }

@@ -2,6 +2,7 @@
 #include <iostream>
 void Anim::move(float x, float y)
 {
+    // std::cout << std::to_string(x) << std::endl;
     if (this->curobj == CurrentObj::Shape)
         Objs.Shape->move(x, y);
     else if (this->curobj == CurrentObj::Sprite)
@@ -34,10 +35,14 @@ void Anim::SetObj(sf::CircleShape &obj)
     this->curobj = CurrentObj::Shape;
 }
 
-void Anim::Start()
+bool Anim::Start()
 {
+    if (this->progress != 0)
+        return 1;
+
     this->progress = 0;
     this->timePassed.restart();
+
     int min = 0;
     unsigned int minTasks = Animator::thread_pool.at(0)->TasksCount;
 
@@ -49,9 +54,10 @@ void Anim::Start()
             minTasks = current;
             min = static_cast<int>(i);
         }
-    }    
+    }
     Animator::thread_pool.at(min)->TasksCount++;
-    Animator::thread_pool.at(min)->animations.push_back(new Anim(*this));
+    Animator::thread_pool.at(min)->animations.push_back(this);
+    return 0;
 }
 
 Anim::Anim()

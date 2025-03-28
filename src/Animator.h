@@ -4,6 +4,7 @@
 #include <vector>
 #include "TickRateController.h"
 #include "Anim.h"
+#include <memory>
 
 struct ThreadPoolThread;
 class Anim;
@@ -36,11 +37,7 @@ struct ThreadPoolThread
     unsigned int TasksCount;
     int index;
     std::vector<Anim*> animations;
-    ThreadPoolThread(int index)
-    {
-        this->index = index;
-        thread = std::thread(Animator::StartCicle,index);
-    }
+    
     ThreadPoolThread()
     {
         

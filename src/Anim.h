@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Animator.h"
-
+#include <vector>
 
 class Animator;
 class Anim
@@ -14,7 +14,7 @@ private:
     {
         sf::Text* Text;
         sf::Sprite* Sprite;
-        sf::Shape* Shape;        
+        sf::Shape* Shape;
     };
     enum class CurrentObj{Text,Sprite,Shape};
     CurrentObj curobj;
@@ -24,9 +24,8 @@ private:
     sf::Time time;
     sf::Clock timePassed;
     sf::Vector2f moveOffset;
-    double progress;
+    double progress = 0;
     void move(float x, float y);
-    // bool isStarted();
 public:
     void SetObj(sf::Text &obj);
     void SetObj(sf::Sprite &obj);
@@ -41,7 +40,8 @@ public:
 
 
 
-    void Start();
+    bool Start();
+
     bool IsFinished(){return this->isFinised;}
     
 
