@@ -1,10 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include "bs.h"
-#include "Anim.h"
 #include "Animator.h"
 #include "Raleway.h"
 #include <vector>
 #include <iostream>
+#include "MoveAnim.h"
+
+
 int main()
 {
     bs b;
@@ -26,14 +28,14 @@ int main()
         rects.at(i)->setPosition(100, 100 * i + 100);
         rects.at(i)->setFillColor(sf::Color(200, 30, 10));
     }
-    std::vector<Anim *> anims;
+    std::vector<MoveAnim *> anims;
     for (size_t i = 0; i < 4; i++)
     {
-        anims.push_back(new Anim);
-        anims.at(i)->SetAnimationType((Anim::AnimationType)i);
+        anims.push_back(new MoveAnim);
+        anims.at(i)->SetAnimationType((Animation::AnimationType)i);
         anims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
         anims.at(i)->SetObj(*rects.at(i));
-        anims.at(i)->SetTime(sf::seconds(1));
+        anims.at(i)->SetDeltaTime(sf::seconds(1));
     }
     for (size_t i = 0; i < 4; i++)
     {

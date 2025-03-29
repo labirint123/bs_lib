@@ -3,12 +3,12 @@
 #include <thread>
 #include <vector>
 #include "TickRateController.h"
-#include "Anim.h"
+#include "Animation.h"
 #include <memory>
 
 struct ThreadPoolThread;
 class Anim;
-
+class Animation;
 
 class Animator
 {
@@ -17,11 +17,6 @@ private:
     static unsigned int coreCount;
     static std::vector<ThreadPoolThread *> thread_pool;
 
-    static void linear(Anim* anim);
-    static void easeOutCubic(Anim* anim);
-    static void easeInCubic(Anim* anim);
-    static void easeInOutCubic(Anim* anim);
-
 public:
     static void StartCicle(int ThreadIndex);
     Animator(/* args */);
@@ -29,6 +24,7 @@ public:
 
     friend bs;
     friend Anim;
+    friend Animation;
 };
 
 struct ThreadPoolThread
@@ -36,10 +32,9 @@ struct ThreadPoolThread
     std::thread thread;
     unsigned int TasksCount;
     int index;
-    std::vector<Anim*> animations;
-    
+    std::vector<Animation *> animations;
+
     ThreadPoolThread()
     {
-        
     }
 };
