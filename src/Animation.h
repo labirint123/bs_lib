@@ -16,8 +16,8 @@ public:
     virtual ~Animation() = default;
 
     bool Start();
-    virtual bool IsFinished() const = 0;
-    virtual void Abort() = 0;
+    bool IsFinished() { return this->isFinised; }
+    void Abort() { isAborted = 1; }
 
     void SetAnimationType(AnimationType type) { this->type = type; }
     AnimationType GetAnimationType() { return this->type; }
@@ -29,6 +29,7 @@ protected:
     virtual void MakeAMove(float UpdatedProgress) = 0;
     sf::Time DeltaTime;
     bool isFinised = 0;
+    bool isAborted = 0;
     sf::Clock timePassed;
     float LastProgress = 0;
     friend Animator;

@@ -1,12 +1,18 @@
 #include "Animation.h"
 #include "Animator.h"
 
-
 bool Animation::Start()
 {
     if (this->LastProgress != 0)
         return 1;
 
+    if (this->DeltaTime == sf::seconds(0))
+    {
+        this->MakeAMove(1);
+        isFinised = 1;
+        LastProgress = 0;
+        return 0;
+    }
     this->LastProgress = 0;
     this->timePassed.restart();
 

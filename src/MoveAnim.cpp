@@ -15,15 +15,6 @@ void MoveAnim::MakeAMove(float UpdatedProgress)
     }
 }
 
-bool MoveAnim::IsFinished() const
-{
-    return false;
-}
-
-void MoveAnim::Abort()
-{
-}
-
 void MoveAnim::SetMoveOffset(sf::Vector2f offset)
 {
     this->moveOffset = offset;

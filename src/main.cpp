@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include "MoveAnim.h"
-
+#include "ColorAnim.h"
 
 int main()
 {
@@ -37,9 +37,21 @@ int main()
         anims.at(i)->SetObj(*rects.at(i));
         anims.at(i)->SetDeltaTime(sf::seconds(1));
     }
+
+    std::vector<ColorAnim *> colanims;
+    for (size_t i = 0; i < 4; i++)
+    {
+        colanims.push_back(new ColorAnim);
+        colanims.at(i)->SetAnimationType((Animation::AnimationType)i);
+        colanims.at(i)->SetColor(sf::Color::Green);
+        colanims.at(i)->SetObj(*rects.at(i));
+        colanims.at(i)->SetDeltaTime(sf::seconds(1));
+    }
+
     for (size_t i = 0; i < 4; i++)
     {
         anims.at(i)->Start();
+        colanims.at(i)->Start();
     }
     sf::Clock c;
     c.restart();
@@ -65,6 +77,8 @@ int main()
             for (size_t i = 0; i < 4; i++)
             {
                 rects.at(i)->setPosition(100, 100 * i + 100);
+                rects.at(i)->setFillColor(sf::Color::Red);
+                colanims.at(i)->Start();
                 anims.at(i)->Start();
             }
             c.restart();
