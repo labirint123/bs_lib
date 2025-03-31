@@ -1284,6 +1284,7 @@ CMakeFiles/sfml-engine.dir/src/MoveAnim.cpp.o: /home/podushka/projects/cmake-sfm
   /usr/include/c++/14.2.1/bits/hash_bytes.h \
   /usr/include/c++/14.2.1/bits/invoke.h \
   /usr/include/c++/14.2.1/bits/ios_base.h \
+  /usr/include/c++/14.2.1/bits/istream.tcc \
   /usr/include/c++/14.2.1/bits/locale_classes.h \
   /usr/include/c++/14.2.1/bits/locale_classes.tcc \
   /usr/include/c++/14.2.1/bits/locale_conv.h \
@@ -1356,6 +1357,8 @@ CMakeFiles/sfml-engine.dir/src/MoveAnim.cpp.o: /home/podushka/projects/cmake-sfm
   /usr/include/c++/14.2.1/initializer_list \
   /usr/include/c++/14.2.1/ios \
   /usr/include/c++/14.2.1/iosfwd \
+  /usr/include/c++/14.2.1/iostream \
+  /usr/include/c++/14.2.1/istream \
   /usr/include/c++/14.2.1/iterator \
   /usr/include/c++/14.2.1/locale \
   /usr/include/c++/14.2.1/map \

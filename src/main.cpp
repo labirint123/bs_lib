@@ -20,7 +20,7 @@ int main()
     txt.setFont(font);
 
     sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
-
+    window.setVerticalSyncEnabled(1);
     std::vector<sf::RectangleShape *> rects;
     for (size_t i = 0; i < 4; i++)
     {
@@ -105,7 +105,7 @@ int main()
                 rects.at(i)->setSize({80, 80});
                 rects.at(i)->setScale({1, 1});
                 rects.at(i)->setFillColor(sf::Color::White);
-                std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
+                // std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
                 sizeanims.at(i)->Start();
                 anims.at(i)->Start();
                 colanims.at(i)->Start();

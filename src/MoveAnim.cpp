@@ -1,18 +1,25 @@
 #include "MoveAnim.h"
+#include <iostream>
 
 void MoveAnim::MakeAMove(float UpdatedProgress)
 {
     float diffP = UpdatedProgress - this->LastProgress;
-    if (std::abs(this->moveOffset.x * diffP) >= 1.f)
+
+    sf::Vector2f totalMove = moveOffset * UpdatedProgress;
+    sf::Vector2f prevMove = moveOffset * this->LastProgress;
+    sf::Vector2f delta = totalMove - prevMove;
+
+    if (std::abs(delta.x) >= 0.5f || std::abs(delta.y) >= 1.5f)
     {
+        this->move(delta.x, delta.y);
         this->LastProgress = UpdatedProgress;
-        this->move(this->moveOffset.x * diffP, 0);
     }
-    if (std::abs(this->moveOffset.y * diffP) >= 1.f)
-    {
-        this->LastProgress = UpdatedProgress;
-        this->move(this->moveOffset.y * diffP, 0);
-    }
+    
+}
+
+void MoveAnim::ToDoAtStart()
+{
+    
 }
 
 void MoveAnim::SetMoveOffset(sf::Vector2f offset)

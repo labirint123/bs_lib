@@ -7,6 +7,7 @@ class MoveAnim : public Animation
 public:
 
     void MakeAMove(float UpdatedProgress) override; 
+    void ToDoAtStart() override;
     void SetMoveOffset(sf::Vector2f offset);
     void SetObj(sf::Text &obj);
     void SetObj(sf::Sprite &obj);
