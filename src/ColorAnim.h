@@ -5,41 +5,33 @@
 class ColorAnim : public Animation
 {
 public:
-    enum Target
-    {
-        Fill,
-        Outline
-    };
+    enum Target { Fill, Outline };
 
-private:
-    void MakeAMove(float UpdatedProgress) override;
-    void AdjustColor(int r, int g, int b);
-    void ToDoAtStart() override;
+    ColorAnim();
+    ~ColorAnim();
 
-    sf::Shape *ShapeObj = nullptr;
-    sf::Text *TextObj = nullptr;
-    sf::Color *ColorObj = nullptr;
-
-    Target target;
-    float prevR;
-    float prevG;
-    float prevB;
-    int diffR;
-    int diffG;
-    int diffB;
-    sf::Color EndColor;
-    sf::Color StartColor;
-
-
-public:
-    void SetObj(sf::Text &obj);
-    void SetObj(sf::RectangleShape &obj);
-    void SetObj(sf::CircleShape &obj);
-    void SetObj(sf::Color &obj);
-
-    void SetColor(const sf::Color &color);
+    void SetObj(sf::Text& obj);
+    void SetObj(sf::RectangleShape& obj);
+    void SetObj(sf::CircleShape& obj);
+    void SetObj(sf::Color& obj);
+    void SetColor(const sf::Color& color);
     void SetTarget(Target target);
 
-    ColorAnim(/* args */);
-    ~ColorAnim();
+protected:
+    void MakeAMove(float UpdatedProgress) override;
+    void ToDoAtStart() override;
+
+private:
+    void AdjustColor(int r, int g, int b);
+
+    sf::Shape* ShapeObj = nullptr;
+    sf::Text* TextObj = nullptr;
+    sf::Color* ColorObj = nullptr;
+
+    Target target;
+    sf::Color StartColor;
+    sf::Color EndColor;
+
+    float diffR = 0.f, diffG = 0.f, diffB = 0.f;
+    float prevR = 0.f, prevG = 0.f, prevB = 0.f;
 };
