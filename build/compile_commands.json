@@ -1,0 +1,62 @@
+[
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/AnimStack.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/AnimStack.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/AnimStack.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/AnimStack.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/Animation.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/Animation.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/Animation.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/Animation.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/Animator.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/Animator.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/Animator.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/Animator.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/BsLogger.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/BsLogger.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/BsLogger.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/BsLogger.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/ColorAnim.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/ColorAnim.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/ColorAnim.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/ColorAnim.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/MoveAnim.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/MoveAnim.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/MoveAnim.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/MoveAnim.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/ScaleAnim.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/ScaleAnim.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/ScaleAnim.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/ScaleAnim.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/TickRateController.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/TickRateController.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/TickRateController.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/TickRateController.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/bs.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/bs.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/bs.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/bs.cpp.o"
+},
+{
+  "directory": "/home/podushka/projects/cmake-sfml-project/build",
+  "command": "/usr/bin/g++ -I/home/podushka/projects/cmake-sfml-project/build -isystem /opt/sfml2/include -g -std=gnu++17 -o CMakeFiles/sfml-engine.dir/src/main.cpp.o -c /home/podushka/projects/cmake-sfml-project/src/main.cpp",
+  "file": "/home/podushka/projects/cmake-sfml-project/src/main.cpp",
+  "output": "CMakeFiles/sfml-engine.dir/src/main.cpp.o"
+}
+]

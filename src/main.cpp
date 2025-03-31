@@ -6,6 +6,9 @@
 #include <iostream>
 #include "MoveAnim.h"
 #include "ColorAnim.h"
+#include "ScaleAnim.h"
+
+
 
 int main()
 {
@@ -20,15 +23,15 @@ int main()
 
     sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
 
-    std::vector<sf::RectangleShape *> rects;
+    std::vector<sf::RectangleShape*> rects;
     for (size_t i = 0; i < 4; i++)
     {
-        rects.push_back(new sf::RectangleShape({80, 80}));
+        rects.push_back(new sf::RectangleShape({ 80, 80 }));
         rects.at(i)->setFillColor(sf::Color::White);
         rects.at(i)->setPosition(100, 100 * i + 100);
-        rects.at(i)->setFillColor(sf::Color(200, 30, 10));
+        // rects.at(i)->setFillColor(sf::Color(200, 30, 10));
     }
-    std::vector<MoveAnim *> anims;
+    std::vector<MoveAnim*> anims;
     for (size_t i = 0; i < 4; i++)
     {
         anims.push_back(new MoveAnim);
@@ -38,19 +41,37 @@ int main()
         anims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-    std::vector<ColorAnim *> colanims;
+    std::vector<ScaleAnim*> sizeanims;
+    for (size_t i = 0; i < 4; i++)
+    {
+        sizeanims.push_back(new ScaleAnim);
+        sizeanims.at(i)->SetAnimationType((Animation::AnimationType)i);
+
+        sizeanims.at(i)->SetObj(*rects.at(i));
+        sizeanims.at(i)->SetScaleOffset({ 1.2,1.2 });
+
+
+        sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
+    }
+
+    std::vector<ColorAnim*> colanims;
     for (size_t i = 0; i < 4; i++)
     {
         colanims.push_back(new ColorAnim);
         colanims.at(i)->SetAnimationType((Animation::AnimationType)i);
-        colanims.at(i)->SetColor(sf::Color::Green);
+
         colanims.at(i)->SetObj(*rects.at(i));
+        colanims.at(i)->SetTarget(ColorAnim::Target::Fill);
+        colanims.at(i)->SetColor(sf::Color::Red);
+
+
         colanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
     for (size_t i = 0; i < 4; i++)
     {
         anims.at(i)->Start();
+        sizeanims.at(i)->Start();
         colanims.at(i)->Start();
     }
     sf::Clock c;
@@ -72,14 +93,18 @@ int main()
                 }
             }
         }
-        if (c.getElapsedTime().asSeconds() > 1.2)
+        if (c.getElapsedTime().asSeconds() > 10)
         {
             for (size_t i = 0; i < 4; i++)
             {
                 rects.at(i)->setPosition(100, 100 * i + 100);
-                rects.at(i)->setFillColor(sf::Color::Red);
-                colanims.at(i)->Start();
+                rects.at(i)->setSize({ 80, 80 });
+                rects.at(i)->setScale({ 1,1 });
+                rects.at(i)->setFillColor(sf::Color::White);
+                std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
+                sizeanims.at(i)->Start();
                 anims.at(i)->Start();
+                colanims.at(i)->Start();
             }
             c.restart();
         }

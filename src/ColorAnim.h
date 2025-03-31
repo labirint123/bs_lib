@@ -13,14 +13,23 @@ public:
 
 private:
     void MakeAMove(float UpdatedProgress) override;
-    void AdjustColor(sf::Color color);
+    void AdjustColor(int r, int g, int b);
+    void ToDoAtStart() override;
 
     sf::Shape *ShapeObj = nullptr;
     sf::Text *TextObj = nullptr;
     sf::Color *ColorObj = nullptr;
 
     Target target;
-    sf::Color colordiff;
+    float prevR;
+    float prevG;
+    float prevB;
+    int diffR;
+    int diffG;
+    int diffB;
+    sf::Color EndColor;
+    sf::Color StartColor;
+
 
 public:
     void SetObj(sf::Text &obj);

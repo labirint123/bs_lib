@@ -5,7 +5,7 @@ bool Animation::Start()
 {
     if (this->LastProgress != 0)
         return 1;
-
+    ToDoAtStart();
     if (this->DeltaTime == sf::seconds(0))
     {
         this->MakeAMove(1);

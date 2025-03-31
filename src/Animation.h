@@ -27,6 +27,7 @@ public:
 protected:
     AnimationType type;
     virtual void MakeAMove(float UpdatedProgress) = 0;
+    virtual void ToDoAtStart(){}
     sf::Time DeltaTime;
     bool isFinised = 0;
     bool isAborted = 0;

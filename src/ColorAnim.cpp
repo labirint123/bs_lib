@@ -1,137 +1,143 @@
 #include "ColorAnim.h"
+#include <iostream>
+
 void ColorAnim::MakeAMove(float UpdatedProgress)
 {
+    float diffprog = UpdatedProgress - LastProgress;
+    bool iter = 0;
     sf::Color nCol(0, 0, 0);
-    if (colordiff.r * UpdatedProgress >= 1)
-        nCol.r = colordiff.r * UpdatedProgress;
-    if (colordiff.g * UpdatedProgress >= 1)
-        nCol.g = colordiff.g * UpdatedProgress;
-    if (colordiff.b * UpdatedProgress >= 1)
-        nCol.b = colordiff.b * UpdatedProgress;
-    if (nCol != sf::Color(0, 0, 0))
+    if (std::abs(diffR * diffprog) >= 1)
+        iter = 1;
+    if (std::abs(diffG * diffprog) >= 1)
+        iter = 1;
+    if (std::abs(diffB * diffprog) >= 1)
+        iter = 1;
+    if (iter)
     {
-        AdjustColor(nCol);
+        prevR = diffR * diffprog;
+        prevG = diffG * diffprog;
+        prevB = diffB * diffprog;
+        AdjustColor(diffR * diffprog, diffG * diffprog, diffB * diffprog);
         this->LastProgress = UpdatedProgress;
     }
 }
-void ColorAnim::AdjustColor(sf::Color color)
+void ColorAnim::AdjustColor(int r, int g, int b)
 {
     if (this->ShapeObj != nullptr)
     {
         if (target == Target::Fill)
         {
-            sf::Color base = ShapeObj->getFillColor();
-            base.r = std::min(255, base.r + color.r);
-            base.g = std::min(255, base.g + color.g);
-            base.b = std::min(255, base.b + color.b);
-            base.a = std::min(255, base.a + color.a);
-            ShapeObj->setFillColor(base);
+            sf::Color c;
+            c = ShapeObj->getFillColor();
+            c.r += r;
+            c.g += g;
+            c.b += b;
+            ShapeObj->setFillColor(c);
         }
         else if (target == Target::Outline)
         {
-            sf::Color base = ShapeObj->getOutlineColor();
-            base.r = std::min(255, base.r + color.r);
-            base.g = std::min(255, base.g + color.g);
-            base.b = std::min(255, base.b + color.b);
-            base.a = std::min(255, base.a + color.a);
-            ShapeObj->setOutlineColor(base);
+            sf::Color c = ShapeObj->getOutlineColor();
+            c.r += r;
+            c.g += g;
+            c.b += b;
+            ShapeObj->setOutlineColor(c);
         }
     }
     else if (this->TextObj != nullptr)
     {
         if (target == Target::Fill)
         {
-            sf::Color base = TextObj->getFillColor();
-            base.r = std::min(255, base.r + color.r);
-            base.g = std::min(255, base.g + color.g);
-            base.b = std::min(255, base.b + color.b);
-            base.a = std::min(255, base.a + color.a);
-            TextObj->setFillColor(base);
+            sf::Color c = TextObj->getFillColor();
+            c.r += r;
+            c.g += g;
+            c.b += b;
+            TextObj->setFillColor(c);
         }
         else if (target == Target::Outline)
         {
-            sf::Color base = TextObj->getOutlineColor();
-            base.r = std::min(255, base.r + color.r);
-            base.g = std::min(255, base.g + color.g);
-            base.b = std::min(255, base.b + color.b);
-            base.a = std::min(255, base.a + color.a);
-            TextObj->setOutlineColor(base);
+            sf::Color c = TextObj->getOutlineColor();
+            c.r += r;
+            c.g += g;
+            c.b += b;
+            TextObj->setOutlineColor(c);
         }
     }
     else if (this->ColorObj != nullptr)
     {
-        ColorObj->r = std::min(255, ColorObj->r + color.r);
-        ColorObj->g = std::min(255, ColorObj->g + color.g);
-        ColorObj->b = std::min(255, ColorObj->b + color.b);
-        ColorObj->a = std::min(255, ColorObj->a + color.a);
+        ColorObj->r += r;
+        ColorObj->g += g;
+        ColorObj->b += b;
     }
 }
 
-void ColorAnim::SetObj(sf::Text &obj)
+void ColorAnim::ToDoAtStart()
+{
+
+    if (this->ShapeObj != nullptr)
+    {
+        if (target == Target::Fill)
+        {
+            StartColor = ShapeObj->getFillColor();
+        }
+        else if (target == Target::Outline)
+        {
+            StartColor = ShapeObj->getOutlineColor();
+        }
+    }
+    else if (this->TextObj != nullptr)
+    {
+        if (target == Target::Fill)
+        {
+            StartColor = TextObj->getFillColor();
+        }
+        else if (target == Target::Outline)
+        {
+            StartColor = TextObj->getOutlineColor();
+        }
+    }
+    else if (this->ColorObj != nullptr)
+    {
+        StartColor = *ColorObj;
+    }
+    diffR = EndColor.r - StartColor.r;
+    diffG = EndColor.g - StartColor.g;
+    diffB = EndColor.b - StartColor.b;
+    prevR = StartColor.r;
+    prevG = StartColor.g;
+    prevB = StartColor.b;
+}
+
+void ColorAnim::SetObj(sf::Text& obj)
 {
     TextObj = &obj;
     ShapeObj = nullptr;
+    ColorObj = nullptr;
 }
 
-void ColorAnim::SetObj(sf::RectangleShape &obj)
+void ColorAnim::SetObj(sf::RectangleShape& obj)
 {
     TextObj = nullptr;
     ColorObj = nullptr;
     ShapeObj = &obj;
 }
 
-void ColorAnim::SetObj(sf::CircleShape &obj)
+void ColorAnim::SetObj(sf::CircleShape& obj)
 {
     TextObj = nullptr;
     ColorObj = nullptr;
     ShapeObj = &obj;
 }
 
-void ColorAnim::SetObj(sf::Color &obj)
+void ColorAnim::SetObj(sf::Color& obj)
 {
     TextObj = nullptr;
     ShapeObj = nullptr;
     ColorObj = &obj;
 }
 
-void ColorAnim::SetColor(const sf::Color &color)
+void ColorAnim::SetColor(const sf::Color& color)
 {
-    if (this->ShapeObj != nullptr)
-    {
-        if (target == Target::Fill)
-        {
-            this->colordiff.r = color.r - ShapeObj->getFillColor().r;
-            this->colordiff.g = color.g - ShapeObj->getFillColor().g;
-            this->colordiff.b = color.b - ShapeObj->getFillColor().b;
-        }
-        else if (target == Target::Outline)
-        {
-            this->colordiff.r = color.r - ShapeObj->getOutlineColor().r;
-            this->colordiff.g = color.g - ShapeObj->getOutlineColor().g;
-            this->colordiff.b = color.b - ShapeObj->getOutlineColor().b;
-        }
-    }
-    else if (this->TextObj != nullptr)
-    {
-        if (target == Target::Fill)
-        {
-            this->colordiff.r = color.r - TextObj->getFillColor().r;
-            this->colordiff.g = color.g - TextObj->getFillColor().g;
-            this->colordiff.b = color.b - TextObj->getFillColor().b;
-        }
-        else if (target == Target::Outline)
-        {
-            this->colordiff.r = color.r - TextObj->getOutlineColor().r;
-            this->colordiff.g = color.g - TextObj->getOutlineColor().g;
-            this->colordiff.b = color.b - TextObj->getOutlineColor().b;
-        }
-    }
-    else if (this->ColorObj != nullptr)
-    {
-        this->colordiff.r = color.r - ColorObj->r;
-        this->colordiff.g = color.g - ColorObj->g;
-        this->colordiff.b = color.b - ColorObj->b;
-    }
+    EndColor = color;
 }
 
 void ColorAnim::SetTarget(Target target)
