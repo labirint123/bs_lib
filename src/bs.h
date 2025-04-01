@@ -1,5 +1,5 @@
 #pragma once
-#include "BsLogger.h"
+#include "Log.h"
 
 
 class bs
@@ -8,7 +8,6 @@ private:
 
 public:
     static bool IsProgrammEnd;
-    BsLogger l;
     bs(/* args */);
     void bsInit();
     ~bs();

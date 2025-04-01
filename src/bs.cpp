@@ -11,11 +11,10 @@ bs::bs()
 
 void bs::bsInit()
 {
-    l.module = "BS";
 
     Animator a;
     Animator::coreCount = std::thread::hardware_concurrency();
-    l.Log("cores: " + std::to_string(a.coreCount));
+    Log("cores: " + std::to_string(a.coreCount));
     Animator::trc.setTimesPerSec(1000);
     for (size_t i = 0; i < a.coreCount; i++)
     {

@@ -1,6 +1,6 @@
 #include "Animator.h"
 #include "bs.h"
-#include "BsLogger.h"
+#include "Log.h"
 #include <cmath>
 #include <iostream>
 unsigned int Animator::coreCount = 0;
@@ -24,9 +24,7 @@ double calcEaseInOutCubic(double x)
 
 void Animator::StartCicle(const int ThreadIndex)
 {
-    BsLogger l;
-    l.module = "AnimationThread(" + std::to_string(ThreadIndex) + ")";
-    l.Log("started");
+    Log("AnimationThread(" + std::to_string(ThreadIndex) + ")" + "started");
     std::vector<Animation *> *anims = &Animator::thread_pool.at(ThreadIndex)->animations;
 
     while (!bs::IsProgrammEnd)
