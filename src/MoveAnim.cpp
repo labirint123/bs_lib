@@ -14,7 +14,6 @@ void MoveAnim::MakeAMove(float UpdatedProgress)
         this->move(delta.x, delta.y);
         this->LastProgress = UpdatedProgress;
     }
-    
 }
 
 void MoveAnim::ToDoAtStart()

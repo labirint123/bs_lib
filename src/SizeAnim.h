@@ -11,7 +11,6 @@ private:
 
     sf::Vector2f FinalSize;
     sf::Vector2f StartSize;
-    sf::Vector2f ComplitedSize;
 
     void SetObjSize(sf::Vector2f size);
     sf::Vector2f GetObjSize();

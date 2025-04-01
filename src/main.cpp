@@ -8,6 +8,7 @@
 #include "ColorAnim.h"
 #include "ScaleAnim.h"
 #include "SizeAnim.h"
+#include "RotateAnim.h"
 
 int main()
 {
@@ -27,6 +28,12 @@ int main()
     {
         rects.push_back(new sf::RectangleShape({80, 80}));
         rects.at(i)->setFillColor(sf::Color::White);
+        
+        sf::FloatRect bounds = rects.at(i)->getLocalBounds();
+        rects.at(i)->setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+
+
+
         rects.at(i)->setPosition(100, 100 * i + 100);
         // rects.at(i)->setFillColor(sf::Color(200, 30, 10));
     }
@@ -40,14 +47,15 @@ int main()
         anims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-    std::vector<SizeAnim *> sizeanims;
+    std::vector<RotateAnim *> sizeanims;
     for (size_t i = 0; i < 4; i++)
     {
-        sizeanims.push_back(new SizeAnim);
+        sizeanims.push_back(new RotateAnim);
         sizeanims.at(i)->SetAnimationType((Animation::AnimationType)i);
 
         sizeanims.at(i)->SetObj(*rects.at(i));
-        sizeanims.at(i)->SetSize({rects.at(i)->getSize().x * 1.2, rects.at(i)->getSize().y * 1.2});
+        sizeanims.at(i)->SetRotation(180);
+        
 
         sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
     }

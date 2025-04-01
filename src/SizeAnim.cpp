@@ -49,7 +49,6 @@ void SizeAnim::ToDoAtStart()
         this->StartSize = {SpriteObj->getTextureRect().getSize().x, SpriteObj->getTextureRect().getSize().y};
     }
     LastProgress = 0;
-    ComplitedSize = {0,0};
 }
 
 void SizeAnim::MakeAMove(float UpdatedProgress)
@@ -57,7 +56,6 @@ void SizeAnim::MakeAMove(float UpdatedProgress)
     float d = UpdatedProgress - LastProgress;
     sf::Vector2f dv = FinalSize - StartSize;
     SetObjSize(GetObjSize() + dv * d);
-    this->ComplitedSize += dv * d;
     LastProgress = UpdatedProgress;
 }
 
