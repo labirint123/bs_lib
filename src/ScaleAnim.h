@@ -1,21 +1,18 @@
 #pragma once
 #include "Animation.h"
 #include <SFML/Graphics.hpp>
+#include "UsesTransformable.h"
 
-class ScaleAnim : public Animation
+class ScaleAnim : public Animation, public UsesTransformable
 {
 private:
     void MakeAMove(float UpdatedProgress) override;
     void ToDoAtStart() override;
+
 public:
-    void SetObj(sf::Text &obj);
-    void SetObj(sf::Sprite &obj);
-    void SetObj(sf::RectangleShape &obj);
-    void SetObj(sf::CircleShape &obj);
     void SetScaleOffset(sf::Vector2f ScaleOffset);
 
 private:
-    sf::Transformable *obj;
     sf::Vector2f ScaleOffset = {0, 0};
     sf::Vector2f StartScale = {0, 0};
 

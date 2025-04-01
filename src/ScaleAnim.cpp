@@ -14,26 +14,6 @@ void ScaleAnim::ToDoAtStart()
 }
 
 
-void ScaleAnim::SetObj(sf::Text& obj)
-{
-    this->obj = &obj;
-}
-
-void ScaleAnim::SetObj(sf::Sprite& obj)
-{
-    this->obj = &obj;
-}
-
-void ScaleAnim::SetObj(sf::RectangleShape& obj)
-{
-    this->obj = &obj;
-}
-
-void ScaleAnim::SetObj(sf::CircleShape& obj)
-{
-    this->obj = &obj;
-}
-
 void ScaleAnim::SetScaleOffset(sf::Vector2f ScaleOffset)
 {
     this->ScaleOffset.x = ScaleOffset.x - 1;

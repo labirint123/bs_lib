@@ -26,26 +26,6 @@ void MoveAnim::SetMoveOffset(sf::Vector2f offset)
     this->moveOffset = offset;
 }
 
-void MoveAnim::SetObj(sf::Text &obj)
-{
-    this->obj = &obj;
-}
-
-void MoveAnim::SetObj(sf::Sprite &obj)
-{
-    this->obj = &obj;
-}
-
-void MoveAnim::SetObj(sf::RectangleShape &obj)
-{
-    this->obj = &obj;
-}
-
-void MoveAnim::SetObj(sf::CircleShape &obj)
-{
-    this->obj = &obj;
-}
-
 void MoveAnim::move(float x, float y)
 {
     obj->move(x, y);

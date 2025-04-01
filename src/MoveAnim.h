@@ -1,22 +1,16 @@
 #pragma once
 #include "Animation.h"
 #include <SFML/Graphics.hpp>
+#include "UsesTransformable.h"
 
-class MoveAnim : public Animation
+class MoveAnim : public Animation, public UsesTransformable
 {
 public:
-
-    void MakeAMove(float UpdatedProgress) override; 
+    void MakeAMove(float UpdatedProgress) override;
     void ToDoAtStart() override;
     void SetMoveOffset(sf::Vector2f offset);
-    void SetObj(sf::Text &obj);
-    void SetObj(sf::Sprite &obj);
-    void SetObj(sf::RectangleShape &obj);
-    void SetObj(sf::CircleShape &obj);
-    
+
 private:
-    
-    sf::Transformable* obj;
     sf::Vector2f moveOffset;
     void move(float x, float y);
 

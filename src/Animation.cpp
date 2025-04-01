@@ -3,7 +3,7 @@
 
 bool Animation::Start()
 {
-    if (this->LastProgress != 0 || !isStarted)
+    if (this->LastProgress != 0 || isStarted)
         return 1;
     ToDoAtStart();
     if (this->DeltaTime == sf::seconds(0))
