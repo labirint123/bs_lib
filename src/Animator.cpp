@@ -42,6 +42,14 @@ void Animator::StartCicle(const int ThreadIndex)
                 Animator::thread_pool.at(ThreadIndex)->TasksCount--;
                 continue;
             }
+            if (anims->at(i)->isAborted)
+            {
+                anims->at(i)->isFinised = 1;
+                anims->at(i)->LastProgress = 0;
+                anims->erase(anims->begin() + i);
+                Animator::thread_pool.at(ThreadIndex)->TasksCount--;
+                continue;
+            }
 
             if (anims->at(i)->GetAnimationType() == Animation::AnimationType::linear)
                 anims->at(i)->MakeAMove(anims->at(i)->timePassed.getElapsedTime().asSeconds() / anims->at(i)->DeltaTime.asSeconds());
