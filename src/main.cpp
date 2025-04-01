@@ -7,6 +7,7 @@
 #include "MoveAnim.h"
 #include "ColorAnim.h"
 #include "ScaleAnim.h"
+#include "SizeAnim.h"
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
     txt.setFont(font);
 
     sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
-    window.setVerticalSyncEnabled(1);
+
     std::vector<sf::RectangleShape *> rects;
     for (size_t i = 0; i < 4; i++)
     {
@@ -39,14 +40,14 @@ int main()
         anims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-    std::vector<ScaleAnim *> sizeanims;
+    std::vector<SizeAnim *> sizeanims;
     for (size_t i = 0; i < 4; i++)
     {
-        sizeanims.push_back(new ScaleAnim);
+        sizeanims.push_back(new SizeAnim);
         sizeanims.at(i)->SetAnimationType((Animation::AnimationType)i);
 
         sizeanims.at(i)->SetObj(*rects.at(i));
-        sizeanims.at(i)->SetScaleOffset({1.2, 1.2});
+        sizeanims.at(i)->SetSize({rects.at(i)->getSize().x * 1.2, rects.at(i)->getSize().y * 1.2});
 
         sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
@@ -90,7 +91,6 @@ int main()
                     {
                         for (size_t i = 0; i < 4; i++)
                         {
-                            
                         }
                         c.restart();
                     }
