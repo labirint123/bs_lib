@@ -56,7 +56,7 @@ int main()
         sizeanims.at(i)->SetObj(*rects.at(i));
         sizeanims.at(i)->SetRotation(180);
         
-
+        sizeanims.at(i)->SetCiclic(1);
         sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
@@ -97,10 +97,7 @@ int main()
                 {
                     if (event.key.code == sf::Keyboard::R)
                     {
-                        for (size_t i = 0; i < 4; i++)
-                        {
-                        }
-                        c.restart();
+                        
                     }
                 }
             }
@@ -114,9 +111,9 @@ int main()
                 rects.at(i)->setScale({1, 1});
                 rects.at(i)->setFillColor(sf::Color::White);
                 // std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
-                sizeanims.at(i)->Start();
-                anims.at(i)->Start();
-                colanims.at(i)->Start();
+                // sizeanims.at(i)->Start();
+                // anims.at(i)->Start();
+                // colanims.at(i)->Start();
             }
             c.restart();
         }
