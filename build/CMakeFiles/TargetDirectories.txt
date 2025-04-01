@@ -1,4 +1,0 @@
-/home/podushka/projects/cmake-sfml-project/build/CMakeFiles/embed_resources.dir
-/home/podushka/projects/cmake-sfml-project/build/CMakeFiles/sfml-engine.dir
-/home/podushka/projects/cmake-sfml-project/build/CMakeFiles/edit_cache.dir
-/home/podushka/projects/cmake-sfml-project/build/CMakeFiles/rebuild_cache.dir
