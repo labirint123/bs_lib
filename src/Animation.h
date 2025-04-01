@@ -22,7 +22,7 @@ public:
     void SetDeltaTime(sf::Time time) { this->DeltaTime = time; }
 
     sf::Time GetDeltaTime() { return this->DeltaTime; }
-    bool IsStarted() { return IsStarted; }
+    bool IsStarted() { return isStarted; }
     bool IsFinished() { return this->isFinised; }
     bool IsAborted() { return this->isAborted; }
     float GetProgress() { return LastProgress; }
@@ -36,6 +36,7 @@ protected:
     sf::Time DeltaTime;
     bool isFinised = 0;
     bool isAborted = 0;
+    bool isStarted = 0;
     sf::Clock timePassed;
     float LastProgress = 0;
     friend Animator;

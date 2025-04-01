@@ -3,7 +3,7 @@
 
 bool Animation::Start()
 {
-    if (this->LastProgress != 0)
+    if (this->LastProgress != 0 || !isStarted)
         return 1;
     ToDoAtStart();
     if (this->DeltaTime == sf::seconds(0))
@@ -30,5 +30,6 @@ bool Animation::Start()
     }
     Animator::thread_pool.at(min)->TasksCount++;
     Animator::thread_pool.at(min)->animations.push_back(this);
+    isStarted = 1;
     return 0;
 }

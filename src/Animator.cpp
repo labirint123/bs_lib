@@ -38,6 +38,7 @@ void Animator::StartCicle(const int ThreadIndex)
                 anims->at(i)->MakeAMove(1);
                 anims->at(i)->isFinised = 1;
                 anims->at(i)->LastProgress = 0;
+                anims->at(i)->isStarted = 0;
                 anims->erase(anims->begin() + i);
                 Animator::thread_pool.at(ThreadIndex)->TasksCount--;
                 continue;
@@ -46,6 +47,7 @@ void Animator::StartCicle(const int ThreadIndex)
             {
                 anims->at(i)->isFinised = 1;
                 anims->at(i)->LastProgress = 0;
+                anims->at(i)->isStarted = 0;
                 anims->erase(anims->begin() + i);
                 Animator::thread_pool.at(ThreadIndex)->TasksCount--;
                 continue;
