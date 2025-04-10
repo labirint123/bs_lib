@@ -12,6 +12,8 @@ protected:
 
     sf::Vector2f Pos;
     float Rotation = 0;
+    sf::Vector2f Scale  = {1,1};
+    sf::Vector2f Origin;
 
 public:
     void add(sf::Text &o);
@@ -22,9 +24,18 @@ public:
     sf::Vector2f GetPosition();
     void SetPosition(sf::Vector2f pos);
     void move(sf::Vector2f offset);
+    
     int GetRotation();
     void SetRotation(float rotation);
     void rotate(float offset);
+
+    void SetScale(sf::Vector2f scale);
+    void scale(sf::Vector2f scale);
+    sf::Vector2f GetScale();
+    void SetOrigin(sf::Vector2f origin);
+    sf::Vector2f GetOrigin();
+
+    // add size things
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
