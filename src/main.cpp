@@ -9,6 +9,7 @@
 #include "ScaleAnim.h"
 #include "SizeAnim.h"
 #include "RotateAnim.h"
+#include "Group.h"
 
 int main()
 {
@@ -28,14 +29,11 @@ int main()
     {
         rects.push_back(new sf::RectangleShape({80, 80}));
         rects.at(i)->setFillColor(sf::Color::White);
-        
+
         sf::FloatRect bounds = rects.at(i)->getLocalBounds();
         rects.at(i)->setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
-
-
         rects.at(i)->setPosition(100, 100 * i + 100);
-        // rects.at(i)->setFillColor(sf::Color(200, 30, 10));
     }
     std::vector<MoveAnim *> anims;
     for (size_t i = 0; i < 4; i++)
@@ -55,8 +53,8 @@ int main()
 
         sizeanims.at(i)->SetObj(*rects.at(i));
         sizeanims.at(i)->SetRotation(180);
-        
-        sizeanims.at(i)->SetCiclic(1);
+
+        // sizeanims.at(i)->SetCiclic(1);
         sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
@@ -79,6 +77,18 @@ int main()
         sizeanims.at(i)->Start();
         colanims.at(i)->Start();
     }
+
+    Group g;
+
+    sf::RectangleShape t;
+    t.setFillColor(sf::Color(10, 10, 10));
+    t.setSize({100, 100});
+    g.add(t);
+    sf::Text tx;
+    tx.setFont(font);
+    tx.setString("hi");
+    g.add(tx);
+    g.SetRotation(30);
     sf::Clock c;
     c.restart();
     while (window.isOpen())
@@ -93,17 +103,23 @@ int main()
             }
             else
             {
-                if (event.type == sf::Event::KeyPressed)
+                if (event.type == sf::Event::TextEntered)
                 {
-                    if (event.key.code == sf::Keyboard::R)
+                    if (event.text.unicode < 128)
                     {
-                        
+                        char entered = static_cast<char>(event.text.unicode);
+
+                        if (std::isprint(entered))
+                        {
+                            Log(entered);
+                        }
                     }
                 }
             }
         }
         if (c.getElapsedTime().asSeconds() > 2)
         {
+            g.SetPosition({g.GetPosition().x + 10, g.GetPosition().y + 10});
             for (size_t i = 0; i < 4; i++)
             {
                 rects.at(i)->setPosition(100, 100 * i + 100);
@@ -111,9 +127,9 @@ int main()
                 rects.at(i)->setScale({1, 1});
                 rects.at(i)->setFillColor(sf::Color::White);
                 // std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
-                // sizeanims.at(i)->Start();
-                // anims.at(i)->Start();
-                // colanims.at(i)->Start();
+                sizeanims.at(i)->Start();
+                anims.at(i)->Start();
+                colanims.at(i)->Start();
             }
             c.restart();
         }
@@ -123,7 +139,7 @@ int main()
         {
             window.draw(*rects.at(i));
         }
-
+        window.draw(g);
         window.draw(txt);
         window.display();
     }

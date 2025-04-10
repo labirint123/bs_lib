@@ -11,6 +11,7 @@ class UsesTransformable {
         virtual void SetObj(sf::Sprite& o) { obj = &o; }
         virtual void SetObj(sf::RectangleShape& o) { obj = &o; }
         virtual void SetObj(sf::CircleShape& o)    { obj = &o; }
+        virtual void SetObj(sf::Transformable *o)    { obj = o; }
     
         sf::Transformable* GetTransformable() const { return obj; }
     };

@@ -18,7 +18,7 @@ void MoveAnim::MakeAMove(float UpdatedProgress)
 
 void MoveAnim::ToDoAtStart()
 {
-    
+
 }
 
 void MoveAnim::SetMoveOffset(sf::Vector2f offset)
