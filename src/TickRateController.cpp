@@ -10,7 +10,7 @@ void TickRateController::ControlTicks()
     else
     {
         sf::Time t = clock.getElapsedTime();
-        if (t.asSeconds() < this->deltatime.asSeconds());
+        if (t.asSeconds() < this->deltatime.asSeconds())
         {
             sf::sleep(sf::seconds(this->deltatime.asSeconds() - t.asSeconds()));
         }        

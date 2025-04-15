@@ -29,7 +29,12 @@ sf::Vector2f SizeAnim::GetObjSize()
     }
     else if (SpriteObj != nullptr)
     {
-        ret = {SpriteObj->getTextureRect().getSize().x, SpriteObj->getTextureRect().getSize().y};
+        ret = sf::Vector2f(
+            SpriteObj->getTextureRect().getSize().x,
+            SpriteObj->getTextureRect().getSize().y
+        );
+
+
     }
     return ret;
 }
@@ -46,7 +51,7 @@ void SizeAnim::ToDoAtStart()
     }
     else if (SpriteObj != nullptr)
     {
-        this->StartSize = {SpriteObj->getTextureRect().getSize().x, SpriteObj->getTextureRect().getSize().y};
+        this->StartSize = sf::Vector2f(SpriteObj->getTextureRect().getSize().x, SpriteObj->getTextureRect().getSize().y);
     }
     LastProgress = 0;
 }

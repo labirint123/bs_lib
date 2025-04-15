@@ -17,7 +17,7 @@ foreach(RESOURCE ${RESOURCES})
 
     add_custom_command(
         OUTPUT ${HEADER}
-        COMMAND xxd -i -n ${BASENAME} ${RESOURCE} > ${HEADER}
+        COMMAND xxd -i ${RESOURCE} > ${HEADER}
         DEPENDS ${RESOURCE}
         COMMENT "Embedding resource ${BASENAME}"
         VERBATIM
@@ -29,7 +29,8 @@ endforeach()
 add_custom_target(embed_resources ALL DEPENDS ${GENERATED_HEADERS})
 
 # SFML
-find_package(SFML 2.6 COMPONENTS graphics REQUIRED)
+set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML")
+find_package(SFML 2.6.2 REQUIRED COMPONENTS graphics window system audio)
 
 # исходники — исключаем служебные
 file(GLOB_RECURSE ALL_SRC_FILES "src/*.cpp")
@@ -48,10 +49,17 @@ add_executable(sfml-engine ${SRC_FILES} ${GENERATED_HEADERS})
 
 add_dependencies(sfml-engine embed_resources)
 
-target_link_libraries(sfml-engine sfml-graphics)
+target_link_libraries(sfml-engine
+    sfml-graphics
+    sfml-window
+    sfml-system
+    sfml-audio
+)
+
 
 if(WIN32)
     add_custom_command(TARGET sfml-engine POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${SFML_DIR}/bin $<TARGET_FILE_DIR:sfml-engine>)
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "C:/libs/SFML-2.6.2/bin" $<TARGET_FILE_DIR:sfml-engine>
+    )
 endif()

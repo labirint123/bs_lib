@@ -13,28 +13,29 @@
 
 int main()
 {
+    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
     bs b;
     b.bsInit();
 
     sf::Font font;
-    font.loadFromMemory(Raleway, Raleway_len);
+    font.loadFromMemory(C__sfml_engine_res_Raleway_ttf, C__sfml_engine_res_Raleway_ttf_len);
     sf::Text txt;
     txt.setString("hi, its example of how good \nc++ really is :)");
     txt.setFont(font);
 
-    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
 
-    std::vector<sf::RectangleShape *> rects;
-    for (size_t i = 0; i < 4; i++)
+    std::vector<sf::RectangleShape*> rects;
+    for (size_t i = 0; i < 4; ++i)
     {
-        rects.push_back(new sf::RectangleShape({80, 80}));
-        rects.at(i)->setFillColor(sf::Color::White);
+        rects.push_back(new sf::RectangleShape({ 80, 80 }));
+        rects.back()->setFillColor(sf::Color::White);
 
-        sf::FloatRect bounds = rects.at(i)->getLocalBounds();
-        rects.at(i)->setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        sf::FloatRect bounds = rects.back()->getLocalBounds();
+        rects.back()->setOrigin(bounds.width / 2.f, bounds.height / 2.f);
 
-        rects.at(i)->setPosition(100, 100 * i + 100);
+        rects.back()->setPosition(100, 100 * i + 100);
     }
+
     std::vector<MoveAnim *> anims;
     for (size_t i = 0; i < 4; i++)
     {
