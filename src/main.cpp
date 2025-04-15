@@ -18,7 +18,7 @@ int main()
     b.bsInit();
 
     sf::Font font;
-    font.loadFromMemory(C__sfml_engine_res_Raleway_ttf, C__sfml_engine_res_Raleway_ttf_len);
+    font.loadFromMemory(Raleway, Raleway_len);
     sf::Text txt;
     txt.setString("hi, its example of how good \nc++ really is :)");
     txt.setFont(font);
