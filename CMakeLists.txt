@@ -21,10 +21,8 @@ add_custom_command(
 add_custom_target(embed_resources ALL DEPENDS ${HEADER})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# исходники проекта
 file(GLOB_RECURSE ALL_SRC_FILES "src/*.cpp")
 
-# фильтрация лишнего
 set(SRC_FILES "")
 foreach(FILE ${ALL_SRC_FILES})
     if(NOT FILE MATCHES ".*/CMakeFiles/.*")
@@ -34,12 +32,11 @@ endforeach()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-# компиляция
 add_executable(sfml-engine ${SRC_FILES} ${GENERATED_SOURCES})
 add_dependencies(sfml-engine embed_resources)
 
 # SFML
-set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML")
+# set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML") 
 find_package(SFML 2.6.2 REQUIRED COMPONENTS graphics window system audio)
 
 target_link_libraries(sfml-engine
@@ -49,10 +46,9 @@ target_link_libraries(sfml-engine
     sfml-audio
 )
 
-# Копирование DLL на винде
 if(WIN32)
     add_custom_command(TARGET sfml-engine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "C:/libs/SFML-2.6.2/bin" $<TARGET_FILE_DIR:sfml-engine>
+        "C:/libs/SFML-2.6.2/bin" $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
     )
 endif()
