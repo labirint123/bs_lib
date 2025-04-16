@@ -7,14 +7,9 @@ class MoveAnim : public Animation, public UsesTransformable
 {
 public:
     void MakeAMove(float UpdatedProgress) override;
-    void ToDoAtStart() override;
     void SetMoveOffset(sf::Vector2f offset);
 
 private:
     sf::Vector2f moveOffset;
-    void move(float x, float y);
 
-public:
-    MoveAnim(/* args */);
-    ~MoveAnim();
 };

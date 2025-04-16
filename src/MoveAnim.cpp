@@ -11,30 +11,12 @@ void MoveAnim::MakeAMove(float UpdatedProgress)
 
     if (std::abs(delta.x) >= 0.5f || std::abs(delta.y) >= 1.5f)
     {
-        this->move(delta.x, delta.y);
+        Move({delta.x, delta.y});
         this->LastProgress = UpdatedProgress;
     }
-}
-
-void MoveAnim::ToDoAtStart()
-{
-
 }
 
 void MoveAnim::SetMoveOffset(sf::Vector2f offset)
 {
     this->moveOffset = offset;
-}
-
-void MoveAnim::move(float x, float y)
-{
-    obj->move(x, y);
-}
-
-MoveAnim::MoveAnim()
-{
-}
-
-MoveAnim::~MoveAnim()
-{
 }

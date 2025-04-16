@@ -3,7 +3,7 @@
 void RotateAnim::MakeAMove(float UpdatedProgress)
 {
     float d = UpdatedProgress - LastProgress;
-    obj->rotate(d * rotateDiff);
+    Rotate(d * rotateDiff);
     LastProgress = UpdatedProgress;
 }
 

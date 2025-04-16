@@ -4,13 +4,13 @@ void ScaleAnim::MakeAMove(float UpdatedProgress)
 {
     sf::Vector2f newScale;
     newScale = StartScale + ScaleOffset * UpdatedProgress;
-    obj->setScale(newScale);
+    SetScale(newScale);
     this->LastProgress = UpdatedProgress;
 }
 
 void ScaleAnim::ToDoAtStart()
 {
-    StartScale = obj->getScale();
+    StartScale = GetScale();
 }
 
 
