@@ -7,7 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # bin2c builder
 add_executable(bin2c tools/bin2c.c)
 
-set(RESOURCE "${CMAKE_CURRENT_SOURCE_DIR}/res/Raleway.ttf")
+set(RESOURCE 
+    "${CMAKE_CURRENT_SOURCE_DIR}/res/Raleway.ttf"
+)
+
 get_filename_component(BASENAME ${RESOURCE} NAME_WE)
 set(HEADER "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}.h")
 
@@ -37,6 +40,7 @@ add_dependencies(sfml-engine embed_resources)
 
 # SFML
 # set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML") 
+# set(SFML_BIN_DIR "C:/libs/SFML-2.6.2/bin") 
 find_package(SFML 2.6.2 REQUIRED COMPONENTS graphics window system audio)
 
 target_link_libraries(sfml-engine
@@ -49,6 +53,6 @@ target_link_libraries(sfml-engine
 if(WIN32)
     add_custom_command(TARGET sfml-engine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "C:/libs/SFML-2.6.2/bin" $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
+        SFML_BIN_DIR $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
     )
 endif()

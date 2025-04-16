@@ -6,6 +6,9 @@ class Group : public sf::Drawable
 {
 protected:
     std::vector<sf::Drawable *> drawables;
+    std::vector<sf::Text *> Texts;
+    std::vector<sf::Sprite *> Sprites;
+    std::vector<sf::Shape *> Shapes;
 
     sf::Vector2f Pos = {0.f, 0.f};
     float Rotation = 0.f;
@@ -39,7 +42,8 @@ public:
     // ORIGIN
     void SetOrigin(sf::Vector2f origin);
     sf::Vector2f GetOrigin() const;
-
+    // BOUNDS
+    sf::FloatRect Group::getBounds() const;
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };

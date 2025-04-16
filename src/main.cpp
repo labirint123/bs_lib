@@ -36,11 +36,9 @@ int main()
 
         sf::FloatRect bounds = r->getLocalBounds();
         rects[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
-
         rects[i]->SetPosition({100, 100 * i + 100});
         rects[i]->add(*r);
         rects[i]->add(*t);
-
     }
 
     std::vector<MoveAnim *> moveanims;
@@ -64,13 +62,12 @@ int main()
         rotateanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-        for (size_t i = 0; i < 4; i++)
+    for (size_t i = 0; i < 4; i++)
     {
         moveanims.at(i)->Start();
         rotateanims.at(i)->Start();
     }
 
-    
     sf::Clock c;
     c.restart();
     while (window.isOpen())
@@ -103,8 +100,8 @@ int main()
         {
             for (size_t i = 0; i < 4; i++)
             {
-                rects.at(i)->SetPosition({100, 100 * i + 100});               
-                rects.at(i)->SetScale({1, 1});                
+                rects.at(i)->SetPosition({100, 100 * i + 100});
+                rects.at(i)->SetScale({1, 1});
                 rotateanims.at(i)->Start();
                 moveanims.at(i)->Start();
             }
