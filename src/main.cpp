@@ -10,6 +10,7 @@
 #include "SizeAnim.h"
 #include "RotateAnim.h"
 #include "Group.h"
+#include "RoundedRectangleShape.hpp"
 
 int main()
 {
@@ -73,6 +74,13 @@ int main()
         rotateanims.at(i)->Start();
     }
 
+    RoundedRectangleShape f;
+    f.setSize({100,100});
+    f.setCornerRadius(20);
+    f.setFillColor(sf::Color(255,255,255,100));
+    f.setPosition({0,0});
+
+
     sf::Clock c;
     c.restart();
     while (window.isOpen())
@@ -120,6 +128,7 @@ int main()
             window.draw(*groups.at(i));
         }
         window.draw(txt);
+        window.draw(f);
         window.display();
     }
 
