@@ -31,12 +31,16 @@ sf::Vector2f Group::GetPosition() const
 
 void Group::SetPosition(sf::Vector2f pos)
 {
+    if (pos != Pos)
+        onPositionChanged.emit(Pos);
     Pos = pos;
 }
 
 void Group::move(sf::Vector2f offset)
 {
     Pos += offset;
+    if (offset != sf::Vector2f(0, 0))
+        onPositionChanged.emit(Pos);
 }
 
 float Group::GetRotation() const
@@ -46,16 +50,22 @@ float Group::GetRotation() const
 
 void Group::SetRotation(float rotation)
 {
+    if (Rotation != rotation)
+        onRotationChanged.emit(Rotation);
     Rotation = rotation;
 }
 
 void Group::rotate(float offset)
 {
     Rotation += offset;
+    if (offset != 0)
+        onRotationChanged.emit(Rotation);
 }
 
 void Group::SetScale(sf::Vector2f scale)
 {
+    if (scale != Scale)
+        onScaleChanged.emit(Scale);
     Scale = scale;
 }
 
@@ -63,6 +73,8 @@ void Group::scale(sf::Vector2f factor)
 {
     Scale.x *= factor.x;
     Scale.y *= factor.y;
+    if (factor != sf::Vector2f(1, 1))
+        onScaleChanged.emit(Scale);
 }
 
 sf::Vector2f Group::GetScale() const
@@ -72,6 +84,8 @@ sf::Vector2f Group::GetScale() const
 
 void Group::SetOrigin(sf::Vector2f origin)
 {
+    if (origin != Origin)
+        onOriginChanged.emit(Origin);
     Origin = origin;
 }
 
@@ -100,20 +114,24 @@ void Group::draw(sf::RenderTarget &target, sf::RenderStates states) const
     }
 }
 
-
-sf::FloatRect Group::getBounds() const {
+sf::FloatRect Group::getBounds() const
+{
     sf::FloatRect bounds;
     bool hasBounds = false;
 
     // Helper lambda to merge a new rectangle into our overall bounds.
-    auto mergeBounds = [&](const sf::FloatRect &newBounds) {
-        if (!hasBounds) {
+    auto mergeBounds = [&](const sf::FloatRect &newBounds)
+    {
+        if (!hasBounds)
+        {
             bounds = newBounds;
             hasBounds = true;
-        } else {
-            float left   = std::min(bounds.left, newBounds.left);
-            float top    = std::min(bounds.top, newBounds.top);
-            float right  = std::max(bounds.left + bounds.width, newBounds.left + newBounds.width);
+        }
+        else
+        {
+            float left = std::min(bounds.left, newBounds.left);
+            float top = std::min(bounds.top, newBounds.top);
+            float right = std::max(bounds.left + bounds.width, newBounds.left + newBounds.width);
             float bottom = std::max(bounds.top + bounds.height, newBounds.top + newBounds.height);
             bounds.left = left;
             bounds.top = top;
@@ -123,7 +141,8 @@ sf::FloatRect Group::getBounds() const {
     };
 
     // Lambda to compute the transformed bounds for a given drawable.
-    auto computeTransformedBounds = [&](const sf::Transformable *obj, const sf::FloatRect &localBounds) -> sf::FloatRect {
+    auto computeTransformedBounds = [&](const sf::Transformable *obj, const sf::FloatRect &localBounds) -> sf::FloatRect
+    {
         // Combine the group's transform with the object's own transform.
         sf::Transform combinedTransform = getTransform() * obj->getTransform();
 
@@ -132,12 +151,12 @@ sf::FloatRect Group::getBounds() const {
             combinedTransform.transformPoint(localBounds.left, localBounds.top),
             combinedTransform.transformPoint(localBounds.left + localBounds.width, localBounds.top),
             combinedTransform.transformPoint(localBounds.left, localBounds.top + localBounds.height),
-            combinedTransform.transformPoint(localBounds.left + localBounds.width, localBounds.top + localBounds.height)
-        };
+            combinedTransform.transformPoint(localBounds.left + localBounds.width, localBounds.top + localBounds.height)};
 
         float minX = points[0].x, maxX = points[0].x;
         float minY = points[0].y, maxY = points[0].y;
-        for (int i = 1; i < 4; ++i) {
+        for (int i = 1; i < 4; ++i)
+        {
             minX = std::min(minX, points[i].x);
             maxX = std::max(maxX, points[i].x);
             minY = std::min(minY, points[i].y);
@@ -147,21 +166,24 @@ sf::FloatRect Group::getBounds() const {
     };
 
     // Process each sf::Text object.
-    for (auto text : Texts) {
+    for (auto text : Texts)
+    {
         sf::FloatRect local = text->getLocalBounds();
         sf::FloatRect transformed = computeTransformedBounds(text, local);
         mergeBounds(transformed);
     }
 
     // Process each sf::Sprite object.
-    for (auto sprite : Sprites) {
+    for (auto sprite : Sprites)
+    {
         sf::FloatRect local = sprite->getLocalBounds();
         sf::FloatRect transformed = computeTransformedBounds(sprite, local);
         mergeBounds(transformed);
     }
 
     // Process each sf::Shape object.
-    for (auto shape : Shapes) {
+    for (auto shape : Shapes)
+    {
         sf::FloatRect local = shape->getLocalBounds();
         sf::FloatRect transformed = computeTransformedBounds(shape, local);
         mergeBounds(transformed);
@@ -170,6 +192,6 @@ sf::FloatRect Group::getBounds() const {
     // If the group is empty, return an empty rectangle.
     if (!hasBounds)
         return sf::FloatRect();
-        
+
     return bounds;
 }

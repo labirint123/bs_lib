@@ -23,22 +23,27 @@ int main()
     txt.setString("font check");
     txt.setFont(font);
 
-    std::vector<Group *> rects;
+    std::vector<Group *> groups;
     for (size_t i = 0; i < 4; ++i)
     {
-        rects.push_back(new Group());
+        groups.push_back(new Group());
         sf::RectangleShape *r = new sf::RectangleShape({80, 80});
         sf::Text *t = new sf::Text;
         t->setFont(font);
         t->setString("obj " + std::to_string(i));
-        t->setFillColor(sf::Color::Black);
+        t->setFillColor(sf::Color::Green);
+        t->setStyle(sf::Text::Bold);
         r->setFillColor(sf::Color::White);
 
         sf::FloatRect bounds = r->getLocalBounds();
-        rects[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
-        rects[i]->SetPosition({100, 100 * i + 100});
-        rects[i]->add(*r);
-        rects[i]->add(*t);
+        groups[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
+        groups[i]->SetPosition({100, 100 * i + 100});
+        groups[i]->add(*r);
+        groups[i]->add(*t);
+        groups[i]->onPositionChanged.connect([t](sf::Vector2f newPos) {
+            t->setString("pos: " + std::to_string((int)newPos.x) + ", " + std::to_string((int)newPos.y));
+        });
+        
     }
 
     std::vector<MoveAnim *> moveanims;
@@ -47,7 +52,7 @@ int main()
         moveanims.push_back(new MoveAnim);
         moveanims.at(i)->SetAnimationType((Animation::AnimationType)i);
         moveanims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
-        moveanims.at(i)->SetObj(rects.at(i));
+        moveanims.at(i)->SetObj(groups.at(i));
         moveanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
@@ -57,8 +62,8 @@ int main()
         rotateanims.push_back(new RotateAnim);
         rotateanims.at(i)->SetAnimationType((Animation::AnimationType)i);
 
-        rotateanims.at(i)->SetObj(rects.at(i));
-        rotateanims.at(i)->SetRotation(180);
+        rotateanims.at(i)->SetObj(groups.at(i));
+        rotateanims.at(i)->SetRotation(360);
         rotateanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
@@ -100,8 +105,9 @@ int main()
         {
             for (size_t i = 0; i < 4; i++)
             {
-                rects.at(i)->SetPosition({100, 100 * i + 100});
-                rects.at(i)->SetScale({1, 1});
+                groups.at(i)->SetPosition({100, 100 * i + 100});
+                groups.at(i)->SetScale({1, 1});
+                groups.at(i)->SetRotation(0);
                 rotateanims.at(i)->Start();
                 moveanims.at(i)->Start();
             }
@@ -111,7 +117,7 @@ int main()
 
         for (size_t i = 0; i < 4; i++)
         {
-            window.draw(*rects.at(i));
+            window.draw(*groups.at(i));
         }
         window.draw(txt);
         window.display();

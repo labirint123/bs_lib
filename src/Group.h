@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "Signal.h"
 
 class Group : public sf::Drawable
 {
@@ -18,6 +19,13 @@ protected:
     sf::Transform getTransform() const;
 
 public:
+    // Signals
+
+    Signal<sf::Vector2f> onPositionChanged;
+    Signal<float> onRotationChanged;
+    Signal<sf::Vector2f> onScaleChanged;
+    Signal<sf::Vector2f> onOriginChanged;
+
     // ADD
     void add(sf::Text &o);
     void add(sf::Sprite &o);
@@ -43,7 +51,8 @@ public:
     void SetOrigin(sf::Vector2f origin);
     sf::Vector2f GetOrigin() const;
     // BOUNDS
-    sf::FloatRect Group::getBounds() const;
+    sf::FloatRect getBounds() const;
+
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
