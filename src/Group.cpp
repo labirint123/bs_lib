@@ -2,126 +2,98 @@
 
 void Group::add(sf::Text &o)
 {
-    Texts.push_back(&o);
     drawables.push_back(&o);
 }
 
 void Group::add(sf::Sprite &o)
 {
-    Sprites.push_back(&o);
     drawables.push_back(&o);
 }
 
 void Group::add(sf::RectangleShape &o)
 {
-    Shapes.push_back(&o);
     drawables.push_back(&o);
 }
 
 void Group::add(sf::CircleShape &o)
 {
-    Shapes.push_back(&o);
     drawables.push_back(&o);
 }
 
-sf::Vector2f Group::GetPosition()
+
+sf::Vector2f Group::GetPosition() const
 {
     return Pos;
 }
 
 void Group::SetPosition(sf::Vector2f pos)
 {
-    sf::Vector2f spos = GetPosition();
-    move(pos - spos);
+    Pos = pos;
 }
 
 void Group::move(sf::Vector2f offset)
 {
-    for (size_t i = 0; i < Shapes.size(); i++)
-    {
-        Shapes[i]->move(offset);
-    }
-    for (size_t i = 0; i < Sprites.size(); i++)
-    {
-        Sprites[i]->move(offset);
-    }
-    for (size_t i = 0; i < Texts.size(); i++)
-    {
-        Texts[i]->move(offset);
-    }
-    this->Pos += offset;
-    this->Origin += offset;
+    Pos += offset;
 }
 
-int Group::GetRotation()
+
+float Group::GetRotation() const
 {
-    return this->Rotation;
+    return Rotation;
 }
 
 void Group::SetRotation(float rotation)
 {
-    rotate(rotation - this->Rotation);
-
+    Rotation = rotation;
 }
 
 void Group::rotate(float offset)
 {
-    for (size_t i = 0; i < Shapes.size(); i++)
-    {
-        Shapes[i]->rotate(offset);
-    }
-    for (size_t i = 0; i < Sprites.size(); i++)
-    {
-        Sprites[i]->rotate(offset);
-    }
-    for (size_t i = 0; i < Texts.size(); i++)
-    {
-        Texts[i]->rotate(offset);
-    }
-    this->Rotation += offset;
+    Rotation += offset;
 }
+
 
 void Group::SetScale(sf::Vector2f scale)
 {
-    this->scale(scale - this->Scale);
+    Scale = scale;
 }
 
-void Group::scale(sf::Vector2f scale)
+void Group::scale(sf::Vector2f factor)
 {
-    for (size_t i = 0; i < Shapes.size(); i++)
-    {
-        Shapes[i]->setOrigin(Origin);
-        Shapes[i]->scale(scale);
-    }
-    for (size_t i = 0; i < Sprites.size(); i++)
-    {
-        Sprites[i]->setOrigin(Origin);
-        Sprites[i]->scale(scale);
-    }
-    for (size_t i = 0; i < Texts.size(); i++)
-    {
-        Texts[i]->setOrigin(Origin);
-        Texts[i]->scale(scale);
-    }
+    Scale.x *= factor.x;
+    Scale.y *= factor.y;
 }
 
-sf::Vector2f Group::GetScale()
+sf::Vector2f Group::GetScale() const
 {
-    return this->Scale;
+    return Scale;
 }
+
 
 void Group::SetOrigin(sf::Vector2f origin)
 {
-    this->Origin = origin;
+    Origin = origin;
 }
 
-sf::Vector2f Group::GetOrigin()
+sf::Vector2f Group::GetOrigin() const
 {
     return Origin;
 }
 
+sf::Transform Group::getTransform() const
+{
+    sf::Transform transform;
+    transform.translate(Pos);
+    transform.rotate(Rotation);
+    transform.scale(Scale);
+    transform.translate(-Origin);
+    return transform;
+}
+
 void Group::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    states.transform *= getTransform();
+
     for (size_t i = 0; i < drawables.size(); i++)
     {
         target.draw(*drawables[i], states);

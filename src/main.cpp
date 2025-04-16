@@ -20,76 +20,57 @@ int main()
     sf::Font font;
     font.loadFromMemory(Raleway, Raleway_len);
     sf::Text txt;
-    txt.setString("hi, its example of how good \nc++ really is :)");
+    txt.setString("font check");
     txt.setFont(font);
 
-
-    std::vector<sf::RectangleShape*> rects;
+    std::vector<Group *> rects;
     for (size_t i = 0; i < 4; ++i)
     {
-        rects.push_back(new sf::RectangleShape({ 80, 80 }));
-        rects.back()->setFillColor(sf::Color::White);
+        rects.push_back(new Group());
+        sf::RectangleShape *r = new sf::RectangleShape({80, 80});
+        sf::Text *t = new sf::Text;
+        t->setFont(font);
+        t->setString("obj " + std::to_string(i));
+        t->setFillColor(sf::Color::Black);
+        r->setFillColor(sf::Color::White);
 
-        sf::FloatRect bounds = rects.back()->getLocalBounds();
-        rects.back()->setOrigin(bounds.width / 2.f, bounds.height / 2.f);
+        sf::FloatRect bounds = r->getLocalBounds();
+        rects[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
 
-        rects.back()->setPosition(100, 100 * i + 100);
+        rects[i]->SetPosition({100, 100 * i + 100});
+        rects[i]->add(*r);
+        rects[i]->add(*t);
+
     }
 
-    std::vector<MoveAnim *> anims;
+    std::vector<MoveAnim *> moveanims;
     for (size_t i = 0; i < 4; i++)
     {
-        anims.push_back(new MoveAnim);
-        anims.at(i)->SetAnimationType((Animation::AnimationType)i);
-        anims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
-        anims.at(i)->SetObj(*rects.at(i));
-        anims.at(i)->SetDeltaTime(sf::seconds(1));
+        moveanims.push_back(new MoveAnim);
+        moveanims.at(i)->SetAnimationType((Animation::AnimationType)i);
+        moveanims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
+        moveanims.at(i)->SetObj(rects.at(i));
+        moveanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-    std::vector<RotateAnim *> sizeanims;
+    std::vector<RotateAnim *> rotateanims;
     for (size_t i = 0; i < 4; i++)
     {
-        sizeanims.push_back(new RotateAnim);
-        sizeanims.at(i)->SetAnimationType((Animation::AnimationType)i);
+        rotateanims.push_back(new RotateAnim);
+        rotateanims.at(i)->SetAnimationType((Animation::AnimationType)i);
 
-        sizeanims.at(i)->SetObj(*rects.at(i));
-        sizeanims.at(i)->SetRotation(180);
-
-        // sizeanims.at(i)->SetCiclic(1);
-        sizeanims.at(i)->SetDeltaTime(sf::seconds(1));
+        rotateanims.at(i)->SetObj(rects.at(i));
+        rotateanims.at(i)->SetRotation(180);
+        rotateanims.at(i)->SetDeltaTime(sf::seconds(1));
     }
 
-    std::vector<ColorAnim *> colanims;
-    for (size_t i = 0; i < 4; i++)
+        for (size_t i = 0; i < 4; i++)
     {
-        colanims.push_back(new ColorAnim);
-        colanims.at(i)->SetAnimationType((Animation::AnimationType)i);
-
-        colanims.at(i)->SetObj(*rects.at(i));
-        colanims.at(i)->SetTarget(ColorAnim::Target::Fill);
-        colanims.at(i)->SetColor(sf::Color::Red);
-
-        colanims.at(i)->SetDeltaTime(sf::seconds(1));
+        moveanims.at(i)->Start();
+        rotateanims.at(i)->Start();
     }
 
-    for (size_t i = 0; i < 4; i++)
-    {
-        anims.at(i)->Start();
-        sizeanims.at(i)->Start();
-        colanims.at(i)->Start();
-    }
-
-    Group g;
-
-    sf::RectangleShape t;
-    t.setFillColor(sf::Color(10, 10, 10));
-    t.setSize({100, 100});
-    g.add(t);
-    sf::Text tx;
-    tx.setFont(font);
-    tx.setString("hi");
-    g.add(tx);
-    g.SetRotation(30);
+    
     sf::Clock c;
     c.restart();
     while (window.isOpen())
@@ -120,17 +101,12 @@ int main()
         }
         if (c.getElapsedTime().asSeconds() > 2)
         {
-            g.SetPosition({g.GetPosition().x + 10, g.GetPosition().y + 10});
             for (size_t i = 0; i < 4; i++)
             {
-                rects.at(i)->setPosition(100, 100 * i + 100);
-                rects.at(i)->setSize({80, 80});
-                rects.at(i)->setScale({1, 1});
-                rects.at(i)->setFillColor(sf::Color::White);
-                // std::cout << std::to_string(rects.at(i)->getPosition().x) << std::endl;
-                sizeanims.at(i)->Start();
-                anims.at(i)->Start();
-                colanims.at(i)->Start();
+                rects.at(i)->SetPosition({100, 100 * i + 100});               
+                rects.at(i)->SetScale({1, 1});                
+                rotateanims.at(i)->Start();
+                moveanims.at(i)->Start();
             }
             c.restart();
         }
@@ -140,7 +116,6 @@ int main()
         {
             window.draw(*rects.at(i));
         }
-        window.draw(g);
         window.draw(txt);
         window.display();
     }
