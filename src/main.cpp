@@ -11,6 +11,7 @@
 #include "RotateAnim.h"
 #include "Group.h"
 #include "RoundedRectangleShape.hpp"
+#include "Utils.hpp"
 
 int main()
 {
@@ -28,23 +29,30 @@ int main()
     for (size_t i = 0; i < 4; ++i)
     {
         groups.push_back(new Group());
-        sf::RectangleShape *r = new sf::RectangleShape({80, 80});
+        RoundedRectangleShape *r = new RoundedRectangleShape();        
+        r->setSize({80, 80});
+        r->setCornerRadius(20);
+        r->setFillColor(sf::Color::White);
+        r->setPosition({0, 0});
+
         sf::Text *t = new sf::Text;
         t->setFont(font);
+        t->setPosition({0, 0});
         t->setString("obj " + std::to_string(i));
         t->setFillColor(sf::Color::Green);
         t->setStyle(sf::Text::Bold);
-        r->setFillColor(sf::Color::White);
 
         sf::FloatRect bounds = r->getLocalBounds();
         groups[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
         groups[i]->SetPosition(sf::Vector2f(100, 100 * i + 100));
-        groups[i]->add(*r);
+        groups[i]->add(r);
         groups[i]->add(*t);
-        groups[i]->onPositionChanged.connect([t](sf::Vector2f newPos) {
-            t->setString("pos: " + std::to_string((int)newPos.x) + ", " + std::to_string((int)newPos.y));
-        });
-        
+        FitTextToWidth(*t, GetSize(r).x);
+
+        // groups[i]->onPositionChanged.connect([t](sf::Vector2f newPos) {
+        //     t->setString("pos: " + std::to_string((int)newPos.x) + ", " + std::to_string((int)newPos.y));
+
+        // });
     }
 
     std::vector<MoveAnim *> moveanims;
@@ -74,13 +82,13 @@ int main()
         rotateanims.at(i)->Start();
     }
 
+    Group gg;
     RoundedRectangleShape f;
-    f.setSize({100,100});
+    f.setSize({100, 100});
     f.setCornerRadius(20);
-    f.setFillColor(sf::Color(255,255,255,100));
-    f.setPosition({0,0});
-
-
+    f.setFillColor(sf::Color(255, 255, 255, 100));
+    f.setPosition({0, 0});
+    gg.add(&f);
     sf::Clock c;
     c.restart();
     while (window.isOpen())
@@ -128,7 +136,7 @@ int main()
             window.draw(*groups.at(i));
         }
         window.draw(txt);
-        window.draw(f);
+        window.draw(gg);
         window.display();
     }
 

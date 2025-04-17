@@ -24,6 +24,12 @@ void Group::add(sf::CircleShape &o)
     drawables.push_back(&o);
 }
 
+void Group::add(sf::Shape *o)
+{
+    Shapes.push_back(o);
+    drawables.push_back(o);
+}
+
 sf::Vector2f Group::GetPosition() const
 {
     return Pos;

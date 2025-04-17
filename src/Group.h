@@ -31,6 +31,7 @@ public:
     void add(sf::Sprite &o);
     void add(sf::RectangleShape &o);
     void add(sf::CircleShape &o);
+    void add(sf::Shape *o);
 
     // POS
     sf::Vector2f GetPosition() const;
