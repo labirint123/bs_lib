@@ -1,144 +1,55 @@
 #include <SFML/Graphics.hpp>
-#include "bs.h"
-#include "Animator.h"
-#include "Raleway.h"
-#include <vector>
+#include "DebugInfoUi.h"
+#include "Raleway.h"      // здесь лежит const char Raleway[], int Raleway_len
 #include <iostream>
-#include "MoveAnim.h"
-#include "ColorAnim.h"
-#include "ScaleAnim.h"
-#include "SizeAnim.h"
-#include "RotateAnim.h"
-#include "Group.h"
-#include "RoundedRectangleShape.hpp"
-#include "Utils.hpp"
-
 int main()
 {
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 16;
-    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!", sf::Style::Default, settings);
-    bs b;
-    b.bsInit();
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(
+        sf::VideoMode(800,600),
+        "DebugInfoUi Test",
+        sf::Style::Default,
+        settings
+    );
 
     sf::Font font;
-    font.loadFromMemory(Raleway, Raleway_len);
-    sf::Text txt;
-    txt.setString("font check");
-    txt.setFont(font);
-
-    std::vector<Group *> groups;
-    for (size_t i = 0; i < 4; ++i)
+    if (!font.loadFromMemory(Raleway, Raleway_len))
     {
-        groups.push_back(new Group());
-        RoundedRectangleShape *r = new RoundedRectangleShape();
-        r->setSize({80, 80});
-        r->setCornerRadius(20);
-        r->setFillColor(sf::Color::White);
-        r->setPosition({0, 0});
-
-        sf::Text *t = new sf::Text;
-        t->setFont(font);
-        t->setPosition({0, 0});
-        t->setString("obj " + std::to_string(i));
-        t->setFillColor(sf::Color::Green);
-        t->setStyle(sf::Text::Bold);
-
-        sf::FloatRect bounds = r->getLocalBounds();
-        groups[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
-        groups[i]->SetPosition(sf::Vector2f(100, 100 * i + 100));
-        groups[i]->add(r);
-        groups[i]->add(*t);
-        FitTextToWidth(*t, GetSize(r).x);
-
-        // groups[i]->onPositionChanged.connect([t](sf::Vector2f newPos) {
-        //     t->setString("pos: " + std::to_string((int)newPos.x) + ", " + std::to_string((int)newPos.y));
-
-        // });
+        std::cerr << "Failed to load embedded font\n";
+        return 1;
     }
 
-    std::vector<MoveAnim *> moveanims;
-    for (size_t i = 0; i < 4; i++)
-    {
-        moveanims.push_back(new MoveAnim);
-        moveanims.at(i)->SetAnimationType((Animation::AnimationType)i);
-        moveanims.at(i)->SetMoveOffset(sf::Vector2f(300, 0));
-        moveanims.at(i)->SetObj(groups.at(i));
-        moveanims.at(i)->SetDeltaTime(sf::seconds(1));
-    }
+    DebugInfoUi d;
+    d.SetFont(font);
 
-    std::vector<RotateAnim *> rotateanims;
-    for (size_t i = 0; i < 4; i++)
-    {
-        rotateanims.push_back(new RotateAnim);
-        rotateanims.at(i)->SetAnimationType((Animation::AnimationType)i);
+    d.SetPosition({10.f, 10.f});
 
-        rotateanims.at(i)->SetObj(groups.at(i));
-        rotateanims.at(i)->SetRotation(360);
-        rotateanims.at(i)->SetDeltaTime(sf::seconds(1));
-    }
+    parameter p("test", 0.f, sf::Color::White);
+    d.AddParameter(p);
 
-    for (size_t i = 0; i < 4; i++)
-    {
-        moveanims.at(i)->Start();
-        rotateanims.at(i)->Start();
-    }
+    d.Update();
 
-    Group gg;
-    RoundedRectangleShape f;
-    f.setSize({100, 100});
-    f.setCornerRadius(20);
-    f.setFillColor(sf::Color(255, 255, 255, 100));
-    f.setPosition({0, 0});
-    gg.add(&f);
-    sf::Clock c;
-    c.restart();
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
+        sf::Event e;
+        while (window.pollEvent(e))
         {
-            if (event.type == sf::Event::Closed)
-            {
+            if (e.type == sf::Event::Closed)
                 window.close();
-                bs::IsProgrammEnd = 1;
-            }
-            else
+            else if (e.type == sf::Event::TextEntered && e.text.unicode < 128)
             {
-                if (event.type == sf::Event::TextEntered)
+                char c = static_cast<char>(e.text.unicode);
+                if (std::isprint(c))
                 {
-                    if (event.text.unicode < 128)
-                    {
-                        char entered = static_cast<char>(event.text.unicode);
-
-                        if (std::isprint(entered))
-                        {
-                            Log(entered);
-                        }
-                    }
+                    p.value += 1.f;
+                    d.Update();
                 }
             }
         }
-        if (c.getElapsedTime().asSeconds() > 2)
-        {
-            for (size_t i = 0; i < 4; i++)
-            {
-                groups.at(i)->SetPosition(sf::Vector2f(100, 100 * i + 100));
-                groups.at(i)->SetScale({1, 1});
-                groups.at(i)->SetRotation(0);
-                rotateanims.at(i)->Start();
-                moveanims.at(i)->Start();
-            }
-            c.restart();
-        }
-        window.clear(sf::Color(20, 5, 5));
 
-        for (size_t i = 0; i < 4; i++)
-        {
-            window.draw(*groups.at(i));
-        }
-        window.draw(txt);
-        window.draw(gg);
+        window.clear(sf::Color(20,5,5));
+        window.draw(d);
         window.display();
     }
 
