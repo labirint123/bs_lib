@@ -13,7 +13,7 @@ set(RESOURCE
 
 get_filename_component(BASENAME ${RESOURCE} NAME_WE)
 set(HEADER "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}.h")
-
+ 
 add_custom_command(
     OUTPUT ${HEADER}
     COMMAND bin2c ${RESOURCE} ${HEADER} ${BASENAME}

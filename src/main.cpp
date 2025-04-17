@@ -15,7 +15,9 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 16;
+    sf::RenderWindow window(sf::VideoMode(1200, 800), "SFML works!", sf::Style::Default, settings);
     bs b;
     b.bsInit();
 
@@ -29,7 +31,7 @@ int main()
     for (size_t i = 0; i < 4; ++i)
     {
         groups.push_back(new Group());
-        RoundedRectangleShape *r = new RoundedRectangleShape();        
+        RoundedRectangleShape *r = new RoundedRectangleShape();
         r->setSize({80, 80});
         r->setCornerRadius(20);
         r->setFillColor(sf::Color::White);
