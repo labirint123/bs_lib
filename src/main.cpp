@@ -38,7 +38,7 @@ int main()
 
         sf::FloatRect bounds = r->getLocalBounds();
         groups[i]->SetOrigin({bounds.width / 2.f, bounds.height / 2.f});
-        groups[i]->SetPosition({100, 100 * i + 100});
+        groups[i]->SetPosition(sf::Vector2f(100, 100 * i + 100));
         groups[i]->add(*r);
         groups[i]->add(*t);
         groups[i]->onPositionChanged.connect([t](sf::Vector2f newPos) {
@@ -113,7 +113,7 @@ int main()
         {
             for (size_t i = 0; i < 4; i++)
             {
-                groups.at(i)->SetPosition({100, 100 * i + 100});
+                groups.at(i)->SetPosition(sf::Vector2f(100, 100 * i + 100));
                 groups.at(i)->SetScale({1, 1});
                 groups.at(i)->SetRotation(0);
                 rotateanims.at(i)->Start();

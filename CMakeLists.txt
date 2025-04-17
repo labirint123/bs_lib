@@ -39,8 +39,8 @@ add_executable(sfml-engine ${SRC_FILES} ${GENERATED_SOURCES})
 add_dependencies(sfml-engine embed_resources)
 
 # SFML
-# set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML") 
-# set(SFML_BIN_DIR "C:/libs/SFML-2.6.2/bin") 
+set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML") 
+set(SFML_BIN_DIR "C:/libs/SFML-2.6.2/bin") 
 find_package(SFML 2.6.2 REQUIRED COMPONENTS graphics window system audio)
 
 target_link_libraries(sfml-engine
@@ -53,6 +53,6 @@ target_link_libraries(sfml-engine
 if(WIN32)
     add_custom_command(TARGET sfml-engine POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        SFML_BIN_DIR $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
+        ${SFML_BIN_DIR} $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
     )
 endif()
