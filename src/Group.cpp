@@ -1,77 +1,73 @@
 #include "Group.h"
+#include <algorithm>
 
-void Group::add(sf::Text &o)
+void Group::add(sf::Text& o)
 {
     Texts.push_back(&o);
     drawables.push_back(&o);
 }
 
-void Group::add(sf::Sprite &o)
+void Group::add(sf::Sprite& o)
 {
     Sprites.push_back(&o);
     drawables.push_back(&o);
 }
 
-void Group::add(sf::RectangleShape &o)
+void Group::add(sf::RectangleShape& o)
 {
     Shapes.push_back(&o);
     drawables.push_back(&o);
 }
 
-void Group::add(sf::CircleShape &o)
+void Group::add(sf::CircleShape& o)
 {
     Shapes.push_back(&o);
     drawables.push_back(&o);
 }
 
-void Group::add(sf::Shape *o)
+void Group::add(sf::Shape* o)
 {
     Shapes.push_back(o);
     drawables.push_back(o);
 }
 
-sf::Vector2f Group::GetPosition() const
+void Group::add(sf::VertexArray& o)
 {
-    return Pos;
+    VertexArrays.push_back(&o);
+    drawables.push_back(&o);
 }
+
+sf::Vector2f Group::GetPosition() const { return Pos; }
 
 void Group::SetPosition(sf::Vector2f pos)
 {
-    if (pos != Pos)
-        onPositionChanged.emit(Pos);
+    if (pos != Pos) onPositionChanged.emit(pos);
     Pos = pos;
 }
 
 void Group::move(sf::Vector2f offset)
 {
     Pos += offset;
-    if (offset != sf::Vector2f(0, 0))
-        onPositionChanged.emit(Pos);
+    if (offset != sf::Vector2f(0.f,0.f)) onPositionChanged.emit(Pos);
 }
 
-float Group::GetRotation() const
-{
-    return Rotation;
-}
+float Group::GetRotation() const { return Rotation; }
 
 void Group::SetRotation(float rotation)
 {
-    if (Rotation != rotation)
-        onRotationChanged.emit(Rotation);
+    if (rotation != Rotation) onRotationChanged.emit(rotation);
     Rotation = rotation;
 }
 
 void Group::rotate(float offset)
 {
     Rotation += offset;
-    if (offset != 0)
-        onRotationChanged.emit(Rotation);
+    if (offset != 0.f) onRotationChanged.emit(Rotation);
 }
 
 void Group::SetScale(sf::Vector2f scale)
 {
-    if (scale != Scale)
-        onScaleChanged.emit(Scale);
+    if (scale != Scale) onScaleChanged.emit(scale);
     Scale = scale;
 }
 
@@ -79,125 +75,137 @@ void Group::scale(sf::Vector2f factor)
 {
     Scale.x *= factor.x;
     Scale.y *= factor.y;
-    if (factor != sf::Vector2f(1, 1))
-        onScaleChanged.emit(Scale);
+    if (factor != sf::Vector2f(1.f,1.f)) onScaleChanged.emit(Scale);
 }
 
-sf::Vector2f Group::GetScale() const
-{
-    return Scale;
-}
+sf::Vector2f Group::GetScale() const { return Scale; }
 
 void Group::SetOrigin(sf::Vector2f origin)
 {
-    if (origin != Origin)
-        onOriginChanged.emit(Origin);
+    if (origin != Origin) onOriginChanged.emit(origin);
     Origin = origin;
 }
 
-sf::Vector2f Group::GetOrigin() const
-{
-    return Origin;
-}
+sf::Vector2f Group::GetOrigin() const { return Origin; }
 
 sf::Transform Group::getTransform() const
 {
-    sf::Transform transform;
-    transform.translate(Pos);
-    transform.rotate(Rotation);
-    transform.scale(Scale);
-    transform.translate(-Origin);
-    return transform;
+    sf::Transform t;
+    t.translate(Pos);
+    t.rotate(Rotation);
+    t.scale(Scale);
+    t.translate(-Origin);
+    return t;
 }
 
-void Group::draw(sf::RenderTarget &target, sf::RenderStates states) const
+void Group::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     states.transform *= getTransform();
-
-    for (size_t i = 0; i < drawables.size(); i++)
-    {
-        target.draw(*drawables[i], states);
-    }
+    for (auto d : drawables)
+        target.draw(*d, states);
 }
 
 sf::FloatRect Group::getBounds() const
 {
+    bool has = false;
     sf::FloatRect bounds;
-    bool hasBounds = false;
-
-    // Helper lambda to merge a new rectangle into our overall bounds.
-    auto mergeBounds = [&](const sf::FloatRect &newBounds)
-    {
-        if (!hasBounds)
-        {
-            bounds = newBounds;
-            hasBounds = true;
-        }
-        else
-        {
-            float left = std::min(bounds.left, newBounds.left);
-            float top = std::min(bounds.top, newBounds.top);
-            float right = std::max(bounds.left + bounds.width, newBounds.left + newBounds.width);
-            float bottom = std::max(bounds.top + bounds.height, newBounds.top + newBounds.height);
-            bounds.left = left;
-            bounds.top = top;
-            bounds.width = right - left;
-            bounds.height = bottom - top;
+    auto merge = [&](const sf::FloatRect& r) {
+        if (!has) { bounds = r; has = true; }
+        else {
+            float l = std::min(bounds.left,   r.left);
+            float t = std::min(bounds.top,    r.top);
+            float rr= std::max(bounds.left + bounds.width,  r.left + r.width);
+            float bb= std::max(bounds.top  + bounds.height, r.top  + r.height);
+            bounds.left = l;
+            bounds.top  = t;
+            bounds.width = rr - l;
+            bounds.height= bb - t;
         }
     };
 
-    // Lambda to compute the transformed bounds for a given drawable.
-    auto computeTransformedBounds = [&](const sf::Transformable *obj, const sf::FloatRect &localBounds) -> sf::FloatRect
-    {
-        // Combine the group's transform with the object's own transform.
-        sf::Transform combinedTransform = getTransform() * obj->getTransform();
+    sf::Transform tr = getTransform();
 
-        // Transform the four corners of the local bounds.
-        sf::Vector2f points[4] = {
-            combinedTransform.transformPoint(localBounds.left, localBounds.top),
-            combinedTransform.transformPoint(localBounds.left + localBounds.width, localBounds.top),
-            combinedTransform.transformPoint(localBounds.left, localBounds.top + localBounds.height),
-            combinedTransform.transformPoint(localBounds.left + localBounds.width, localBounds.top + localBounds.height)};
-
-        float minX = points[0].x, maxX = points[0].x;
-        float minY = points[0].y, maxY = points[0].y;
-        for (int i = 1; i < 4; ++i)
-        {
-            minX = std::min(minX, points[i].x);
-            maxX = std::max(maxX, points[i].x);
-            minY = std::min(minY, points[i].y);
-            maxY = std::max(maxY, points[i].y);
+    // Texts
+    for (auto txt : Texts) {
+        auto lb = txt->getLocalBounds();
+        sf::Vector2f pts[4] = {
+            tr.transformPoint(lb.left, lb.top),
+            tr.transformPoint(lb.left+lb.width, lb.top),
+            tr.transformPoint(lb.left, lb.top+lb.height),
+            tr.transformPoint(lb.left+lb.width, lb.top+lb.height)
+        };
+        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        for (int i = 1; i < 4; ++i) {
+            r.left   = std::min(r.left,   pts[i].x);
+            r.top    = std::min(r.top,    pts[i].y);
+            r.width  = std::max(r.width,  pts[i].x - r.left);
+            r.height = std::max(r.height, pts[i].y - r.top);
         }
-        return sf::FloatRect(minX, minY, maxX - minX, maxY - minY);
-    };
-
-    // Process each sf::Text object.
-    for (auto text : Texts)
-    {
-        sf::FloatRect local = text->getLocalBounds();
-        sf::FloatRect transformed = computeTransformedBounds(text, local);
-        mergeBounds(transformed);
+        merge(r);
     }
 
-    // Process each sf::Sprite object.
-    for (auto sprite : Sprites)
-    {
-        sf::FloatRect local = sprite->getLocalBounds();
-        sf::FloatRect transformed = computeTransformedBounds(sprite, local);
-        mergeBounds(transformed);
+    // Sprites
+    for (auto sp : Sprites) {
+        auto lb = sp->getLocalBounds();
+        sf::Transform t2 = tr * sp->getTransform();
+        sf::Vector2f pts[4] = {
+            t2.transformPoint(lb.left, lb.top),
+            t2.transformPoint(lb.left+lb.width, lb.top),
+            t2.transformPoint(lb.left, lb.top+lb.height),
+            t2.transformPoint(lb.left+lb.width, lb.top+lb.height)
+        };
+        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        for (int i = 1; i < 4; ++i) {
+            r.left   = std::min(r.left,   pts[i].x);
+            r.top    = std::min(r.top,    pts[i].y);
+            r.width  = std::max(r.width,  pts[i].x - r.left);
+            r.height = std::max(r.height, pts[i].y - r.top);
+        }
+        merge(r);
     }
 
-    // Process each sf::Shape object.
-    for (auto shape : Shapes)
-    {
-        sf::FloatRect local = shape->getLocalBounds();
-        sf::FloatRect transformed = computeTransformedBounds(shape, local);
-        mergeBounds(transformed);
+    // Shapes
+    for (auto sh : Shapes) {
+        auto lb = sh->getLocalBounds();
+        sf::Transform t2 = tr * sh->getTransform();
+        sf::Vector2f pts[4] = {
+            t2.transformPoint(lb.left, lb.top),
+            t2.transformPoint(lb.left+lb.width, lb.top),
+            t2.transformPoint(lb.left, lb.top+lb.height),
+            t2.transformPoint(lb.left+lb.width, lb.top+lb.height)
+        };
+        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        for (int i = 1; i < 4; ++i) {
+            r.left   = std::min(r.left,   pts[i].x);
+            r.top    = std::min(r.top,    pts[i].y);
+            r.width  = std::max(r.width,  pts[i].x - r.left);
+            r.height = std::max(r.height, pts[i].y - r.top);
+        }
+        merge(r);
     }
 
-    // If the group is empty, return an empty rectangle.
-    if (!hasBounds)
-        return sf::FloatRect();
+    // VertexArrays
+    for (auto va : VertexArrays) {
+        sf::FloatRect r;
+        bool first = true;
+        sf::Transform t2 = tr;
+        std::size_t count = va->getVertexCount();
+        for (std::size_t i = 0; i < count; ++i) {
+            const sf::Vertex& v = (*va)[i];
+            auto p = t2.transformPoint(v.position);
+            if (first) {
+                r.left = p.x; r.top = p.y; r.width = r.height = 0.f;
+                first = false;
+            } else {
+                r.left   = std::min(r.left,   p.x);
+                r.top    = std::min(r.top,    p.y);
+                r.width  = std::max(r.width,  p.x - r.left);
+                r.height = std::max(r.height, p.y - r.top);
+            }
+        }
+        if (!first)
+            merge(r);
+    }
 
-    return bounds;
+    return has ? bounds : sf::FloatRect();
 }

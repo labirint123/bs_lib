@@ -1,45 +1,44 @@
 #pragma once
-#include <string>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Group.h"
 
-struct parameter
+struct Parameter
 {
-    std::string name = "???";
+    std::string name;
     float value = 0;
-    sf::Color color;
-    parameter(){}
-    parameter(std::string name,float value,sf::Color color){
-        this->color = color;
-        this->name = name;
-        this->value = value;
-    }
+    sf::Color color = sf::Color::White;
+    std::vector<std::pair<float, float>> history;
 };
 
-class DebugInfoUi : public Group
+class DebugInfoUi : public sf::Drawable
 {
+public:
+    DebugInfoUi();
+
+    void SetFont(const sf::Font &font);
+
+    int AddParameter(Parameter &p);
+
+    void SetTimeWindow(float seconds) { m_timeWindow = seconds; }
+
+    void Update();
+
 private:
     struct Element
     {
-        parameter* param;
+        Parameter *param = nullptr;
         sf::Text label;
-        sf::Text ValueText;
-        sf::Vector2f size;
-        std::vector<sf::RectangleShape> graphobjs;
-        sf::RectangleShape MainBg;
-        sf::RectangleShape GraphBg;
-    };    
-   sf::Font font;
-   sf::Time logTime = sf::seconds(1);
-public:
-    std::vector<Element*> elms;
-    int AddParameter(parameter &par);
-    int RemoveParameter(int index);
-    DebugInfoUi();
-    void Update();
-    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
-    void SetFont(sf::Font &font);
- 
-    
+        sf::Text valueText;
+        sf::RectangleShape graphBg;
+    };
+
+    std::vector<Element> m_elements;
+    sf::Font m_font;
+    sf::Clock m_clock;
+    float m_timeWindow = 5.f;
+    float m_margin = 5.f;
+    float m_graphHeight = 50.f;
+    float m_graphWidth = 200.f;
+
+    virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
