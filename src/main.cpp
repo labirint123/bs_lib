@@ -1,24 +1,22 @@
 #include <SFML/Graphics.hpp>
-#include "DebugInfoUi.h"
+#include "GraphWidget.h"
 #include "Raleway.h"
+#include "GraphWidget.h"
 int main()
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
     sf::RenderWindow window(sf::VideoMode(800, 600), "DebugInfoUi Test", sf::Style::Default, settings);
 
-
     sf::Font font;
-    font.loadFromMemory(Raleway,Raleway_len);
+    font.loadFromMemory(Raleway, Raleway_len);
 
-    Parameter fpsPar{"Frame Time in ms", 0.f, sf::Color::Cyan};
-
-
-    DebugInfoUi debugUi;
+    GraphWidget debugUi;
+    debugUi.SetGraphColor(sf::Color::White);
+    debugUi.SetLabel("Frame Time in ms");
     debugUi.SetFont(font);
-    debugUi.SetTimeWindow(1.f);
-    debugUi.AddParameter(fpsPar);
-
+    debugUi.SetTimeWindow(10);
+    debugUi.SetPosition({10,10});
     sf::Clock clock;
     float dt;
     while (window.isOpen())
@@ -28,11 +26,7 @@ int main()
             if (ev.type == sf::Event::Closed)
                 window.close();
 
-        dt = clock.restart().asSeconds() * 1000;
-        fpsPar.value = dt;
-        
-
-        debugUi.Update();
+        debugUi.Update(clock.restart().asSeconds() * 1000.f);
 
         window.clear(sf::Color(30, 30, 30));
         window.draw(debugUi);
