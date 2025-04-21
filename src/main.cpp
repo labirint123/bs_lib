@@ -1,37 +1,69 @@
 #include <SFML/Graphics.hpp>
 #include "GraphWidget.h"
 #include "Raleway.h"
-#include "GraphWidget.h"
+#include <cmath>
+
 int main()
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window(sf::VideoMode(800, 600), "DebugInfoUi Test", sf::Style::Default, settings);
+    sf::RenderWindow window({1920, 1080}, "GraphWidget Test", sf::Style::Default, settings);
 
     sf::Font font;
-    font.loadFromMemory(Raleway, Raleway_len);
+    if (!font.loadFromMemory(Raleway, Raleway_len))
+        return -1;
 
-    GraphWidget debugUi;
-    debugUi.SetGraphColor(sf::Color::White);
-    debugUi.SetLabel("Frame Time in ms");
-    debugUi.SetFont(font);
-    debugUi.SetTimeWindow(10);
-    debugUi.SetPosition({10,10});
+    float FrameTime = 0;
+    GraphWidget graph;
+    graph.SetFont(font);
+    graph.SetGraphColor(sf::Color::Green);
+    graph.SetLabel("Value");
+    graph.SetTimeWindow(5.f);
+    graph.SetPosition({10.f, 10.f});
+    graph.SetValue(FrameTime);
+
+    sf::Text fpsText("", font, 16);
+    fpsText.setPosition(10.f, 320.f);
+    fpsText.setFillColor(sf::Color::White);
+    sf::Clock fpsClock;
+    int fpsCounter = 0;
+    sf::Clock FrameTimer;
+
+    bool isdeb = 1;
+
     sf::Clock clock;
-    float dt;
     while (window.isOpen())
     {
         sf::Event ev;
         while (window.pollEvent(ev))
+        {
             if (ev.type == sf::Event::Closed)
                 window.close();
+            else if (ev.type == sf::Event::KeyReleased)
+            {
+                if (ev.key.code == sf::Keyboard::F3)
+                    isdeb = !isdeb;
+            }
+        }
 
-        debugUi.Update(clock.restart().asSeconds() * 1000.f);
+        if (fpsClock.getElapsedTime().asSeconds() >= 1.f)
+        {
+            fpsText.setString("FPS: " + std::to_string(fpsCounter));
+            fpsCounter = 0;
+            fpsClock.restart();
+        }
+        fpsCounter++;
 
-        window.clear(sf::Color(30, 30, 30));
-        window.draw(debugUi);
+        FrameTime = FrameTimer.restart().asSeconds() * 1000;
+        
+        window.clear({30, 30, 30});
+        if (isdeb)
+        {            
+            graph.Update();
+            window.draw(graph);
+        }        
+        window.draw(fpsText);
         window.display();
     }
-
     return 0;
 }
