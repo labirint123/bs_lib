@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "RoundedRectangleShape.hpp"
+#include "Group.h"
 
 enum Aligns
 {
@@ -19,21 +21,56 @@ enum Aligns
 };
 //  GET SIZE
 
-inline sf::Vector2f GetSize(const sf::Text &text)
-{
-    auto bounds = text.getLocalBounds();
-    return {bounds.getSize().x, bounds.getSize().y};
-}
-inline sf::Vector2f GetSize(const sf::Sprite &sprite)
-{
-    return {sprite.getGlobalBounds().getSize().x * sprite.getScale().x,
-            sprite.getGlobalBounds().getSize().y * sprite.getScale().y};
-}
 inline sf::Vector2f GetSize(const sf::Shape *shape)
 {
+    auto lb = shape->getLocalBounds();
+    return {lb.width, lb.height};
+}
 
-    return {shape->getLocalBounds().getSize().x * shape->getScale().x,
-            shape->getLocalBounds().getSize().y * shape->getScale().y};
+inline sf::Vector2f GetSize(const sf::RectangleShape &shape)
+{
+    return shape.getSize();
+}
+
+inline sf::Vector2f GetSize(const sf::CircleShape &shape)
+{
+    auto lb = shape.getLocalBounds();
+    return {lb.width, lb.height};
+}
+
+inline sf::Vector2f GetSize(const sf::ConvexShape &shape)
+{
+    auto lb = shape.getLocalBounds();
+    return {lb.width, lb.height};
+}
+
+inline sf::Vector2f GetSize(const sf::Sprite &sprite)
+{
+    auto lb = sprite.getLocalBounds();
+    return {lb.width, lb.height};
+}
+
+inline sf::Vector2f GetSize(const sf::Text &text)
+{
+    auto lb = text.getLocalBounds();
+    return {lb.width, lb.height};
+}
+
+inline sf::Vector2f GetSize(const Group &group)
+{
+    auto lb = group.getBounds();
+    return {lb.width, lb.height};
+}
+inline sf::Vector2f GetSize(const RoundedRectangleShape &rect)
+{
+    return rect.getSize();
+}
+
+template <typename T>
+auto GetSize(const T &item)
+    -> decltype(item.getSize())
+{
+    return item.getSize();
 }
 
 //  SET SIZE
