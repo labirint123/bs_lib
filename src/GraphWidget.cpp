@@ -103,6 +103,11 @@ void GraphWidget::draw(sf::RenderTarget &target, sf::RenderStates states) const 
     target.draw(cachedPolyline, states);
 }
 
+void GraphWidget::ClearData()
+{
+    this->history.clear();
+}
+
 void GraphWidget::rebuildPolyline() const {
     size_t n = history.size();
     cachedPolyline = sf::VertexArray(sf::LineStrip, n);
@@ -115,13 +120,21 @@ void GraphWidget::rebuildPolyline() const {
     sf::Time total = sf::seconds(0);
     for (auto &p : history)
         total += p.second;
-    if (total.asSeconds() <= 0.f)
-        total = sf::seconds(1.f);
 
     sf::Time acc = sf::seconds(0);
+
     for (size_t i = 0; i < n; ++i) {
         acc += history[i].second;
-        float x = w * (acc.asSeconds() / total.asSeconds());
+        float timestamp = acc.asSeconds();
+
+        float x;
+        if (total.asSeconds() < TimeWindow) {
+            x = w * (timestamp / TimeWindow);
+        } else {
+            float startOffset = total.asSeconds() - TimeWindow;
+            x = w * ((timestamp - startOffset) / TimeWindow);
+        }
+
         float norm = (history[i].first - minVal) / range;
         float y = h * (1.f - norm) + cachedLabelHeight + 5.f;
 

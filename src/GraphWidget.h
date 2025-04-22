@@ -16,10 +16,10 @@ public:
     void Update();
     void SetValue(float &value);
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
-    sf::Clock lastUpdate;
-
+    void ClearData();
 private:
-    float* value;
+    sf::Clock lastUpdate;
+    float *value;
     void rebuildPolyline() const;
 
     std::deque<std::pair<float, sf::Time>> history;

@@ -7,7 +7,7 @@ int main()
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window({1920, 1080}, "GraphWidget Test", sf::Style::Default, settings);
+    sf::RenderWindow window({1920, 1080}, "GraphWidget Test", sf::Style::Fullscreen, settings);
 
     sf::Font font;
     if (!font.loadFromMemory(Raleway, Raleway_len))
@@ -42,7 +42,10 @@ int main()
             else if (ev.type == sf::Event::KeyReleased)
             {
                 if (ev.key.code == sf::Keyboard::F3)
+                {
                     isdeb = !isdeb;
+                    graph.ClearData();
+                }
             }
         }
 
@@ -55,13 +58,13 @@ int main()
         fpsCounter++;
 
         FrameTime = FrameTimer.restart().asSeconds() * 1000;
-        
+
         window.clear({30, 30, 30});
         if (isdeb)
-        {            
+        {
             graph.Update();
             window.draw(graph);
-        }        
+        }
         window.draw(fpsText);
         window.display();
     }
