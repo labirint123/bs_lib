@@ -12,6 +12,7 @@ protected:
     std::vector<sf::Sprite *> Sprites;
     std::vector<sf::Shape *> Shapes;
     std::vector<sf::VertexArray *> VertexArrays;
+    std::vector<Group *> Groups;
 
     sf::Vector2f Pos = {0.f, 0.f};
     float Rotation = 0.f;
@@ -34,7 +35,7 @@ public:
     void add(sf::CircleShape &o);
     void add(sf::Shape *o);
     void add(sf::VertexArray &o);
-
+    void add(Group &o);
     // POS
     sf::Vector2f GetPosition() const;
     void SetPosition(sf::Vector2f pos);

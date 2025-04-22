@@ -2,22 +2,52 @@
 #include "GraphWidget.h"
 #include "Raleway.h"
 #include <cmath>
+#include "RoundedRectangleShape.hpp"
+#include "Utils.hpp"
+#include "Log.h"
 
 int main()
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 4;
-    sf::RenderWindow window({1920, 1080}, "GraphWidget Test", sf::Style::Fullscreen, settings);
+    sf::RenderWindow window({1600, 900}, "GraphWidget Test", sf::Style::Default, settings);
 
     sf::Font font;
     if (!font.loadFromMemory(Raleway, Raleway_len))
         return -1;
 
+    float rectsizes = 100;
+    float margin = 20;
+
+    std::vector<Group> grps(13);
+    for (size_t i = 0; i < grps.size(); i++)
+    {
+        auto *r = new RoundedRectangleShape();
+        r->setSize({rectsizes, rectsizes});
+        grps[i].add(r);
+
+        grps[i].SetPosition({(rectsizes + margin) * i, 0});
+
+        auto *v = new RoundedRectangleShape();
+        v->setSize({rectsizes / 3.f, rectsizes / 3.f});
+        v->setFillColor(sf::Color::Red);
+
+        grps[i].add(v);
+
+        Align(*v, r->getSize(), {0.f, 0.f}, (Aligns)i);
+    }
+    Group all;
+    for (size_t i = 0; i < grps.size(); i++)
+    {
+        all.add(grps[i]);
+    }
+    Align(all, {(float)window.getSize().x, (float)window.getSize().y}, {0, 0}, Center);
+
     float FrameTime = 0;
     GraphWidget graph;
     graph.SetFont(font);
     graph.SetGraphColor(sf::Color::Green);
-    graph.SetLabel("Value");
+    graph.SetLabel("frameTime in ms");
     graph.SetTimeWindow(5.f);
     graph.SetPosition({10.f, 10.f});
     graph.SetValue(FrameTime);
@@ -66,6 +96,7 @@ int main()
             window.draw(graph);
         }
         window.draw(fpsText);
+        window.draw(all);
         window.display();
     }
     return 0;

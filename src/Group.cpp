@@ -1,6 +1,6 @@
 #include "Group.h"
 #include <algorithm>
-
+#include "Log.h"
 void Group::add(sf::Text& o)
 {
     Texts.push_back(&o);
@@ -34,6 +34,12 @@ void Group::add(sf::Shape* o)
 void Group::add(sf::VertexArray& o)
 {
     VertexArrays.push_back(&o);
+    drawables.push_back(&o);
+}
+
+void Group::add(Group &o)
+{
+    Groups.push_back(&o);
     drawables.push_back(&o);
 }
 
@@ -109,32 +115,36 @@ sf::FloatRect Group::getBounds() const
 {
     bool has = false;
     sf::FloatRect bounds;
+
     auto merge = [&](const sf::FloatRect& r) {
-        if (!has) { bounds = r; has = true; }
-        else {
-            float l = std::min(bounds.left,   r.left);
-            float t = std::min(bounds.top,    r.top);
-            float rr= std::max(bounds.left + bounds.width,  r.left + r.width);
-            float bb= std::max(bounds.top  + bounds.height, r.top  + r.height);
-            bounds.left = l;
-            bounds.top  = t;
-            bounds.width = rr - l;
-            bounds.height= bb - t;
+        if (!has) {
+            bounds = r;
+            has = true;
+        } else {
+            float l  = std::min(bounds.left,             r.left);
+            float t  = std::min(bounds.top,              r.top);
+            float rr = std::max(bounds.left + bounds.width,  r.left + r.width);
+            float bb = std::max(bounds.top  + bounds.height, r.top  + r.height);
+            bounds.left   = l;
+            bounds.top    = t;
+            bounds.width  = rr - l;
+            bounds.height = bb - t;
         }
     };
 
+    // Трансформация этой группы
     sf::Transform tr = getTransform();
 
     // Texts
     for (auto txt : Texts) {
         auto lb = txt->getLocalBounds();
         sf::Vector2f pts[4] = {
-            tr.transformPoint(lb.left, lb.top),
-            tr.transformPoint(lb.left+lb.width, lb.top),
-            tr.transformPoint(lb.left, lb.top+lb.height),
-            tr.transformPoint(lb.left+lb.width, lb.top+lb.height)
+            tr.transformPoint(lb.left,             lb.top),
+            tr.transformPoint(lb.left + lb.width,  lb.top),
+            tr.transformPoint(lb.left,             lb.top + lb.height),
+            tr.transformPoint(lb.left + lb.width,  lb.top + lb.height)
         };
-        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        sf::FloatRect r{ pts[0].x, pts[0].y, 0.f, 0.f };
         for (int i = 1; i < 4; ++i) {
             r.left   = std::min(r.left,   pts[i].x);
             r.top    = std::min(r.top,    pts[i].y);
@@ -149,12 +159,12 @@ sf::FloatRect Group::getBounds() const
         auto lb = sp->getLocalBounds();
         sf::Transform t2 = tr * sp->getTransform();
         sf::Vector2f pts[4] = {
-            t2.transformPoint(lb.left, lb.top),
-            t2.transformPoint(lb.left+lb.width, lb.top),
-            t2.transformPoint(lb.left, lb.top+lb.height),
-            t2.transformPoint(lb.left+lb.width, lb.top+lb.height)
+            t2.transformPoint(lb.left,             lb.top),
+            t2.transformPoint(lb.left + lb.width,  lb.top),
+            t2.transformPoint(lb.left,             lb.top + lb.height),
+            t2.transformPoint(lb.left + lb.width,  lb.top + lb.height)
         };
-        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        sf::FloatRect r{ pts[0].x, pts[0].y, 0.f, 0.f };
         for (int i = 1; i < 4; ++i) {
             r.left   = std::min(r.left,   pts[i].x);
             r.top    = std::min(r.top,    pts[i].y);
@@ -164,17 +174,36 @@ sf::FloatRect Group::getBounds() const
         merge(r);
     }
 
-    // Shapes
+    // Shapes (RectangleShape, CircleShape и др.)
     for (auto sh : Shapes) {
         auto lb = sh->getLocalBounds();
         sf::Transform t2 = tr * sh->getTransform();
         sf::Vector2f pts[4] = {
-            t2.transformPoint(lb.left, lb.top),
-            t2.transformPoint(lb.left+lb.width, lb.top),
-            t2.transformPoint(lb.left, lb.top+lb.height),
-            t2.transformPoint(lb.left+lb.width, lb.top+lb.height)
+            t2.transformPoint(lb.left,             lb.top),
+            t2.transformPoint(lb.left + lb.width,  lb.top),
+            t2.transformPoint(lb.left,             lb.top + lb.height),
+            t2.transformPoint(lb.left + lb.width,  lb.top + lb.height)
         };
-        sf::FloatRect r{pts[0].x, pts[0].y, 0.f, 0.f};
+        sf::FloatRect r{ pts[0].x, pts[0].y, 0.f, 0.f };
+        for (int i = 1; i < 4; ++i) {
+            r.left   = std::min(r.left,   pts[i].x);
+            r.top    = std::min(r.top,    pts[i].y);
+            r.width  = std::max(r.width,  pts[i].x - r.left);
+            r.height = std::max(r.height, pts[i].y - r.top);
+        }
+        merge(r);
+    }
+
+    // Вложенные группы — берём их свои bounds и применяем только трансформ этой группы
+    for (auto grp : Groups) {
+        sf::FloatRect lb = grp->getBounds();  // уже содержит преобразования grp
+        sf::Vector2f pts[4] = {
+            tr.transformPoint(lb.left,             lb.top),
+            tr.transformPoint(lb.left + lb.width,  lb.top),
+            tr.transformPoint(lb.left,             lb.top + lb.height),
+            tr.transformPoint(lb.left + lb.width,  lb.top + lb.height)
+        };
+        sf::FloatRect r{ pts[0].x, pts[0].y, 0.f, 0.f };
         for (int i = 1; i < 4; ++i) {
             r.left   = std::min(r.left,   pts[i].x);
             r.top    = std::min(r.top,    pts[i].y);
@@ -186,13 +215,10 @@ sf::FloatRect Group::getBounds() const
 
     // VertexArrays
     for (auto va : VertexArrays) {
-        sf::FloatRect r;
         bool first = true;
-        sf::Transform t2 = tr;
-        std::size_t count = va->getVertexCount();
-        for (std::size_t i = 0; i < count; ++i) {
-            const sf::Vertex& v = (*va)[i];
-            auto p = t2.transformPoint(v.position);
+        sf::FloatRect r;
+        for (std::size_t i = 0; i < va->getVertexCount(); ++i) {
+            auto p = tr.transformPoint((*va)[i].position);
             if (first) {
                 r.left = p.x; r.top = p.y; r.width = r.height = 0.f;
                 first = false;
