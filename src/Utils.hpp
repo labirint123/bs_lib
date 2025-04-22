@@ -139,7 +139,7 @@ inline void Align(Group &item, sf::Vector2f targetSize, sf::Vector2f targetPosit
 template <typename T>
 inline void Align(T &item, const sf::Vector2f &targetSize, const sf::Vector2f &targetPosition, Aligns align)
 {
-    const auto itemSize = item.getSize();
+    const auto itemSize = GetSize(item);
     const auto itemPos = item.getPosition();
     const auto aligned = GetAlignedPosition(
         targetSize,
