@@ -26,36 +26,30 @@ inline sf::Vector2f GetSize(const sf::Shape *shape)
     auto lb = shape->getLocalBounds();
     return {lb.width, lb.height};
 }
-
 inline sf::Vector2f GetSize(const sf::RectangleShape &shape)
 {
     return shape.getSize();
 }
-
 inline sf::Vector2f GetSize(const sf::CircleShape &shape)
 {
     auto lb = shape.getLocalBounds();
     return {lb.width, lb.height};
 }
-
 inline sf::Vector2f GetSize(const sf::ConvexShape &shape)
 {
     auto lb = shape.getLocalBounds();
     return {lb.width, lb.height};
 }
-
 inline sf::Vector2f GetSize(const sf::Sprite &sprite)
 {
     auto lb = sprite.getLocalBounds();
     return {lb.width, lb.height};
 }
-
 inline sf::Vector2f GetSize(const sf::Text &text)
 {
     auto lb = text.getLocalBounds();
     return {lb.width, lb.height};
 }
-
 inline sf::Vector2f GetSize(const Group &group)
 {
     auto lb = group.getBounds();
@@ -65,7 +59,6 @@ inline sf::Vector2f GetSize(const RoundedRectangleShape &rect)
 {
     return rect.getSize();
 }
-
 template <typename T>
 auto GetSize(const T &item)
     -> decltype(item.getSize())

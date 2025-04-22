@@ -15,7 +15,8 @@ public:
 
     virtual ~Animation() = default;
 
-    bool Start();
+    int Start(); 
+    bool Start(unsigned int ThreadId);
     void Abort() { isAborted = 1; }
 
     void SetAnimationType(AnimationType type) { this->type = type; }
