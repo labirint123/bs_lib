@@ -20,7 +20,7 @@ void UsesTransformable::SetPosition(sf::Vector2f pos)
     }
     else if (gobj != nullptr)
     {
-        return gobj->SetPosition(pos);
+        return gobj->setPosition(pos);
     }
 }
 
@@ -44,7 +44,7 @@ void UsesTransformable::SetRotation(float rotation)
     }
     else if (gobj != nullptr)
     {
-        return gobj->SetRotation(rotation);
+        return gobj->setRotation(rotation);
     }
 }
 
@@ -68,7 +68,7 @@ void UsesTransformable::SetScale(sf::Vector2f scale)
     }
     else if (gobj != nullptr)
     {
-        return gobj->SetScale(scale);
+        return gobj->setScale(scale);
     }
 }
 
@@ -80,6 +80,6 @@ sf::Vector2f UsesTransformable::GetScale()
     }
     else if (gobj != nullptr)
     {
-        return gobj->GetScale();
+        return gobj->getScale();
     }
 }

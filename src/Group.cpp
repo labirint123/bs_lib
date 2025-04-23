@@ -43,9 +43,9 @@ void Group::add(Group &o)
     drawables.push_back(&o);
 }
 
-sf::Vector2f Group::GetPosition() const { return Pos; }
+sf::Vector2f Group::getPosition() const { return Pos; }
 
-void Group::SetPosition(sf::Vector2f pos)
+void Group::setPosition(sf::Vector2f pos)
 {
     if (pos != Pos) onPositionChanged.emit(pos);
     Pos = pos;
@@ -57,9 +57,9 @@ void Group::move(sf::Vector2f offset)
     if (offset != sf::Vector2f(0.f,0.f)) onPositionChanged.emit(Pos);
 }
 
-float Group::GetRotation() const { return Rotation; }
+float Group::getRotation() const { return Rotation; }
 
-void Group::SetRotation(float rotation)
+void Group::setRotation(float rotation)
 {
     if (rotation != Rotation) onRotationChanged.emit(rotation);
     Rotation = rotation;
@@ -71,7 +71,7 @@ void Group::rotate(float offset)
     if (offset != 0.f) onRotationChanged.emit(Rotation);
 }
 
-void Group::SetScale(sf::Vector2f scale)
+void Group::setScale(sf::Vector2f scale)
 {
     if (scale != Scale) onScaleChanged.emit(scale);
     Scale = scale;
@@ -84,7 +84,7 @@ void Group::scale(sf::Vector2f factor)
     if (factor != sf::Vector2f(1.f,1.f)) onScaleChanged.emit(Scale);
 }
 
-sf::Vector2f Group::GetScale() const { return Scale; }
+sf::Vector2f Group::getScale() const { return Scale; }
 
 void Group::SetOrigin(sf::Vector2f origin)
 {

@@ -59,6 +59,10 @@ inline sf::Vector2f GetSize(const RoundedRectangleShape &rect)
 {
     return rect.getSize();
 }
+inline sf::Vector2f GetSize(const sf::RenderWindow &win)
+{
+    return {(float)win.getSize().x, (float)win.getSize().y};
+}
 template <typename T>
 auto GetSize(const T &item)
     -> decltype(item.getSize())
@@ -163,7 +167,7 @@ inline sf::Vector2f GetAlignedPosition(
 
 inline void Align(Group &item, sf::Vector2f targetSize, sf::Vector2f targetPosition, Aligns Align)
 {
-    item.SetPosition(GetAlignedPosition(targetSize, targetPosition, item.getBounds().getSize(), item.GetPosition(), Align));
+    item.setPosition(GetAlignedPosition(targetSize, targetPosition, item.getBounds().getSize(), item.getPosition(), Align));
 }
 
 template <typename T>
@@ -179,3 +183,37 @@ inline void Align(T &item, const sf::Vector2f &targetSize, const sf::Vector2f &t
         align);
     item.setPosition(aligned);
 }
+
+template <typename T>
+inline void Align(T &item, const sf::RenderWindow &win, Aligns align)
+{
+    const auto itemSize = GetSize(item);
+    const auto itemPos = item.getPosition();
+    const auto aligned = GetAlignedPosition(
+        GetSize(win),
+        {0.f,0.f},
+        itemSize,
+        itemPos,
+        align);
+    item.setPosition(aligned);
+}
+
+template <
+    typename ItemT,
+    typename TargetT 
+>
+inline void Align(ItemT &item, const TargetT &target, Aligns align)
+{
+    const auto itemSize = GetSize(item);
+    const auto itemPos = item.getPosition();
+    const auto targetSize = GetSize(target);
+    const auto targetPosition = target.getPosition();
+    const auto aligned = GetAlignedPosition(
+        targetSize,
+        targetPosition,
+        itemSize,
+        itemPos,
+        align);
+    item.setPosition(aligned);
+}
+

@@ -37,19 +37,19 @@ public:
     void add(sf::VertexArray &o);
     void add(Group &o);
     // POS
-    sf::Vector2f GetPosition() const;
-    void SetPosition(sf::Vector2f pos);
+    sf::Vector2f getPosition() const;
+    void setPosition(sf::Vector2f pos);
     void move(sf::Vector2f offset);
 
     // ROTATION
-    float GetRotation() const;
-    void SetRotation(float rotation);
+    float getRotation() const;
+    void setRotation(float rotation);
     void rotate(float offset);
 
     // SCALE
-    void SetScale(sf::Vector2f scale);
+    void setScale(sf::Vector2f scale);
     void scale(sf::Vector2f factor);
-    sf::Vector2f GetScale() const;
+    sf::Vector2f getScale() const;
 
     // ORIGIN
     void SetOrigin(sf::Vector2f origin);

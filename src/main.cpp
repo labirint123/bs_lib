@@ -26,7 +26,7 @@ int main()
         r->setSize({rectsizes, rectsizes});
         grps[i].add(r);
 
-        grps[i].SetPosition({(rectsizes + margin) * i, 0});
+        grps[i].setPosition({(rectsizes + margin) * i, 0});
 
         auto *v = new RoundedRectangleShape();
         v->setSize({rectsizes / 3.f, rectsizes / 3.f});
@@ -34,14 +34,14 @@ int main()
 
         grps[i].add(v);
 
-        Align(*v, r->getSize(), {0.f, 0.f}, (Aligns)i);
+        Align(*v, *r, (Aligns)i);
     }
     Group all;
     for (size_t i = 0; i < grps.size(); i++)
     {
         all.add(grps[i]);
     }
-    Align(all, {(float)window.getSize().x, (float)window.getSize().y}, {0, 0}, Center);
+    Align(all, window, Center);
 
     float FrameTime = 0;
     GraphWidget graph;
@@ -49,7 +49,7 @@ int main()
     graph.SetGraphColor(sf::Color::Green);
     graph.SetLabel("frameTime in ms");
     graph.SetTimeWindow(5.f);
-    graph.SetPosition({10.f, 10.f});
+    graph.setPosition({10.f, 10.f});
     graph.SetValue(FrameTime);
 
     sf::Text fpsText("", font, 16);
