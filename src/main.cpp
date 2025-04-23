@@ -1,15 +1,20 @@
 #include <SFML/Graphics.hpp>
+#include "ViewAnim.h"
 #include "GraphWidget.h"
 #include "Raleway.h"
 #include <cmath>
 #include "RoundedRectangleShape.hpp"
 #include "Utils.hpp"
 #include "Log.h"
+#include "bs.h"
 
 int main()
 {
+    bs eng;
+    eng.bsInit();
+
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 4;
+    settings.antialiasingLevel = 16;
     sf::RenderWindow window({1600, 900}, "GraphWidget Test", sf::Style::Default, settings);
 
     sf::Font font;
@@ -25,13 +30,13 @@ int main()
         auto *r = new RoundedRectangleShape();
         r->setSize({rectsizes, rectsizes});
         grps[i].add(r);
-
+        r->setCornerRadius(rectsizes / 4);
         grps[i].setPosition({(rectsizes + margin) * i, 0});
 
         auto *v = new RoundedRectangleShape();
         v->setSize({rectsizes / 3.f, rectsizes / 3.f});
         v->setFillColor(sf::Color::Red);
-
+        v->setCornerRadius(rectsizes / 3 / 4);
         grps[i].add(v);
 
         Align(*v, *r, (Aligns)i);
@@ -42,6 +47,14 @@ int main()
         all.add(grps[i]);
     }
     Align(all, window, Center);
+
+    sf::View vi(window.getDefaultView());
+    ViewAnim va;
+    va.SetObj(vi);
+    va.SetAnimationType(Animation::AnimationType::easeInOutCubic);
+    va.SetDeltaTime(sf::seconds(1));
+    va.SetMoveOffset({50, 0});
+    // va.SetRotationOffset(50);
 
     float FrameTime = 0;
     GraphWidget graph;
@@ -60,17 +73,29 @@ int main()
     sf::Clock FrameTimer;
 
     bool isdeb = 1;
-
+    
     sf::Clock clock;
-    while (window.isOpen())
+    while (!eng.IsProgrammEnd)
     {
         sf::Event ev;
         while (window.pollEvent(ev))
         {
             if (ev.type == sf::Event::Closed)
+            {
+                eng.IsProgrammEnd = 1;
                 window.close();
+            }
             else if (ev.type == sf::Event::KeyReleased)
             {
+                if (ev.key.code == sf::Keyboard::F)
+                {
+                    va.Start();
+                }
+                if (ev.key.code == sf::Keyboard::Q)
+                {
+                    eng.IsProgrammEnd = 1;
+                    window.close();
+                }
                 if (ev.key.code == sf::Keyboard::F3)
                 {
                     isdeb = !isdeb;
@@ -78,7 +103,7 @@ int main()
                 }
             }
         }
-
+        window.setView(vi);
         if (fpsClock.getElapsedTime().asSeconds() >= 1.f)
         {
             fpsText.setString("FPS: " + std::to_string(fpsCounter));
