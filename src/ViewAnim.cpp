@@ -26,16 +26,16 @@ void ViewAnim::SetFinalRotation(float Rotation)
 
 void ViewAnim::SetFinalPosition(sf::Vector2i CenterPos)
 {
-    MoveOffset = {CenterPos.x - view->getCenter().x,
-                  CenterPos.y - view->getCenter().y};
+    MoveOffset = {(int)(CenterPos.x - view->getCenter().x),
+                  (int)(CenterPos.y - view->getCenter().y)};
 }
 
 void ViewAnim::MakeAMove(float UpdatedProgress)
 {
     float diffP = UpdatedProgress - this->LastProgress;
 
-    sf::Vector2i totalMove = {MoveOffset.x * UpdatedProgress,
-                              MoveOffset.y * UpdatedProgress};
+    sf::Vector2i totalMove = {(int)(MoveOffset.x * UpdatedProgress),
+                              (int)(MoveOffset.y * UpdatedProgress)};
     sf::Vector2i deltaMove = totalMove - PassedMove;
 
     float totalRotate = RotationOffset * UpdatedProgress;
