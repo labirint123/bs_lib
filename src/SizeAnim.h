@@ -4,6 +4,9 @@
 
 class SizeAnim : public Animation
 {
+protected:
+    Animation *Clone() const override { return new SizeAnim(*this); }
+
 private:
     sf::RectangleShape *RectShapeObj;
     sf::CircleShape *CircShapeObj;
@@ -15,6 +18,7 @@ private:
     void SetObjSize(sf::Vector2f size);
     sf::Vector2f GetObjSize();
     void ToDoAtStart() override;
+
 public:
     void MakeAMove(float UpdatedProgress) override;
     void SetObj(sf::Sprite &obj);

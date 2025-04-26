@@ -8,6 +8,7 @@ class ScaleAnim : public Animation, public UsesTransformable
 private:
     void MakeAMove(float UpdatedProgress) override;
     void ToDoAtStart() override;
+    Animation *Clone() const override { return new ScaleAnim(*this); }
 
 public:
     void SetScaleOffset(sf::Vector2f ScaleOffset);

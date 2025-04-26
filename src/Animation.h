@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/System.hpp>
+#include <vector>
 
 class Animator;
 class Animation
@@ -15,8 +16,9 @@ public:
 
     virtual ~Animation() = default;
 
-    int Start(); 
+    int Start();
     bool Start(unsigned int ThreadId);
+    int StartClone();
     void Abort() { isAborted = 1; }
 
     void SetAnimationType(AnimationType type) { this->type = type; }
@@ -42,5 +44,8 @@ protected:
     bool isCiclic = 0;
     sf::Clock timePassed;
     float LastProgress = 0;
+    std::vector<Animation *> Cloned;
+    virtual Animation *Clone() const = 0;
+
     friend Animator;
 };

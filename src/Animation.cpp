@@ -14,8 +14,6 @@ int Animation::Start()
         return 0;
     }
     this->LastProgress = 0;
-    this->timePassed.restart();
-
     int min = 0;
     unsigned int minTasks = Animator::thread_pool.at(0)->TasksCount;
 
@@ -29,6 +27,7 @@ int Animation::Start()
         }
     }
     Animator::thread_pool.at(min)->TasksCount++;
+    this->timePassed.restart();
     Animator::thread_pool.at(min)->animations.push_back(this);
     isStarted = 1;
     return min;
@@ -54,4 +53,27 @@ bool Animation::Start(unsigned int ThreadId)
     isStarted = 1;
 
     return false;
+}
+
+int Animation::StartClone()
+{
+    Animation *clone = this->Clone(); 
+    this->Cloned.push_back(clone);
+    int ret = clone->Start();
+    for (size_t i = 0; i < Cloned.size(); i++)
+    {
+        if (Cloned[i] == nullptr)
+        {
+            Cloned.erase(Cloned.begin() + i);
+            continue;
+        }
+        else if (Cloned[i]->IsFinished() || Cloned[i]->IsAborted())
+        {
+            delete Cloned[i];
+            Cloned[i] = nullptr;
+            Cloned.erase(Cloned.begin() + i);
+        }
+    }
+
+    return ret;
 }

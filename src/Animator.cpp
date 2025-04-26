@@ -31,6 +31,10 @@ void Animator::StartCicle(const int ThreadIndex)
     {
         for (size_t i = 0; i < anims->size(); i++)
         {
+            if (anims->at(i) == nullptr){
+                anims->erase(anims->begin() + i);
+                continue;
+            }
             if (anims->at(i)->timePassed.getElapsedTime().asSeconds() >= anims->at(i)->DeltaTime.asSeconds())
             {
                 anims->at(i)->MakeAMove(1);

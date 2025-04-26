@@ -11,5 +11,6 @@ public:
     void SetRotation(float offset);
 
 private:
+    Animation *Clone() const override { return new RotateAnim(*this); }
     float rotateDiff;
 };

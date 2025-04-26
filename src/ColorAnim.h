@@ -20,6 +20,7 @@ public:
 protected:
     void MakeAMove(float UpdatedProgress) override;
     void ToDoAtStart() override;
+    Animation *Clone() const override { return new ColorAnim(*this); }
 
 private:
     void AdjustColor(int r, int g, int b);

@@ -12,7 +12,7 @@ private:
     sf::Vector2i MoveOffset = {0, 0};
     sf::View *view;
     void ToDoAtStart() override;
-
+    Animation *Clone() const override { return new ViewAnim(*this); }
 public:
     void SetZoomOffset(float offset);
     void SetRotationOffset(float offset);

@@ -14,7 +14,7 @@ int main()
     eng.bsInit();
 
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 16;
+    settings.antialiasingLevel = 8;
     sf::RenderWindow window({1600, 900}, "GraphWidget Test", sf::Style::Default, settings);
 
     sf::Font font;
@@ -53,8 +53,8 @@ int main()
     va.SetObj(vi);
     va.SetAnimationType(Animation::AnimationType::easeInOutCubic);
     va.SetDeltaTime(sf::seconds(1));
-    va.SetMoveOffset({50, 0});
-    // va.SetRotationOffset(50);
+    // va.SetMoveOffset({50, 0});
+    va.SetRotationOffset(50);
 
     float FrameTime = 0;
     GraphWidget graph;
@@ -89,7 +89,7 @@ int main()
             {
                 if (ev.key.code == sf::Keyboard::F)
                 {
-                    va.Start();
+                    va.StartClone();
                 }
                 if (ev.key.code == sf::Keyboard::Q)
                 {
