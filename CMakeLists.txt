@@ -56,3 +56,13 @@ if(WIN32)
         ${SFML_BIN_DIR} $<TARGET_FILE_DIR:sfml-engine> # CHANGE PATH
     )
 endif()
+
+if(WIN32)
+    add_compile_definitions(PLATFORM_WINDOWS)
+elseif(APPLE)
+    add_compile_definitions(PLATFORM_MAC)
+elseif(UNIX)
+    add_compile_definitions(PLATFORM_LINUX)
+else()
+    message(FATAL_ERROR "Unsupported platform!")
+endif()
