@@ -74,7 +74,7 @@ int main()
     sf::Clock FrameTimer;
 
     bool isdeb = 1;
-    
+
     sf::Clock clock;
     while (!eng.IsProgrammEnd)
     {
@@ -96,7 +96,17 @@ int main()
                 {
                     eng.IsProgrammEnd = 1;
                     window.close();
-                }                
+                }
+                if (ev.key.code == sf::Keyboard::M)
+                {
+                    int *a = new int[999999];
+                    for (size_t i = 0; i < 999999; ++i)
+                    {
+                        a[i] = i; 
+                    }
+
+                    Log("int* a = new int[999999];");
+                }
                 if (ev.key.code == sf::Keyboard::F3)
                 {
                     isdeb = !isdeb;
