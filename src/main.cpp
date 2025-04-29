@@ -7,6 +7,7 @@
 #include "Utils.hpp"
 #include "Log.h"
 #include "bs.h"
+#include "OsStates.h"
 
 int main()
 {
@@ -95,7 +96,7 @@ int main()
                 {
                     eng.IsProgrammEnd = 1;
                     window.close();
-                }
+                }                
                 if (ev.key.code == sf::Keyboard::F3)
                 {
                     isdeb = !isdeb;
@@ -106,6 +107,7 @@ int main()
         window.setView(vi);
         if (fpsClock.getElapsedTime().asSeconds() >= 1.f)
         {
+            Log(OsStates::GetProcessMemoryUsage() / (1000.0 * 1000.0));
             fpsText.setString("FPS: " + std::to_string(fpsCounter));
             fpsCounter = 0;
             fpsClock.restart();
