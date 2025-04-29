@@ -17,7 +17,7 @@ public:
     void SetValue(float &value);
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     void ClearData();
-private:
+protected:
     sf::Clock lastUpdate;
     float *value;
     void rebuildPolyline() const;

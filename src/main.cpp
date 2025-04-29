@@ -8,7 +8,7 @@
 #include "Log.h"
 #include "bs.h"
 #include "OsStates.h"
-
+#include "MemoryUsageGraph.h"
 int main()
 {
     bs eng;
@@ -66,6 +66,16 @@ int main()
     graph.setPosition({10.f, 10.f});
     graph.SetValue(FrameTime);
 
+    MemoryUsageGraph memgr;
+
+    memgr.SetFont(font);
+    memgr.SetGraphColor(sf::Color::Green);
+    memgr.SetLabel("mem usage in mb");
+    memgr.SetTimeWindow(20.f);
+    memgr.setPosition({10.f, memgr.getBounds().getSize().y + 20});
+
+    memgr.Start();
+
     sf::Text fpsText("", font, 16);
     fpsText.setPosition(10.f, 320.f);
     fpsText.setFillColor(sf::Color::White);
@@ -102,7 +112,7 @@ int main()
                     int *a = new int[999999];
                     for (size_t i = 0; i < 999999; ++i)
                     {
-                        a[i] = i; 
+                        a[i] = i;
                     }
 
                     Log("int* a = new int[999999];");
@@ -131,6 +141,7 @@ int main()
         {
             graph.Update();
             window.draw(graph);
+            window.draw(memgr);
         }
         window.draw(fpsText);
         window.draw(all);
