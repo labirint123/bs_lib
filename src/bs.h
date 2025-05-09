@@ -1,14 +1,16 @@
 #pragma once
 #include "Log.h"
-
+#include <vector>
+#include <string>
 
 class bs
 {
 private:
+    static std::vector<std::string> args;
 
 public:
+    static bool ArgsContains(std::string str);
+    static std::vector<std::string> GetArgs();
     static bool IsProgrammEnd;
-    bs(/* args */);
-    void bsInit();
-    ~bs();
+    static void bsInit(int argc, char *argv[]);
 };

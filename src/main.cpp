@@ -9,15 +9,23 @@
 #include "bs.h"
 #include "OsStates.h"
 #include "MemoryUsageGraph.h"
-int main()
+int main(int argc, char *argv[])
 {
     bs eng;
-    eng.bsInit();
-
+    eng.bsInit(argc, argv);
     sf::ContextSettings settings;
+    bool IsFixedSize = bs::ArgsContains("--FixedSize");
+    Log(bs::ArgsContains("--FixedSize"));
     settings.antialiasingLevel = 8;
-    sf::RenderWindow window({1600, 900}, "GraphWidget Test", sf::Style::Default, settings);
 
+    sf::Uint32 style = sf::Style::Default;
+
+    if (IsFixedSize)
+    {
+        style = sf::Style::Titlebar | sf::Style::Close;
+    }
+
+    sf::RenderWindow window({1600, 900}, "GraphWidget Test", style, settings);
     sf::Font font;
     if (!font.loadFromMemory(Raleway, Raleway_len))
         return -1;
@@ -122,6 +130,15 @@ int main()
                     isdeb = !isdeb;
                     graph.ClearData();
                 }
+            }
+            if (ev.type == sf::Event::Resized)
+            {
+                Log(window.getSize());
+                vi.setSize({window.getSize().x, window.getSize().y});
+                vi.setCenter({window.getSize().x / 2, window.getSize().y / 2});
+                Align(all, window, Center);
+                graph.setPosition({10.f, 10.f});
+                memgr.setPosition({10.f, memgr.getBounds().getSize().y + 20});
             }
         }
         window.setView(vi);

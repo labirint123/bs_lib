@@ -28,6 +28,14 @@ inline void Log(sf::Vector2f value)
 {
     std::cout << "[Vector2f] " << "x: " << value.x << "\ty: " << value.y << std::endl;
 }
+inline void Log(sf::Vector2i value)
+{
+    std::cout << "[Vector2i] " << "x: " << value.x << "\ty: " << value.y << std::endl;
+}
+inline void Log(sf::Vector2u value)
+{
+    std::cout << "[Vector2u] " << "x: " << value.x << "\ty: " << value.y << std::endl;
+}
 
 template <typename T>
 inline void Log(const std::vector<T> &vec)
