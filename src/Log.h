@@ -51,3 +51,9 @@ inline void Log(const T &value)
 {
     std::cout << "[Log] value: " << value << std::endl;
 }
+
+template <typename T>
+inline void Log(const std::string before, const T &value)
+{
+    std::cout << "[Log] " << before << " " << value << std::endl;
+}

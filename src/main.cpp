@@ -133,7 +133,6 @@ int main(int argc, char *argv[])
             }
             if (ev.type == sf::Event::Resized)
             {
-                Log(window.getSize());
                 vi.setSize({window.getSize().x, window.getSize().y});
                 vi.setCenter({window.getSize().x / 2, window.getSize().y / 2});
                 Align(all, window, Center);
@@ -141,7 +140,7 @@ int main(int argc, char *argv[])
                 memgr.setPosition({10.f, memgr.getBounds().getSize().y + 20});
             }
         }
-        window.setView(vi);
+       
         if (fpsClock.getElapsedTime().asSeconds() >= 1.f)
         {
             Log(OsStates::GetProcessMemoryUsage() / (1000.0 * 1000.0));
@@ -154,6 +153,7 @@ int main(int argc, char *argv[])
         FrameTime = FrameTimer.restart().asSeconds() * 1000;
 
         window.clear({30, 30, 30});
+        window.setView(window.getDefaultView());
         if (isdeb)
         {
             graph.Update();
@@ -161,6 +161,7 @@ int main(int argc, char *argv[])
             window.draw(memgr);
         }
         window.draw(fpsText);
+        window.setView(vi);
         window.draw(all);
         window.display();
     }
