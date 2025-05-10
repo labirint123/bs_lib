@@ -21,6 +21,7 @@ Small library that allows you to make your games easier.
 - Other utilities  
 - Rounded rectangle  
 - Simple logger  
+- resources using bin2c
 
 ## Debug features
 
