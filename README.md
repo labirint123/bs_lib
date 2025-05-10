@@ -22,6 +22,7 @@ Small library that allows you to make your games easier.
 - Rounded rectangle  
 - Simple logger  
 - resources using bin2c
+- Json Manager
 
 ## Debug features
 
