@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # bin2c builder
-add_executable(bin2c tools/bin2c.c)
+add_executable(bin2c tools/bin2c/bin2c.c)
 
 set(RESOURCE 
     "${CMAKE_CURRENT_SOURCE_DIR}/res/Raleway.ttf"
@@ -24,6 +24,8 @@ add_custom_command(
 add_custom_target(embed_resources ALL DEPENDS ${HEADER})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
+
+
 file(GLOB_RECURSE ALL_SRC_FILES "src/*.cpp")
 
 set(SRC_FILES "")
@@ -34,8 +36,9 @@ foreach(FILE ${ALL_SRC_FILES})
 endforeach()
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/tools/json)
 
-add_executable(sfml-engine ${SRC_FILES} ${GENERATED_SOURCES})
+add_executable(sfml-engine ${SRC_FILES} ${GENERATED_SOURCES} tools/json/json.hpp)
 add_dependencies(sfml-engine embed_resources)
 
 # SFML

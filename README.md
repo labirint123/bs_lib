@@ -43,6 +43,6 @@ make -j$(nproc)
 
 # TODO
 
-* JSON handler
+* ~~JSON handler~~
 * Easy sound control system
 * Scene manager
