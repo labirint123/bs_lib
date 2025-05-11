@@ -13,4 +13,5 @@ public:
     static std::vector<std::string> GetArgs();
     static bool IsProgrammEnd;
     static void bsInit(int argc, char *argv[]);
+    static void bsInit(int argc, char *argv[], unsigned int ThreadConunt);
 };
