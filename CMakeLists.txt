@@ -30,7 +30,7 @@ file(GLOB_RECURSE ALL_SRC_FILES "src/*.cpp")
 
 set(SRC_FILES "")
 foreach(FILE ${ALL_SRC_FILES})
-    if(NOT FILE MATCHES ".*/CMakeFiles/.*")
+    if(NOT FILE MATCHES ".*/CMakeFiles/.*") 
         list(APPEND SRC_FILES ${FILE})
     endif()
 endforeach()
