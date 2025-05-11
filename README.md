@@ -23,6 +23,7 @@ Small library that allows you to make your games easier.
 - Simple logger  
 - resources using bin2c
 - Json Manager
+- Scenes
 
 ## Debug features
 
@@ -45,5 +46,5 @@ make -j$(nproc)
 # TODO
 
 * ~~JSON handler~~
+* ~~Scene manager~~
 * Easy sound control system
-* Scene manager
