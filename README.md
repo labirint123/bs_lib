@@ -49,3 +49,5 @@ make -j$(nproc)
 * ~~Scene manager~~
 * Easy sound control system
 * more optimization in graphs 
+* hitboxes
+* base widgets

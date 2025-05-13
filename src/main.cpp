@@ -8,11 +8,12 @@ class GameScene : public Scene
 {
 private:
     sf::RectangleShape rect;
-    MemoryUsageGraph* mem;
+    MemoryUsageGraph *mem;
+
 public:
     GameScene()
     {
-        mem  = new MemoryUsageGraph();
+        mem = new MemoryUsageGraph();
         mem->SetGraphColor(sf::Color(sf::Color::Green));
         mem->Start();
         add(*mem);
@@ -24,8 +25,7 @@ public:
     void Resize(sf::Vector2f newSize) override
     {
         mem->setPosition({newSize.x - mem->getBounds().getSize().x - 10, 10});
-
-            rect.setSize(newSize * 0.5f);
+        rect.setSize(newSize * 0.5f);
         rect.setPosition(newSize * 0.25f);
         DefaultView.setSize(newSize);
         DefaultView.setCenter(newSize.x / 2, newSize.y / 2);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
 {
     bs s;
     s.bsInit(argc, argv);
-    
+
     sf::RenderWindow window(sf::VideoMode(800, 600), "Scene Example");
     GameScene scene;
     scene.Resize(sf::Vector2f(window.getSize()));
