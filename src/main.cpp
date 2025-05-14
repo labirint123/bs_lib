@@ -12,7 +12,7 @@ int main()
     CircleHitbox circle({400, 300}, 60);
 
     std::vector<sf::Vector2f> tri = {
-        {600, 400}, {700, 350}, {750, 450}};
+        {600, 400}, {700, 350}, {750, 450}, {750, 750}, {320, 450}};
     PolygonHitbox polygon(tri);
 
     while (window.isOpen())
@@ -24,7 +24,6 @@ int main()
                 window.close();
         }
 
-        // Управление прямоугольником — стрелки
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             rect.setPosition(rect.getPosition() + sf::Vector2f(-3, 0));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
@@ -34,7 +33,6 @@ int main()
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             rect.setPosition(rect.getPosition() + sf::Vector2f(0, 3));
 
-        // Управление кругом — WASD
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
             circle.setPosition(circle.getPosition() + sf::Vector2f(-3, 0));
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
