@@ -47,7 +47,7 @@ make -j$(nproc)
 
 * ~~JSON handler~~
 * ~~Scene manager~~
+* ~~hitboxes~~
 * Easy sound control system
 * more optimization in graphs 
-* hitboxes
 * base widgets
