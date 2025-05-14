@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "RoundedRectangleShape.hpp"
 #include "Group.h"
+#include "PolygonHitbox.h"
+
 
 enum Aligns
 {
@@ -217,3 +219,17 @@ inline void Align(ItemT &item, const TargetT &target, Aligns align)
     item.setPosition(aligned);
 }
 
+inline PolygonHitbox GetHitbox(sf::Shape* shape) {
+    std::vector<sf::Vector2f> globalPoints;
+
+    const sf::Transform& transform = shape->getTransform();
+    std::size_t count = shape->getPointCount();
+
+    for (std::size_t i = 0; i < count; ++i) {
+        sf::Vector2f local = shape->getPoint(i);
+        sf::Vector2f global = transform.transformPoint(local);
+        globalPoints.push_back(global);
+    }
+
+    return PolygonHitbox(globalPoints);
+}

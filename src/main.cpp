@@ -2,6 +2,8 @@
 #include "RectHitbox.h"
 #include "CircleHitbox.h"
 #include "PolygonHitbox.h"
+#include "Utils.hpp"
+#include "RoundedRectangleShape.hpp"
 
 int main()
 {
@@ -13,7 +15,15 @@ int main()
 
     std::vector<sf::Vector2f> tri = {
         {600, 400}, {700, 350}, {750, 450}, {750, 750}, {320, 450}};
-    PolygonHitbox polygon(tri);
+
+
+    RoundedRectangleShape rrr;
+    rrr.setSize({100, 100});
+    rrr.setPosition({400, 400});
+    rrr.setCornerRadius(20);
+    rrr.setFillColor(sf::Color::White);
+    PolygonHitbox polygon(GetHitbox(&rrr));
+
 
     while (window.isOpen())
     {
