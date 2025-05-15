@@ -1,20 +1,25 @@
 #include "GraphWidget.h"
 #include "Utils.hpp"
 #include <algorithm>
-#include "bs.h"
+#include "bs.h" 
 
 GraphWidget::GraphWidget()
+: cachedPolyline(sf::LineStrip)
 {
+    cachedPolyline.resize(maxPoints);
+
     bg.setSize(Size);
     bg.setFillColor(sf::Color(20, 20, 20, 100));
-
     ValText.setStyle(sf::Text::Bold);
 
     add(bg);
     add(Label);
     add(ValText);
-    if (bs::DefaultFont)    this->SetFont(*bs::DefaultFont);
+
+    if (bs::DefaultFont)
+        SetFont(*bs::DefaultFont);
 }
+
 
 void GraphWidget::SetFont(sf::Font &f)
 {
@@ -45,29 +50,38 @@ void GraphWidget::SetLabel(const std::string &s)
     ValText.setPosition(GetSize(Label).x + 10, 0.f);
 }
 
+void GraphWidget::SetValue(float &v)
+{
+    value = &v;
+}
+
+void GraphWidget::SetSize(const sf::Vector2f &size)
+{
+    Size = size;
+    bg.setSize(Size);
+    dirty = true;
+}
+
 void GraphWidget::Update()
 {
+    if (!value) return;
+
     sf::Time dt = lastUpdate.restart();
-    if (dt == sf::Time::Zero)
-        return;
+    if (dt == sf::Time::Zero) return;
 
     sampleAccum += dt;
-    if (sampleAccum < sampleInterval)
-        return;
+    if (sampleAccum < sampleInterval) return;
     dt = sampleAccum;
     sampleAccum = sf::seconds(0.f);
 
     history.emplace_back(*value, dt);
 
     sf::Time sum = sf::seconds(0);
-    for (auto it = history.rbegin(); it != history.rend(); ++it)
-    {
+    for (auto it = history.rbegin(); it != history.rend(); ++it) {
         sum += it->second;
-        if (sum > sf::seconds(TimeWindow))
-            break;
+        if (sum > sf::seconds(TimeWindow)) break;
     }
-    while (!history.empty() && sum > sf::seconds(TimeWindow))
-    {
+    while (!history.empty() && sum > sf::seconds(TimeWindow)) {
         sum -= history.front().second;
         history.pop_front();
     }
@@ -77,33 +91,23 @@ void GraphWidget::Update()
 
     ValText.setString(std::to_string(*value));
 
-    if (!history.empty())
-    {
+    if (!history.empty()) {
         minVal = maxVal = history.front().first;
-        for (auto &p : history)
-        {
+        for (auto &p : history) {
             minVal = std::min(minVal, p.first);
             maxVal = std::max(maxVal, p.first);
         }
         float range = maxVal - minVal;
-        if (range <= 0.f)
-        {
+        if (range <= 0.f) {
             minVal -= 1.f;
             maxVal += 1.f;
-        }
-        else
-        {
+        } else {
             minVal -= std::abs(minVal / 5.f);
             maxVal += std::abs(maxVal / 5.f);
         }
     }
 
     dirty = true;
-}
-
-void GraphWidget::SetValue(float &value)
-{
-    this->value = &value;
 }
 
 void GraphWidget::draw(sf::RenderTarget &target, sf::RenderStates states) const
@@ -123,47 +127,41 @@ void GraphWidget::draw(sf::RenderTarget &target, sf::RenderStates states) const
 
 void GraphWidget::ClearData()
 {
-    this->history.clear();
+    history.clear();
+    dirty = true;
 }
 
 void GraphWidget::rebuildPolyline() const
 {
     size_t n = history.size();
-    cachedPolyline = sf::VertexArray(sf::LineStrip, n);
+
+    cachedPolyline.resize(n);
 
     float w = Size.x;
     float h = Size.y - cachedLabelHeight - 5.f;
     float range = maxVal - minVal;
-    if (range <= 0.f)
-        range = 1.f;
+    if (range <= 0.f) range = 1.f;
 
     sf::Time total = sf::seconds(0);
     for (auto &p : history)
         total += p.second;
 
     sf::Time acc = sf::seconds(0);
+    size_t i = 0;
+    for (auto &p : history) {
+        acc += p.second;
+        float t = acc.asSeconds();
 
-    for (size_t i = 0; i < n; ++i)
-    {
-        acc += history[i].second;
-        float timestamp = acc.asSeconds();
+        float x = (total.asSeconds() < TimeWindow)
+            ? w * (t / TimeWindow)
+            : w * ((t - (total.asSeconds() - TimeWindow)) / TimeWindow);
 
-        float x;
-        if (total.asSeconds() < TimeWindow)
-        {
-            x = w * (timestamp / TimeWindow);
-        }
-        else
-        {
-            float startOffset = total.asSeconds() - TimeWindow;
-            x = w * ((timestamp - startOffset) / TimeWindow);
-        }
-
-        float norm = (history[i].first - minVal) / range;
+        float norm = (p.first - minVal) / range;
         float y = h * (1.f - norm) + cachedLabelHeight + 5.f;
 
-        cachedPolyline[i].position = {x, y};
-        cachedPolyline[i].color = color;
+        cachedPolyline[i].position = { x, y };
+        cachedPolyline[i].color    = color;
+        ++i;
     }
 
     dirty = false;

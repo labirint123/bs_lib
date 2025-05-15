@@ -8,8 +8,11 @@
 /*
 Before optimizaton:
 
-mem = 107
 avg for 3 graphs = 0.05 - 0.06ms
+
+After
+
+avg for 3 graphs = 0.045
 
 */
 
@@ -38,6 +41,7 @@ int main(int argc, char *argv[])
     FrameTimeGr.SetValue(FrameTimeVal);
 
     GraphWidget DeltaTimeOfGraphs;
+    DeltaTimeOfGraphs.SetSize({600,300});
     DeltaTimeOfGraphs.SetLabel("avg for 3 graphs");
     DeltaTimeOfGraphs.move({0, (MemGr.getBounds().height + 10) * 2});
     sf::Clock deltaGraphTimer;

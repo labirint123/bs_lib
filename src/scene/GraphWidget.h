@@ -2,7 +2,6 @@
 #include <SFML/Graphics.hpp>
 #include <deque>
 #include "Group.h"
-#include "Animation.h"
 
 class GraphWidget : public Group
 {
@@ -13,14 +12,17 @@ public:
     void SetTimeWindow(float seconds);
     void SetGraphColor(sf::Color color);
     void SetLabel(const std::string &label);
-    void Update();
     void SetValue(float &value);
+    void SetSize(const sf::Vector2f &size);
+    void Update();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     void ClearData();
+
 protected:
-    sf::Clock lastUpdate;
-    float *value;
     void rebuildPolyline() const;
+
+    sf::Clock lastUpdate;
+    float *value = nullptr;
 
     std::deque<std::pair<float, sf::Time>> history;
     size_t maxPoints = 1000;
