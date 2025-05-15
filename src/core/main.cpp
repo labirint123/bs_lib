@@ -7,15 +7,20 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Hitbox Test");
-    window.setFramerateLimit(60);
-
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    sf::RenderWindow window(
+        sf::VideoMode(800, 600),
+        "Hitbox Test",
+        sf::Style::Default,
+        settings);
+    window.setVerticalSyncEnabled(1);
+    
     RectHitbox rect({100, 100}, {120, 80});
     CircleHitbox circle({400, 300}, 60);
 
     std::vector<sf::Vector2f> tri = {
         {600, 400}, {700, 350}, {750, 450}, {750, 750}, {320, 450}};
-
 
     RoundedRectangleShape rrr;
     rrr.setSize({100, 100});
@@ -23,7 +28,6 @@ int main()
     rrr.setCornerRadius(20);
     rrr.setFillColor(sf::Color::White);
     PolygonHitbox polygon(GetHitbox(&rrr));
-
 
     while (window.isOpen())
     {
