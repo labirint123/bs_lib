@@ -1,11 +1,19 @@
 #include <SFML/Graphics.hpp>
-#include "RectHitbox.h"
-#include "CircleHitbox.h"
-#include "PolygonHitbox.h"
 #include "Utils.hpp"
 #include "RoundedRectangleShape.hpp"
+#include "MemoryUsageGraph.h"
+#include "GraphWidget.h"
+#include "bs.h"
 
-int main()
+/*
+Before optimizaton:
+
+mem = 107
+avg for 3 graphs = 0.05 - 0.06ms
+
+*/
+
+int main(int argc, char *argv[])
 {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -14,20 +22,29 @@ int main()
         "Hitbox Test",
         sf::Style::Default,
         settings);
-    window.setVerticalSyncEnabled(1);
-    
-    RectHitbox rect({100, 100}, {120, 80});
-    CircleHitbox circle({400, 300}, 60);
+    window.setVerticalSyncEnabled(0);
 
-    std::vector<sf::Vector2f> tri = {
-        {600, 400}, {700, 350}, {750, 450}, {750, 750}, {320, 450}};
+    bs core;
+    core.bsInit(argc, argv);
 
-    RoundedRectangleShape rrr;
-    rrr.setSize({100, 100});
-    rrr.setPosition({400, 400});
-    rrr.setCornerRadius(20);
-    rrr.setFillColor(sf::Color::White);
-    PolygonHitbox polygon(GetHitbox(&rrr));
+    MemoryUsageGraph MemGr;
+    MemGr.Start();
+
+    GraphWidget FrameTimeGr;
+    FrameTimeGr.SetLabel("frame time");
+    FrameTimeGr.move({0, MemGr.getBounds().height + 10});
+    sf::Clock FrameTimer;
+    float FrameTimeVal = 0;
+    FrameTimeGr.SetValue(FrameTimeVal);
+
+    GraphWidget DeltaTimeOfGraphs;
+    DeltaTimeOfGraphs.SetLabel("avg for 3 graphs");
+    DeltaTimeOfGraphs.move({0, (MemGr.getBounds().height + 10) * 2});
+    sf::Clock deltaGraphTimer;
+    float DeltaGraphVal = 0;
+    DeltaTimeOfGraphs.SetValue(DeltaGraphVal);
+    std::vector<float> All;
+    bool IsDrawGraphs = 1;
 
     while (window.isOpen())
     {
@@ -36,40 +53,41 @@ int main()
         {
             if (e.type == sf::Event::Closed)
                 window.close();
+            else if (e.type == sf::Event::KeyPressed)
+            {
+                switch (e.key.code)
+                {
+                case sf::Keyboard::F3:
+                    IsDrawGraphs = !IsDrawGraphs;
+                    break;
+
+                default:
+                    break;
+                }
+            }
+        }
+        FrameTimeVal = FrameTimer.restart().asSeconds() * 1000;
+        FrameTimeGr.Update();
+        window.clear(sf::Color::Black);
+
+        deltaGraphTimer.restart();
+        if (IsDrawGraphs)
+        {
+            window.draw(MemGr);
+            window.draw(FrameTimeGr);
+            window.draw(DeltaTimeOfGraphs);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            rect.setPosition(rect.getPosition() + sf::Vector2f(-3, 0));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            rect.setPosition(rect.getPosition() + sf::Vector2f(3, 0));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            rect.setPosition(rect.getPosition() + sf::Vector2f(0, -3));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            rect.setPosition(rect.getPosition() + sf::Vector2f(0, 3));
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-            circle.setPosition(circle.getPosition() + sf::Vector2f(-3, 0));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-            circle.setPosition(circle.getPosition() + sf::Vector2f(3, 0));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-            circle.setPosition(circle.getPosition() + sf::Vector2f(0, -3));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-            circle.setPosition(circle.getPosition() + sf::Vector2f(0, 3));
-
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
-        bool rectVsCircle = rect.intersects(circle) || circle.intersects(rect);
-        bool rectVsPoly = rect.intersects(polygon) || polygon.intersects(rect);
-        bool circleVsPoly = circle.intersects(polygon) || polygon.intersects(circle);
-
-        bool cursorInRect = rect.contains(mousePos);
-        bool cursorInCircle = circle.contains(mousePos);
-        bool cursorInPoly = polygon.contains(mousePos);
-
-        window.clear(sf::Color::Black);
-        rect.draw(window, rectVsCircle || rectVsPoly || cursorInRect);
-        circle.draw(window, rectVsCircle || circleVsPoly || cursorInCircle);
-        polygon.draw(window, rectVsPoly || circleVsPoly || cursorInPoly);
+        DeltaGraphVal = deltaGraphTimer.getElapsedTime().asSeconds() * 1000;
+        All.push_back(DeltaGraphVal);
+        float sum = 0;
+        for (size_t i = 0; i < All.size(); i++)
+        {
+            sum += All[i];
+        }
+        sum /= All.size();
+        DeltaGraphVal  = sum;
+        DeltaTimeOfGraphs.Update();
         window.display();
     }
 

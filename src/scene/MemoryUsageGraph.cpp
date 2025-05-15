@@ -15,6 +15,6 @@ MemoryUsageGraph::MemoryUsageGraph()
     float *val = new float{0};
     this->SetValue(*val);
     this->SetCiclic(1);
-    this->SetLabel("MemoryUsageGraph");
+    this->SetLabel("Memory");
     this->SetDeltaTime(sf::seconds(1.f / 10.f));
 }

@@ -49,7 +49,7 @@ inline void Log(const std::vector<T> &vec)
 template <typename T>
 inline void Log(const T &value)
 {
-    std::cout << "[Log] value: " << value << std::endl;
+    std::cout << "[Log]: " << value << std::endl;
 }
 
 template <typename T>

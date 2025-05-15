@@ -13,9 +13,11 @@ void bs::init(int argc, char *argv[], unsigned int ThreadConunt)
 {
     //  ARGS
     args.clear();
+    Log("Agrs:");
     for (int i = 1; i < argc; ++i)
     {
         args.push_back(argv[i]);
+        Log(argv[i]);
     }
     // DEFAULT FONT
     DefaultFont = new sf::Font();
