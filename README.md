@@ -48,6 +48,6 @@ make -j$(nproc)
 * ~~JSON handler~~
 * ~~Scene manager~~
 * ~~hitboxes~~
-* ~~~more optimization in graphs~~
+* ~~more optimization in graphs~~
 * Easy sound control system
 * base widgets
