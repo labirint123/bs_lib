@@ -1,10 +1,10 @@
 #include "GraphWidget.h"
 #include "Utils.hpp"
 #include <algorithm>
-#include "bs.h" 
+#include "bs.h"
 
 GraphWidget::GraphWidget()
-: cachedPolyline(sf::LineStrip)
+    : cachedPolyline(sf::LineStrip)
 {
     cachedPolyline.resize(maxPoints);
 
@@ -19,7 +19,6 @@ GraphWidget::GraphWidget()
     if (bs::DefaultFont)
         SetFont(*bs::DefaultFont);
 }
-
 
 void GraphWidget::SetFont(sf::Font &f)
 {
@@ -64,24 +63,30 @@ void GraphWidget::SetSize(const sf::Vector2f &size)
 
 void GraphWidget::Update()
 {
-    if (!value) return;
+    if (!value)
+        return;
 
     sf::Time dt = lastUpdate.restart();
-    if (dt == sf::Time::Zero) return;
+    if (dt == sf::Time::Zero)
+        return;
 
     sampleAccum += dt;
-    if (sampleAccum < sampleInterval) return;
+    if (sampleAccum < sampleInterval)
+        return;
     dt = sampleAccum;
     sampleAccum = sf::seconds(0.f);
 
     history.emplace_back(*value, dt);
 
     sf::Time sum = sf::seconds(0);
-    for (auto it = history.rbegin(); it != history.rend(); ++it) {
+    for (auto it = history.rbegin(); it != history.rend(); ++it)
+    {
         sum += it->second;
-        if (sum > sf::seconds(TimeWindow)) break;
+        if (sum > sf::seconds(TimeWindow))
+            break;
     }
-    while (!history.empty() && sum > sf::seconds(TimeWindow)) {
+    while (!history.empty() && sum > sf::seconds(TimeWindow))
+    {
         sum -= history.front().second;
         history.pop_front();
     }
@@ -91,17 +96,22 @@ void GraphWidget::Update()
 
     ValText.setString(std::to_string(*value));
 
-    if (!history.empty()) {
+    if (!history.empty())
+    {
         minVal = maxVal = history.front().first;
-        for (auto &p : history) {
+        for (auto &p : history)
+        {
             minVal = std::min(minVal, p.first);
             maxVal = std::max(maxVal, p.first);
         }
         float range = maxVal - minVal;
-        if (range <= 0.f) {
+        if (range <= 0.f)
+        {
             minVal -= 1.f;
             maxVal += 1.f;
-        } else {
+        }
+        else
+        {
             minVal -= std::abs(minVal / 5.f);
             maxVal += std::abs(maxVal / 5.f);
         }
@@ -131,6 +141,36 @@ void GraphWidget::ClearData()
     dirty = true;
 }
 
+void GraphWidget::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
+{
+    // Only MOVE realisation, so i can do this
+    if (!IsMovable) return;
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        sf::Vector2f mousePos = window.mapPixelToCoords({event.mouseButton.x, event.mouseButton.y});
+        if (this->getBounds().contains(mousePos))
+        {
+            IsMouseHold = true;
+            PrewMousePos = mousePos;
+        }
+    }
+    else if (event.type == sf::Event::MouseButtonReleased &&
+             event.mouseButton.button == sf::Mouse::Left)
+    {
+        IsMouseHold = false;
+    }
+
+    if (IsMouseHold)
+    {
+        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+        sf::Vector2f delta = mousePos - PrewMousePos;
+        this->move(delta);
+        PrewMousePos = mousePos;
+    }
+}
+
+
 void GraphWidget::rebuildPolyline() const
 {
     size_t n = history.size();
@@ -140,7 +180,8 @@ void GraphWidget::rebuildPolyline() const
     float w = Size.x;
     float h = Size.y - cachedLabelHeight - 5.f;
     float range = maxVal - minVal;
-    if (range <= 0.f) range = 1.f;
+    if (range <= 0.f)
+        range = 1.f;
 
     sf::Time total = sf::seconds(0);
     for (auto &p : history)
@@ -148,19 +189,20 @@ void GraphWidget::rebuildPolyline() const
 
     sf::Time acc = sf::seconds(0);
     size_t i = 0;
-    for (auto &p : history) {
+    for (auto &p : history)
+    {
         acc += p.second;
         float t = acc.asSeconds();
 
         float x = (total.asSeconds() < TimeWindow)
-            ? w * (t / TimeWindow)
-            : w * ((t - (total.asSeconds() - TimeWindow)) / TimeWindow);
+                      ? w * (t / TimeWindow)
+                      : w * ((t - (total.asSeconds() - TimeWindow)) / TimeWindow);
 
         float norm = (p.first - minVal) / range;
         float y = h * (1.f - norm) + cachedLabelHeight + 5.f;
 
-        cachedPolyline[i].position = { x, y };
-        cachedPolyline[i].color    = color;
+        cachedPolyline[i].position = {x, y};
+        cachedPolyline[i].color = color;
         ++i;
     }
 

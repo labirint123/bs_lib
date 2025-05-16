@@ -6,13 +6,12 @@
 #include "bs.h"
 
 /*
-Before optimizaton:
+widget
 
-avg for 3 graphs = 0.05 - 0.06ms
+сетаешь вьюв, на каждом кадре передаёшь ивент
 
-After
-
-avg for 3 graphs = 0.045
+наследник хэндлит и эмитит сигналы
+ну типа фсё
 
 */
 
@@ -30,68 +29,48 @@ int main(int argc, char *argv[])
     bs core;
     core.bsInit(argc, argv);
 
+    sf::View view;
+    window.setView(view);
+
     MemoryUsageGraph MemGr;
     MemGr.Start();
+    MemGr.SetView(view);
 
-    GraphWidget FrameTimeGr;
-    FrameTimeGr.SetLabel("frame time");
-    FrameTimeGr.move({0, MemGr.getBounds().height + 10});
-    sf::Clock FrameTimer;
-    float FrameTimeVal = 0;
-    FrameTimeGr.SetValue(FrameTimeVal);
-
-    GraphWidget DeltaTimeOfGraphs;
-    DeltaTimeOfGraphs.SetSize({600,300});
-    DeltaTimeOfGraphs.SetLabel("avg for 3 graphs");
-    DeltaTimeOfGraphs.move({0, (MemGr.getBounds().height + 10) * 2});
-    sf::Clock deltaGraphTimer;
-    float DeltaGraphVal = 0;
-    DeltaTimeOfGraphs.SetValue(DeltaGraphVal);
-    std::vector<float> All;
-    bool IsDrawGraphs = 1;
-
-    while (window.isOpen())
+    while (window.isOpen() || !bs::IsProgrammEnd)
     {
         sf::Event e;
         while (window.pollEvent(e))
         {
             if (e.type == sf::Event::Closed)
+            {
                 window.close();
+                bs::IsProgrammEnd = 1;
+            }
             else if (e.type == sf::Event::KeyPressed)
             {
                 switch (e.key.code)
                 {
-                case sf::Keyboard::F3:
-                    IsDrawGraphs = !IsDrawGraphs;
+                case sf::Keyboard::Q:
+                    window.close();
+                    bs::IsProgrammEnd = 1;
                     break;
-
                 default:
                     break;
                 }
             }
-        }
-        FrameTimeVal = FrameTimer.restart().asSeconds() * 1000;
-        FrameTimeGr.Update();
-        window.clear(sf::Color::Black);
-
-        deltaGraphTimer.restart();
-        if (IsDrawGraphs)
-        {
-            window.draw(MemGr);
-            window.draw(FrameTimeGr);
-            window.draw(DeltaTimeOfGraphs);
+            else if (e.type == sf::Event::Resized)
+            {
+                view.setSize({window.getSize().x, window.getSize().y});
+                view.setCenter({window.getSize().x / 2, window.getSize().y / 2});
+                window.setView(view);
+            }
+            MemGr.HandleEvent(e, window);
         }
 
-        DeltaGraphVal = deltaGraphTimer.getElapsedTime().asSeconds() * 1000;
-        All.push_back(DeltaGraphVal);
-        float sum = 0;
-        for (size_t i = 0; i < All.size(); i++)
-        {
-            sum += All[i];
-        }
-        sum /= All.size();
-        DeltaGraphVal  = sum;
-        DeltaTimeOfGraphs.Update();
+        window.clear();
+
+        window.draw(MemGr);
+
         window.display();
     }
 

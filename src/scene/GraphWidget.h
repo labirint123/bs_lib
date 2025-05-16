@@ -2,8 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <deque>
 #include "Group.h"
+#include "Widget.h"
 
-class GraphWidget : public Group
+class GraphWidget : public Widget
 {
 public:
     GraphWidget();
@@ -17,7 +18,9 @@ public:
     void Update();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     void ClearData();
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
 
+    bool IsMovable = 1;
 protected:
     void rebuildPolyline() const;
 
@@ -45,4 +48,7 @@ protected:
     float cachedLabelHeight = 0.f;
 
     mutable sf::VertexArray cachedPolyline;
+
+    sf::Vector2f PrewMousePos;
+    bool IsMouseHold = 0;
 };
