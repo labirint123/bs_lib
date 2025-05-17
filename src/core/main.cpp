@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
 
     PushButton pb;
     pb.setText("hello :)");
+    pb.SetView(view);
     Align(pb, window, Aligns::Center);
 
     while (window.isOpen() || !bs::IsProgrammEnd)

@@ -145,13 +145,18 @@ void GraphWidget::ClearData()
 
 void GraphWidget::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
 {
-    // Only MOVE realisation, so i can do this
     if (!IsMovable)
         return;
+
+    sf::Vector2f mousePos = window.mapPixelToCoords(
+        (event.type == sf::Event::MouseMoved)
+            ? sf::Mouse::getPosition(window)
+            : sf::Vector2i(event.mouseButton.x, event.mouseButton.y),
+        *this->view);
+
     if (event.type == sf::Event::MouseButtonPressed &&
         event.mouseButton.button == sf::Mouse::Left)
     {
-        sf::Vector2f mousePos = window.mapPixelToCoords({event.mouseButton.x, event.mouseButton.y});
         if (this->getBounds().contains(mousePos))
         {
             IsMouseHold = true;
@@ -166,10 +171,10 @@ void GraphWidget::HandleEvent(const sf::Event &event, const sf::RenderWindow &wi
 
     if (IsMouseHold)
     {
-        sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        sf::Vector2f delta = mousePos - PrewMousePos;
+        sf::Vector2f newMousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *this->view);
+        sf::Vector2f delta = newMousePos - PrewMousePos;
         this->move(delta);
-        PrewMousePos = mousePos;
+        PrewMousePos = newMousePos;
     }
 }
 
