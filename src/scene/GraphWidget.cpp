@@ -122,6 +122,8 @@ void GraphWidget::Update()
 
 void GraphWidget::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    if (!this->isVisible)
+        return;
     states.transform *= getTransform();
     for (auto d : drawables)
         target.draw(*d, states);
@@ -141,10 +143,11 @@ void GraphWidget::ClearData()
     dirty = true;
 }
 
-void GraphWidget::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
+void GraphWidget::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
 {
     // Only MOVE realisation, so i can do this
-    if (!IsMovable) return;
+    if (!IsMovable)
+        return;
     if (event.type == sf::Event::MouseButtonPressed &&
         event.mouseButton.button == sf::Mouse::Left)
     {
@@ -169,7 +172,6 @@ void GraphWidget::HandleEvent(const sf::Event& event, const sf::RenderWindow& wi
         PrewMousePos = mousePos;
     }
 }
-
 
 void GraphWidget::rebuildPolyline() const
 {

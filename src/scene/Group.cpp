@@ -43,6 +43,12 @@ void Group::add(Group &o)
     drawables.push_back(&o);
 }
 
+void Group::add(RoundedRectangleShape &o)
+{
+    Shapes.push_back(&o);
+    drawables.push_back(&o);
+}
+
 sf::Vector2f Group::getPosition() const { return Pos; }
 
 void Group::setPosition(sf::Vector2f pos)

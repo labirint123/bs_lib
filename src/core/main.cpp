@@ -4,11 +4,12 @@
 #include "MemoryUsageGraph.h"
 #include "GraphWidget.h"
 #include "bs.h"
+#include "PushButton.h"
 
 /*
 widget
 
-сетаешь вьюв, на каждом кадре передаёшь ивент
+сетаешь вьюв, на каждом кадре передаёшь ивент (и к сожалению окно)
 
 наследник хэндлит и эмитит сигналы
 ну типа фсё
@@ -35,6 +36,10 @@ int main(int argc, char *argv[])
     MemoryUsageGraph MemGr;
     MemGr.Start();
     MemGr.SetView(view);
+
+    PushButton pb;
+    pb.setText("hello :)");
+    Align(pb, window, Aligns::Center);
 
     while (window.isOpen() || !bs::IsProgrammEnd)
     {
@@ -65,12 +70,13 @@ int main(int argc, char *argv[])
                 window.setView(view);
             }
             MemGr.HandleEvent(e, window);
+            pb.HandleEvent(e, window);
         }
 
         window.clear();
 
         window.draw(MemGr);
-
+        window.draw(pb);
         window.display();
     }
 

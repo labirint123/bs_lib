@@ -3,6 +3,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <vector>
 #include "Signal.h"
+#include "RoundedRectangleShape.hpp"
 
 class Group : public sf::Drawable
 {
@@ -36,6 +37,7 @@ public:
     void add(sf::Shape *o);
     void add(sf::VertexArray &o);
     void add(Group &o);
+    void add(RoundedRectangleShape &o);
     // POS
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);

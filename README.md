@@ -51,3 +51,4 @@ make -j$(nproc)
 * ~~more optimization in graphs~~
 * Easy sound control system
 * base widgets
+* fix issue with roundedrect corner radius subsequence
