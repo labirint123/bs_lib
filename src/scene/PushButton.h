@@ -22,7 +22,7 @@ protected:
     // Style Defaults
     sf::Vector2f DefaultSize{150, 70};
     unsigned int DefaultCharacterSize = 20;
-    float DefaultOutlineThickness = 0;
+    float DefaultOutlineThickness = 2;
     float DefaultCornerRadius = 10;
     sf::Color DefaultTextColor = sf::Color::Black;
     sf::Color DefaultFillColor = sf::Color(200, 200, 200, 200);

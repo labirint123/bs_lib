@@ -25,7 +25,7 @@ enum Aligns
 
 inline sf::Vector2f GetSize(const sf::Shape *shape)
 {
-    auto lb = shape->getLocalBounds();
+    auto lb = shape->getGlobalBounds();
     return {lb.width, lb.height};
 }
 inline sf::Vector2f GetSize(const sf::RectangleShape &shape)
@@ -34,22 +34,22 @@ inline sf::Vector2f GetSize(const sf::RectangleShape &shape)
 }
 inline sf::Vector2f GetSize(const sf::CircleShape &shape)
 {
-    auto lb = shape.getLocalBounds();
+    auto lb = shape.getGlobalBounds();
     return {lb.width, lb.height};
 }
 inline sf::Vector2f GetSize(const sf::ConvexShape &shape)
 {
-    auto lb = shape.getLocalBounds();
+    auto lb = shape.getGlobalBounds();
     return {lb.width, lb.height};
 }
 inline sf::Vector2f GetSize(const sf::Sprite &sprite)
 {
-    auto lb = sprite.getLocalBounds();
+    auto lb = sprite.getGlobalBounds();
     return {lb.width, lb.height};
 }
 inline sf::Vector2f GetSize(const sf::Text &text)
 {
-    auto lb = text.getLocalBounds();
+    auto lb = text.getGlobalBounds();
     return {lb.width, lb.height};
 }
 inline sf::Vector2f GetSize(const Group &group)

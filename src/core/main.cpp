@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     MemGr.SetView(view);
 
     PushButton pb;
-    pb.setText("hello :)");
+    pb.setText("PushButton :)");
     pb.SetView(view);
     Align(pb, window, Aligns::Center);
 
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
             pb.HandleEvent(e, window);
         }
 
-        window.clear();
+        window.clear(sf::Color(150,150,150));
 
         window.draw(MemGr);
         window.draw(pb);
