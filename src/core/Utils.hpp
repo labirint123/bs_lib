@@ -233,3 +233,20 @@ inline PolygonHitbox GetHitbox(sf::Shape* shape) {
 
     return PolygonHitbox(globalPoints);
 }
+
+inline std::vector<sf::Vector2f> GetTransformedPoints(const sf::Shape* shape, const sf::Transform& transform)
+{
+    std::vector<sf::Vector2f> points;
+    if (!shape) return points;
+
+    std::size_t count = shape->getPointCount();
+    points.reserve(count);
+
+    for (std::size_t i = 0; i < count; ++i)
+    {
+        sf::Vector2f pt = transform.transformPoint(shape->getPoint(i));
+        points.push_back(pt);
+    }
+
+    return points;
+}

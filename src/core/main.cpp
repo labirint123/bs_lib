@@ -42,6 +42,8 @@ int main(int argc, char *argv[])
     pb.SetView(view);
     Align(pb, window, Aligns::Center);
 
+    bool isDefRealizationNedded = 1;
+
     while (window.isOpen() || !bs::IsProgrammEnd)
     {
         sf::Event e;
@@ -60,6 +62,9 @@ int main(int argc, char *argv[])
                     window.close();
                     bs::IsProgrammEnd = 1;
                     break;
+                case sf::Keyboard::D:
+                    pb.setDefaultSignalBehavior(isDefRealizationNedded);
+                    isDefRealizationNedded = !isDefRealizationNedded;
                 default:
                     break;
                 }

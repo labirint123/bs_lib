@@ -18,7 +18,7 @@ protected:
     bool isHovered = false;
     bool isPressed = false;
     bool IsDefaultSignalsEnabled = false;
-
+    void updateHitbox();
     // Style Defaults
     sf::Vector2f DefaultSize{150, 70};
     unsigned int DefaultCharacterSize = 20;

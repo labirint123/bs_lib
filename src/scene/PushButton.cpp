@@ -2,7 +2,16 @@
 #include "bs.h"
 #include "Log.h"
 
-PushButton::PushButton() {
+PushButton::PushButton()
+{
+    this->onBoundsChanged.connect([this]()
+    {
+        updateHitbox();
+        Align(Text, base, Aligns::Center);
+    });
+
+    setDefaultSignalBehavior(true);
+
     if (bs::DefaultFont != nullptr)
         setFont(*bs::DefaultFont);
 
@@ -13,133 +22,172 @@ PushButton::PushButton() {
     setSize(DefaultSize);
     setCornerRadius(DefaultCornerRadius);
 
-    mHitbox = new PolygonHitbox(GetHitbox(&base));
-
     add(base);
     add(Text);
-    setDefaultSignalBehavior(true);
 }
 
-PushButton::~PushButton() {
+PushButton::~PushButton()
+{
     delete mHitbox;
     mHitbox = nullptr;
 }
 
-void PushButton::setSize(sf::Vector2f size) {
-    base.setSize(size);
-    Align(Text, base, Aligns::Center);
+void PushButton::updateHitbox()
+{
+    sf::Transform tr = getTransform();
+    auto points = GetTransformedPoints(&base, tr);
+
+    if (mHitbox)
+        *mHitbox = PolygonHitbox(points);
+    else
+        mHitbox = new PolygonHitbox(points);
 }
 
-void PushButton::setFillColor(const sf::Color& color) {
+void PushButton::setSize(sf::Vector2f size)
+{
+    base.setSize(size);
+    Align(Text, base, Aligns::Center);
+    onBoundsChanged.emit();
+}
+
+void PushButton::setFillColor(const sf::Color &color)
+{
     base.setFillColor(color);
 }
 
-void PushButton::setOutlineColor(const sf::Color& color) {
+void PushButton::setOutlineColor(const sf::Color &color)
+{
     base.setOutlineColor(color);
 }
 
-void PushButton::setOutlineThickness(float thickness) {
+void PushButton::setOutlineThickness(float thickness)
+{
     base.setOutlineThickness(thickness);
 }
 
-void PushButton::setTextColor(const sf::Color& color) {
+void PushButton::setTextColor(const sf::Color &color)
+{
     Text.setFillColor(color);
 }
 
-void PushButton::setFont(const sf::Font& font) {
+void PushButton::setFont(const sf::Font &font)
+{
     Text.setFont(font);
     Align(Text, base, Aligns::Center);
 }
 
-void PushButton::setCharacterSize(unsigned int size) {
+void PushButton::setCharacterSize(unsigned int size)
+{
     Text.setCharacterSize(size);
     Align(Text, base, Aligns::Center);
 }
 
-void PushButton::setCornerRadius(unsigned int radius) {
+void PushButton::setCornerRadius(unsigned int radius)
+{
     base.setCornerRadius(radius);
+    onBoundsChanged.emit();
 }
 
-void PushButton::setText(std::string text) {
+void PushButton::setText(std::string text)
+{
     Text.setString(text);
     Align(Text, base, Aligns::Center);
 }
 
-sf::Vector2f PushButton::getSize() const {
+sf::Vector2f PushButton::getSize() const
+{
     return base.getSize();
 }
 
-sf::Text PushButton::GetText() const {
+sf::Text PushButton::GetText() const
+{
     return Text;
 }
 
-std::string PushButton::GetString() const {
+std::string PushButton::GetString() const
+{
     return Text.getString().toAnsiString();
 }
 
-RoundedRectangleShape PushButton::GetBase() const {
+RoundedRectangleShape PushButton::GetBase() const
+{
     return base;
 }
 
-void PushButton::HandleEvent(const sf::Event& event, const sf::RenderWindow& window) {
-    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *this->view);
+void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
+{
+    if (!view || !mHitbox)
+        return;
+
+    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *view);
     bool nowHovered = mHitbox->contains(mousePos);
 
-    if (nowHovered != isHovered) {
+    if (nowHovered != isHovered)
+    {
         isHovered = nowHovered;
-        Log(std::string("Hovered: ") + (isHovered ? "true" : "false"));
+        // Log(std::string("Hovered: ") + (isHovered ? "true" : "false"));
         onHovered.emit(isHovered);
     }
 
     if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left) {
-        if (isHovered) {
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        if (isHovered)
+        {
             isPressed = true;
-            Log("Click: true");
+            // Log("Click: true");
             onClick.emit(true);
         }
     }
 
     if (event.type == sf::Event::MouseButtonReleased &&
-        event.mouseButton.button == sf::Mouse::Left) {
-        Log("Release");
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        // Log("Release");
         onRelease.emit(true);
 
-        if (isPressed && isHovered) {
-            Log("Click: false");
+        if (isPressed && isHovered)
+        {
+            // Log("Click: false");
             onClick.emit(false);
         }
 
         isPressed = false;
     }
 
-    if (isPressed && isHovered && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        Log("Hold");
+    if (isPressed && isHovered && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        // Log("Hold");
         onHold.emit(true);
     }
 }
 
-
-void PushButton::setDefaultSignalBehavior(bool enable) {
-    if (enable && !IsDefaultSignalsEnabled) {
-        onHoveredDefId = onHovered.connect([this](bool hover) {
-            Log(std::string("onHoveredDefId ") + (hover ? "entered" : "left"));
+void PushButton::setDefaultSignalBehavior(bool enable)
+{
+    if (enable && !IsDefaultSignalsEnabled)
+    {
+        onHoveredDefId = onHovered.connect([this](bool hover)
+        {
+            // Log(std::string("onHoveredDefId ") + (hover ? "entered" : "left"));
             base.setFillColor(hover ? sf::Color(180, 180, 180) : DefaultFillColor);
         });
 
-        onClickDefId = onClick.connect([this](bool down) {
-            Log(std::string("onClickDefId ") + (down ? "pressed" : "released"));
+        onClickDefId = onClick.connect([this](bool down)
+        {
+            // Log(std::string("onClickDefId ") + (down ? "pressed" : "released"));
             base.setFillColor(down ? sf::Color(150, 150, 150) : sf::Color(180, 180, 180));
         });
 
-        onReleaseDefId = onRelease.connect([this](bool) {
-            Log("onReleaseDefId");
+        onReleaseDefId = onRelease.connect([this](bool)
+        {
+            // Log("onReleaseDefId");
             base.setFillColor(DefaultFillColor);
         });
 
         IsDefaultSignalsEnabled = true;
     }
-    else if (!enable && IsDefaultSignalsEnabled) {
+    else if (!enable && IsDefaultSignalsEnabled)
+    {
         onHovered.disconnect(onHoveredDefId);
         onClick.disconnect(onClickDefId);
         onRelease.disconnect(onReleaseDefId);

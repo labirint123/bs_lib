@@ -28,6 +28,7 @@ public:
     Signal<float> onRotationChanged;
     Signal<sf::Vector2f> onScaleChanged;
     Signal<sf::Vector2f> onOriginChanged;
+    Signal<> onBoundsChanged;
 
     // ADD
     void add(sf::Text &o);
