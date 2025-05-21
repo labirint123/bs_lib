@@ -26,19 +26,23 @@ protected:
     float DefaultCornerRadius = 10;
     sf::Color DefaultTextColor = sf::Color::Black;
     sf::Color DefaultFillColor = sf::Color(200, 200, 200, 200);
+    sf::Color DefaultDisabledFillColor = sf::Color(150, 150, 150, 200);
 
     // Default Behavior IDs
     Signal<>::SlotId onClickDefId;
     Signal<>::SlotId onHoldDefId;
     Signal<>::SlotId onReleaseDefId;
     Signal<>::SlotId onHoveredDefId;
+    Signal<>::SlotId onEnabledDefId;
 
+    bool IsEnabled = 1;
 public:
     // Signals
     Signal<bool> onClick;
     Signal<bool> onHold;
     Signal<bool> onRelease;
     Signal<bool> onHovered;
+    Signal<bool> onEnabled;
 
     // Lifecycle
     PushButton();
@@ -47,7 +51,7 @@ public:
     // Event Handling
     void HandleEvent(const sf::Event& event, const sf::RenderWindow& window);
     void setDefaultSignalBehavior(bool enable);
-
+    void SetEnabled(bool Enabled);
     // Styling
     void setSize(sf::Vector2f size);
     void setFillColor(const sf::Color& color);

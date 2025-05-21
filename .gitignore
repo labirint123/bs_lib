@@ -2,3 +2,5 @@
 .vs/
 build/
 CMakeLists.txt.user
+build.sh
+REbuild.sh

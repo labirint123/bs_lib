@@ -5,16 +5,47 @@
 #include "GraphWidget.h"
 #include "bs.h"
 #include "PushButton.h"
+#include "Scene.h"
 
-/*
-widget
+class DebugScene : public Scene
+{
+private:
+    MemoryUsageGraph MemGr;
+    PushButton pb;
+    bool IsEnabled = 1;
+public:
+    DebugScene(/* args */);
+    void Resize(sf::Vector2f NewSize);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
+    {
+        MemGr.HandleEvent(event, window);
+        pb.HandleEvent(event, window);
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
+        {
+            this->IsEnabled = !IsEnabled;
+            pb.SetEnabled(IsEnabled);
+        }
+    }
+};
 
-сетаешь вьюв, на каждом кадре передаёшь ивент (и к сожалению окно)
+DebugScene::DebugScene()
+{
+    MemGr.Start();
+    MemGr.SetView(DefaultView);
 
-наследник хэндлит и эмитит сигналы
-ну типа фсё
+    pb.setText("PushButton :)");
+    pb.SetView(DefaultView);
 
-*/
+    add(MemGr);
+    add(pb);
+}
+
+void DebugScene::Resize(sf::Vector2f NewSize)
+{
+    DefaultView.setSize(NewSize);
+    DefaultView.setCenter({NewSize.x / 2, NewSize.y / 2});
+    pb.setPosition(GetAlignedPosition(NewSize, {0, 0}, pb.getSize(), pb.getPosition(), Aligns::Center));
+}
 
 int main(int argc, char *argv[])
 {
@@ -33,17 +64,7 @@ int main(int argc, char *argv[])
     sf::View view;
     window.setView(view);
 
-    MemoryUsageGraph MemGr;
-    MemGr.Start();
-    MemGr.SetView(view);
-
-    PushButton pb;
-    pb.setText("PushButton :)");
-    pb.SetView(view);
-    Align(pb, window, Aligns::Center);
-
-    bool isDefRealizationNedded = 1;
-
+    DebugScene deb;
     while (window.isOpen() || !bs::IsProgrammEnd)
     {
         sf::Event e;
@@ -62,9 +83,7 @@ int main(int argc, char *argv[])
                     window.close();
                     bs::IsProgrammEnd = 1;
                     break;
-                case sf::Keyboard::D:
-                    pb.setDefaultSignalBehavior(isDefRealizationNedded);
-                    isDefRealizationNedded = !isDefRealizationNedded;
+                
                 default:
                     break;
                 }
@@ -74,15 +93,13 @@ int main(int argc, char *argv[])
                 view.setSize({window.getSize().x, window.getSize().y});
                 view.setCenter({window.getSize().x / 2, window.getSize().y / 2});
                 window.setView(view);
+                deb.Resize({window.getSize().x, window.getSize().y});
             }
-            MemGr.HandleEvent(e, window);
-            pb.HandleEvent(e, window);
+            deb.HandleEvent(e, window);            
         }
 
-        window.clear(sf::Color(150,150,150));
-
-        window.draw(MemGr);
-        window.draw(pb);
+        window.clear(sf::Color(150, 150, 150));
+        window.draw(deb);
         window.display();
     }
 

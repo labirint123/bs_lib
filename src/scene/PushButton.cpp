@@ -5,10 +5,9 @@
 PushButton::PushButton()
 {
     this->onBoundsChanged.connect([this]()
-    {
+                                  {
         updateHitbox();
-        Align(Text, base, Aligns::Center);
-    });
+        Align(Text, base, Aligns::Center); });
 
     setDefaultSignalBehavior(true);
 
@@ -116,9 +115,10 @@ RoundedRectangleShape PushButton::GetBase() const
 
 void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
 {
-    if (!view || !mHitbox)
+    if (!view || !mHitbox || !IsEnabled)
         return;
 
+    if (!IsEnabled) Log("hi");
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *view);
     bool nowHovered = mHitbox->contains(mousePos);
 
@@ -167,23 +167,31 @@ void PushButton::setDefaultSignalBehavior(bool enable)
     if (enable && !IsDefaultSignalsEnabled)
     {
         onHoveredDefId = onHovered.connect([this](bool hover)
-        {
+                                           {
             // Log(std::string("onHoveredDefId ") + (hover ? "entered" : "left"));
-            base.setFillColor(hover ? sf::Color(180, 180, 180) : DefaultFillColor);
-        });
+            base.setFillColor(hover ? sf::Color(180, 180, 180) : DefaultFillColor); });
 
         onClickDefId = onClick.connect([this](bool down)
-        {
+                                       {
             // Log(std::string("onClickDefId ") + (down ? "pressed" : "released"));
-            base.setFillColor(down ? sf::Color(150, 150, 150) : sf::Color(180, 180, 180));
-        });
+            base.setFillColor(down ? sf::Color(150, 150, 150) : sf::Color(180, 180, 180)); });
 
         onReleaseDefId = onRelease.connect([this](bool)
-        {
+                                           {
             // Log("onReleaseDefId");
-            base.setFillColor(DefaultFillColor);
-        });
+            base.setFillColor(DefaultFillColor); });
 
+        onEnabledDefId = onEnabled.connect([this](bool enabled)
+                                           {
+            if (enabled)    {
+                base.setFillColor(DefaultFillColor);
+            }
+            else
+            {
+                base.setFillColor(DefaultDisabledFillColor);
+            } 
+            Log("enabled ",enabled);
+        });
         IsDefaultSignalsEnabled = true;
     }
     else if (!enable && IsDefaultSignalsEnabled)
@@ -191,6 +199,13 @@ void PushButton::setDefaultSignalBehavior(bool enable)
         onHovered.disconnect(onHoveredDefId);
         onClick.disconnect(onClickDefId);
         onRelease.disconnect(onReleaseDefId);
+        onEnabled.disconnect(onEnabledDefId);
         IsDefaultSignalsEnabled = false;
     }
+}
+
+void PushButton::SetEnabled(bool Enabled)
+{
+    this->IsEnabled = Enabled;
+    this->onEnabled.emit(Enabled);
 }
