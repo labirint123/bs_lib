@@ -7,14 +7,15 @@
 #include "RoundedRectangleShape.hpp"
 #include "Utils.hpp"
 
-class PushButton : public Widget {
+class PushButton : public Widget
+{
 protected:
     // Visual
     RoundedRectangleShape base;
     sf::Text Text;
 
     // Logic
-    PolygonHitbox* mHitbox = nullptr;
+    PolygonHitbox *mHitbox = nullptr;
     bool isHovered = false;
     bool isPressed = false;
     bool IsDefaultSignalsEnabled = false;
@@ -36,6 +37,7 @@ protected:
     Signal<>::SlotId onEnabledDefId;
 
     bool IsEnabled = 1;
+
 public:
     // Signals
     Signal<bool> onClick;
@@ -49,16 +51,17 @@ public:
     ~PushButton();
 
     // Event Handling
-    void HandleEvent(const sf::Event& event, const sf::RenderWindow& window);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
     void setDefaultSignalBehavior(bool enable);
     void SetEnabled(bool Enabled);
+    bool Enabled() { return IsEnabled; }
     // Styling
     void setSize(sf::Vector2f size);
-    void setFillColor(const sf::Color& color);
-    void setOutlineColor(const sf::Color& color);
+    void setFillColor(const sf::Color &color);
+    void setOutlineColor(const sf::Color &color);
     void setOutlineThickness(float thickness);
-    void setTextColor(const sf::Color& color);
-    void setFont(const sf::Font& font);
+    void setTextColor(const sf::Color &color);
+    void setFont(const sf::Font &font);
     void setCharacterSize(unsigned int size);
     void setCornerRadius(unsigned int radius);
     void setText(std::string text);

@@ -190,7 +190,6 @@ void PushButton::setDefaultSignalBehavior(bool enable)
             {
                 base.setFillColor(DefaultDisabledFillColor);
             } 
-            Log("enabled ",enabled);
         });
         IsDefaultSignalsEnabled = true;
     }

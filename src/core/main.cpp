@@ -22,8 +22,11 @@ public:
         pb.HandleEvent(event, window);
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
         {
-            this->IsEnabled = !IsEnabled;
-            pb.SetEnabled(IsEnabled);
+            pb.SetEnabled(!pb.Enabled());
+        }
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V)
+        {
+            pb.SetVisibility(!pb.IsVisible());
         }
     }
 };
