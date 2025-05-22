@@ -33,6 +33,14 @@ public:
         update();
     }
 
+    void setCornerRadius(float topLeft,float topRight,float bottomRight,float bottomLeft)
+    {
+        setTopLeftRadius(topLeft);
+        setTopRightRadius(topRight);
+        setBottomLeftRadius(bottomLeft);
+        setBottomRightRadius(bottomRight);
+    }
+
     void setTopLeftRadius(float radius)
     {
         m_radii[0] = std::min(radius, std::min(m_size.x, m_size.y) / 2.f);
