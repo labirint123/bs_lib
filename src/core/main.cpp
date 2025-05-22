@@ -6,15 +6,18 @@
 #include "bs.h"
 #include "PushButton.h"
 #include "Scene.h"
+#include "ProgressBar.h"
 
 class DebugScene : public Scene
 {
 private:
     MemoryUsageGraph MemGr;
     PushButton pb;
+    ProgressBar pr;
     bool IsEnabled = 1;
+
 public:
-    DebugScene(/* args */);
+    DebugScene();
     void Resize(sf::Vector2f NewSize);
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
     {
@@ -27,6 +30,14 @@ public:
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V)
         {
             pb.SetVisibility(!pb.IsVisible());
+        }
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Add)
+        {
+            pr.SetValue(pr.GetValue() + 1);
+        }
+        if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Subtract)
+        {
+            pr.SetValue(pr.GetValue() - 1);
         }
     }
 };
@@ -41,6 +52,7 @@ DebugScene::DebugScene()
 
     add(MemGr);
     add(pb);
+    add(pr);
 }
 
 void DebugScene::Resize(sf::Vector2f NewSize)
@@ -48,6 +60,7 @@ void DebugScene::Resize(sf::Vector2f NewSize)
     DefaultView.setSize(NewSize);
     DefaultView.setCenter({NewSize.x / 2, NewSize.y / 2});
     pb.setPosition(GetAlignedPosition(NewSize, {0, 0}, pb.getSize(), pb.getPosition(), Aligns::Center));
+    pr.setPosition({pb.getPosition().x, pb.getPosition().y + pb.getSize().y + 20});
 }
 
 int main(int argc, char *argv[])
@@ -86,7 +99,7 @@ int main(int argc, char *argv[])
                     window.close();
                     bs::IsProgrammEnd = 1;
                     break;
-                
+
                 default:
                     break;
                 }
@@ -98,7 +111,7 @@ int main(int argc, char *argv[])
                 window.setView(view);
                 deb.Resize({window.getSize().x, window.getSize().y});
             }
-            deb.HandleEvent(e, window);            
+            deb.HandleEvent(e, window);
         }
 
         window.clear(sf::Color(150, 150, 150));
