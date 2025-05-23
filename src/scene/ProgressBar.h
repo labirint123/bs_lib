@@ -2,6 +2,7 @@
 #include "Widget.h"
 #include "RoundedRectangleShape.hpp"
 #include "Signal.h"
+#include "ShapeMaskRenderer.h"
 
 class ProgressBar : public Widget
 {
@@ -9,8 +10,13 @@ private:
     float minVal = 0;
     float maxVal = 100;
     float currentVal = 0;
+
     RoundedRectangleShape body;
     RoundedRectangleShape curr;
+
+    mutable ShapeMaskRenderer maskRenderer;
+    mutable RoundedRectangleShape maskShape;
+
     Signal<float> ValueChanged;
 
     sf::Vector2f DefaultSize{150, 70};
@@ -20,14 +26,15 @@ private:
     sf::Color DefaulProgressFillColor = sf::Color(0, 100, 0);
 
 public:
-    float GetValue() { return currentVal; }
+    ProgressBar();
+    ~ProgressBar();
+
+    float GetValue() const { return currentVal; }
     void SetValue(float value);
 
-    sf::Vector2f getSize() { return this->getBounds().getSize(); }
+    sf::Vector2f getSize() const { return getBounds().getSize(); }
     void setSize(sf::Vector2f size);
 
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
-
-    ProgressBar();
-    ~ProgressBar();
+    void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };
