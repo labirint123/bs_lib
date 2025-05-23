@@ -4,7 +4,6 @@
 #include "Group.h"
 #include "PolygonHitbox.h"
 
-
 enum Aligns
 {
     LeftTop,
@@ -193,7 +192,7 @@ inline void Align(T &item, const sf::RenderWindow &win, Aligns align)
     const auto itemPos = item.getPosition();
     const auto aligned = GetAlignedPosition(
         GetSize(win),
-        {0.f,0.f},
+        {0.f, 0.f},
         itemSize,
         itemPos,
         align);
@@ -202,11 +201,23 @@ inline void Align(T &item, const sf::RenderWindow &win, Aligns align)
 
 template <
     typename ItemT,
-    typename TargetT 
->
+    typename TargetT>
 inline void Align(ItemT &item, const TargetT &target, Aligns align)
 {
-    const auto itemSize = GetSize(item);
+    sf::Vector2f itemSize;
+    sf::Vector2f offset{0.f, 0.f};
+
+    if constexpr (std::is_same_v<ItemT, sf::Text>)
+    {
+        auto bounds = item.getLocalBounds();
+        itemSize = {bounds.width, bounds.height};
+        offset = {bounds.left, bounds.top};
+    }
+    else
+    {
+        itemSize = GetSize(item);
+    }
+
     const auto itemPos = item.getPosition();
     const auto targetSize = GetSize(target);
     const auto targetPosition = target.getPosition();
@@ -216,16 +227,19 @@ inline void Align(ItemT &item, const TargetT &target, Aligns align)
         itemSize,
         itemPos,
         align);
-    item.setPosition(aligned);
+
+    item.setPosition(aligned - offset);
 }
 
-inline PolygonHitbox GetHitbox(sf::Shape* shape) {
+inline PolygonHitbox GetHitbox(sf::Shape *shape)
+{
     std::vector<sf::Vector2f> globalPoints;
 
-    const sf::Transform& transform = shape->getTransform();
+    const sf::Transform &transform = shape->getTransform();
     std::size_t count = shape->getPointCount();
 
-    for (std::size_t i = 0; i < count; ++i) {
+    for (std::size_t i = 0; i < count; ++i)
+    {
         sf::Vector2f local = shape->getPoint(i);
         sf::Vector2f global = transform.transformPoint(local);
         globalPoints.push_back(global);
@@ -234,10 +248,11 @@ inline PolygonHitbox GetHitbox(sf::Shape* shape) {
     return PolygonHitbox(globalPoints);
 }
 
-inline std::vector<sf::Vector2f> GetTransformedPoints(const sf::Shape* shape, const sf::Transform& transform)
+inline std::vector<sf::Vector2f> GetTransformedPoints(const sf::Shape *shape, const sf::Transform &transform)
 {
     std::vector<sf::Vector2f> points;
-    if (!shape) return points;
+    if (!shape)
+        return points;
 
     std::size_t count = shape->getPointCount();
     points.reserve(count);
