@@ -25,10 +25,11 @@ protected:
     unsigned int DefaultCharacterSize = 20;
     float DefaultOutlineThickness = 2;
     float DefaultCornerRadius = 10;
-    sf::Color DefaultTextColor = sf::Color::Black;
-    sf::Color DefaultFillColor = sf::Color(200, 200, 200, 200);
-    sf::Color DefaultDisabledFillColor = sf::Color(150, 150, 150, 200);
-
+    sf::Color DefaultTextColor = sf::Color::White;
+    sf::Color DefaultFillColor = sf::Color(50, 50, 50, 200);
+    sf::Color DefaultDisabledFillColor = sf::Color(30, 30, 30, 200);
+    sf::Color HoverFillColor = sf::Color(70, 70, 70, 200);
+    sf::Color PressedFillColor = sf::Color(30, 30, 30, 200);
     // Default Behavior IDs
     Signal<>::SlotId onClickDefId;
     Signal<>::SlotId onHoldDefId;

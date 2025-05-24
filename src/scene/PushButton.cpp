@@ -20,7 +20,7 @@ PushButton::PushButton()
     setFillColor(DefaultFillColor);
     setSize(DefaultSize);
     setCornerRadius(DefaultCornerRadius);
-
+    Text.setStyle(sf::Text::Bold);
     add(base);
     add(Text);
 }
@@ -167,30 +167,27 @@ void PushButton::setDefaultSignalBehavior(bool enable)
     if (enable && !IsDefaultSignalsEnabled)
     {
         onHoveredDefId = onHovered.connect([this](bool hover)
-                                           {
-            // Log(std::string("onHoveredDefId ") + (hover ? "entered" : "left"));
-            base.setFillColor(hover ? sf::Color(180, 180, 180) : DefaultFillColor); });
+        {
+            base.setFillColor(hover ? HoverFillColor : DefaultFillColor);
+        });
 
         onClickDefId = onClick.connect([this](bool down)
-                                       {
-            // Log(std::string("onClickDefId ") + (down ? "pressed" : "released"));
-            base.setFillColor(down ? sf::Color(150, 150, 150) : sf::Color(180, 180, 180)); });
+        {
+            base.setFillColor(down ? PressedFillColor : HoverFillColor);
+        });
 
         onReleaseDefId = onRelease.connect([this](bool)
-                                           {
-            // Log("onReleaseDefId");
-            base.setFillColor(DefaultFillColor); });
+        {
+            base.setFillColor(DefaultFillColor);
+        });
 
         onEnabledDefId = onEnabled.connect([this](bool enabled)
-                                           {
-            if (enabled)    {
-                base.setFillColor(DefaultFillColor);
-            }
-            else
-            {
-                base.setFillColor(DefaultDisabledFillColor);
-            } 
+        {
+            base.setFillColor(enabled
+                ? DefaultFillColor
+                : DefaultDisabledFillColor);
         });
+
         IsDefaultSignalsEnabled = true;
     }
     else if (!enable && IsDefaultSignalsEnabled)
@@ -202,7 +199,6 @@ void PushButton::setDefaultSignalBehavior(bool enable)
         IsDefaultSignalsEnabled = false;
     }
 }
-
 void PushButton::SetEnabled(bool Enabled)
 {
     this->IsEnabled = Enabled;

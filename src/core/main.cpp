@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
             deb.HandleEvent(e, window);
         }
 
-        window.clear(sf::Color(150, 150, 150));
+        window.clear(sf::Color(20, 20, 20));
         window.draw(deb);
         window.display();
     }

@@ -9,7 +9,7 @@ GraphWidget::GraphWidget()
     cachedPolyline.resize(maxPoints);
 
     bg.setSize(Size);
-    bg.setFillColor(sf::Color(20, 20, 20, 100));
+    bg.setFillColor(sf::Color(10, 10, 10, 100));
     ValText.setStyle(sf::Text::Bold);
 
     add(bg);

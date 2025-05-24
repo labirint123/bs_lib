@@ -11,7 +11,7 @@ ProgressBar::ProgressBar()
     setSize(DefaultSize);
     curr.setCornerRadius(DefaultCornerRadius);
     body.setCornerRadius(DefaultCornerRadius);
-
+    
     ValueChanged.connect([this](float val){
         float progress = (maxVal - minVal != 0.f)
             ? (val - minVal) / (maxVal - minVal)

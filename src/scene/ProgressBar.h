@@ -23,8 +23,8 @@ private:
     sf::Vector2f DefaultSize{150, 30};
     float DefaultOutlineThickness = 2;
     float DefaultCornerRadius = 10;
-    sf::Color DefaultBodyFillColor = sf::Color(200, 200, 200, 200);
-    sf::Color DefaulProgressFillColor = sf::Color(0, 100, 0);
+    sf::Color DefaultBodyFillColor = sf::Color(50, 50, 50, 200);
+    sf::Color DefaulProgressFillColor = sf::Color(78, 119, 163);
 
 public:
     ProgressBar();
