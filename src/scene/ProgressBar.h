@@ -31,6 +31,8 @@ public:
     ~ProgressBar();
 
     float GetValue() const { return currentVal; }
+    float GetMaxValue() const { return maxVal; }
+    float GetMinValue() const { return minVal; }
     void SetValue(float value);
 
     sf::Vector2f getSize() const { return getBounds().getSize(); }

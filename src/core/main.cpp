@@ -15,8 +15,6 @@ private:
     PushButton pb;
     ProgressBar pr;
     bool IsEnabled = 1;
-    sf::RectangleShape* r = new sf::RectangleShape();
-
 public:
     DebugScene();
     void Resize(sf::Vector2f NewSize);
@@ -24,6 +22,7 @@ public:
     {
         MemGr.HandleEvent(event, window);
         pb.HandleEvent(event, window);
+        pr.HandleEvent(event, window);
         if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
         {
             pb.SetEnabled(!pb.Enabled());
@@ -54,11 +53,10 @@ DebugScene::DebugScene()
     add(MemGr);
     add(pb);
     add(pr);
-
-    r->setSize(GetSize(pb.GetText()));
-    r->setPosition(pb.GetText().getPosition() + pb.getPosition());
-    r->setFillColor({0,0,0,100});
-    // add(r);
+    pb.onClick.connect([this](bool down){
+        if (pr.GetValue() >= pr.GetMaxValue() && down)   this->pr.SetValue(0);
+        else if (down)   this->pr.SetValue(this->pr.GetValue() + 10); 
+    });
 }
 
 void DebugScene::Resize(sf::Vector2f NewSize)
@@ -67,8 +65,6 @@ void DebugScene::Resize(sf::Vector2f NewSize)
     DefaultView.setCenter({NewSize.x / 2, NewSize.y / 2});
     pb.setPosition(GetAlignedPosition(NewSize, {0, 0}, pb.getSize(), pb.getPosition(), Aligns::Center));
     pr.setPosition({pb.getPosition().x, pb.getPosition().y + pb.getSize().y + 20});
-    r->setSize(GetSize(pb.GetText()));
-    r->setPosition(pb.GetText().getPosition() + pb.getPosition());
 }
 
 int main(int argc, char *argv[])
