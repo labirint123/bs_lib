@@ -18,8 +18,9 @@ private:
     mutable RoundedRectangleShape maskShape;
 
     Signal<float> ValueChanged;
+    bool useMask = 0;
 
-    sf::Vector2f DefaultSize{150, 70};
+    sf::Vector2f DefaultSize{150, 30};
     float DefaultOutlineThickness = 2;
     float DefaultCornerRadius = 10;
     sf::Color DefaultBodyFillColor = sf::Color(200, 200, 200, 200);
