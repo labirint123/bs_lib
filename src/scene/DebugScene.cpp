@@ -14,15 +14,28 @@ DebugScene::DebugScene()
     add(MemGr);
     WidgetsGr.add(pb);
     WidgetsGr.add(pr);
+    WidgetsGr.add(dd);
     add(WidgetsGr);
     add(FrameGr);
     pb.setPosition({0, 0});
     pr.setPosition({0, pb.getSize().y + 10});
+    dd.setPosition({0, pr.getPosition().y + pr.getSize().y + 10});
 
     pb.onClick.connect([this](bool down)
                        {
-        if (pr.GetValue() >= pr.GetMaxValue() && down)   this->pr.SetValue(0);
-        else if (down)   this->pr.SetValue(this->pr.GetValue() + 10); });
+                           if (pr.GetValue() >= pr.GetMaxValue() && down)
+                               this->pr.SetValue(0);
+                           else if (down)
+                               this->pr.SetValue(this->pr.GetValue() + 10);
+                           int *alloc = new int[999999];
+                           if (down)
+                           {
+                               for (size_t i = 0; i < 999999; i++)
+                               {
+                                   alloc[i] = i;
+                               }
+                           } 
+                        });
 }
 
 void DebugScene::Resize(sf::Vector2f NewSize)

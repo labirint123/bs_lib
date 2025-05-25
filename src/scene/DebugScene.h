@@ -10,6 +10,7 @@
 #include "ProgressBar.h"
 #include "Group.h"
 #include "FrameTimeGraph.h"
+#include "DropDown.h"
 
 class DebugScene : public Scene
 {
@@ -18,6 +19,7 @@ private:
     FrameTimeGraph FrameGr;
     PushButton pb;
     ProgressBar pr;
+    DropDown dd;
     bool IsEnabled = 1;
     Group WidgetsGr;
     std::vector<Widget> WidgetsVec; 

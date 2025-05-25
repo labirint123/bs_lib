@@ -28,6 +28,7 @@ ProgressBar::ProgressBar()
         curr.setPosition({ 0.f, 0.f });
         useMask = (fillWidth < DefaultCornerRadius * 2.f)
                || (fillWidth < DefaultCornerRadius * 2.f); });
+    add(body);
 }
 
 ProgressBar::~ProgressBar() {}
@@ -73,7 +74,7 @@ void ProgressBar::draw(sf::RenderTarget &target, sf::RenderStates states) const
         target.draw(curr, states);
     }
 
-    RoundedRectangleShape border = body;
-    border.setFillColor(sf::Color::Transparent);
-    target.draw(border, states);
+    // RoundedRectangleShape border = body;
+    // border.setFillColor(sf::Color::Transparent);
+    // target.draw(border, states);
 }
