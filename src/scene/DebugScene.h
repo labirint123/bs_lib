@@ -9,11 +9,13 @@
 #include "Scene.h"
 #include "ProgressBar.h"
 #include "Group.h"
+#include "FrameTimeGraph.h"
 
 class DebugScene : public Scene
 {
 private:
     MemoryUsageGraph MemGr;
+    FrameTimeGraph FrameGr;
     PushButton pb;
     ProgressBar pr;
     bool IsEnabled = 1;
@@ -23,4 +25,5 @@ public:
     DebugScene();
     void Resize(sf::Vector2f NewSize);
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
+    void AfterDraw();
 };

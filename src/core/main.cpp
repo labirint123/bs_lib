@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
 
         window.clear(sf::Color(20, 20, 20));
         window.draw(deb);
+        deb.AfterDraw();
         window.display();
     }
 

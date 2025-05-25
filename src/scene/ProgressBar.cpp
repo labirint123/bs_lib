@@ -11,8 +11,9 @@ ProgressBar::ProgressBar()
     setSize(DefaultSize);
     curr.setCornerRadius(DefaultCornerRadius);
     body.setCornerRadius(DefaultCornerRadius);
-    
-    ValueChanged.connect([this](float val){
+
+    ValueChanged.connect([this](float val)
+                         {
         float progress = (maxVal - minVal != 0.f)
             ? (val - minVal) / (maxVal - minVal)
             : 0.f;
@@ -26,8 +27,7 @@ ProgressBar::ProgressBar()
         curr.setCornerRadius(adaptiveRadius);
         curr.setPosition({ 0.f, 0.f });
         useMask = (fillWidth < DefaultCornerRadius * 2.f)
-               || (fillWidth < DefaultCornerRadius * 2.f);
-    });
+               || (fillWidth < DefaultCornerRadius * 2.f); });
 }
 
 ProgressBar::~ProgressBar() {}
@@ -51,10 +51,12 @@ void ProgressBar::setSize(sf::Vector2f size)
     ValueChanged.emit(currentVal);
 }
 
-void ProgressBar::HandleEvent(const sf::Event& event, const sf::RenderWindow& window) {}
+void ProgressBar::HandleEvent(const sf::Event &event, const sf::RenderWindow &window) {}
 
-void ProgressBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void ProgressBar::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {
+    if (!isVisible)
+        return;
     states.transform *= getTransform();
     target.draw(body, states);
 
@@ -64,7 +66,7 @@ void ProgressBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
         maskShape.setCornerRadius(body.getTopLeftRadius());
         maskRenderer.setMask(maskShape);
         maskRenderer.drawMasked(curr);
-        maskRenderer.display(target, states.transform.transformPoint({0,0}));
+        maskRenderer.display(target, states.transform.transformPoint({0, 0}));
     }
     else
     {

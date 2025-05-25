@@ -5,6 +5,9 @@ DebugScene::DebugScene()
     MemGr.Start();
     MemGr.SetView(DefaultView);
 
+    FrameGr.SetView(DefaultView);
+    FrameGr.setPosition({0, 110});
+
     pb.setText("PushButton :)");
     pb.SetView(DefaultView);
 
@@ -12,7 +15,7 @@ DebugScene::DebugScene()
     WidgetsGr.add(pb);
     WidgetsGr.add(pr);
     add(WidgetsGr);
-
+    add(FrameGr);
     pb.setPosition({0, 0});
     pr.setPosition({0, pb.getSize().y + 10});
 
@@ -43,6 +46,7 @@ void DebugScene::HandleEvent(const sf::Event &event, const sf::RenderWindow &win
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V)
     {
         pb.SetVisibility(!pb.IsVisible());
+        pr.SetVisibility(!pr.IsVisible());
     }
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Add)
     {
@@ -52,4 +56,9 @@ void DebugScene::HandleEvent(const sf::Event &event, const sf::RenderWindow &win
     {
         pr.SetValue(pr.GetValue() - 1);
     }
+}
+
+void DebugScene::AfterDraw()
+{
+    FrameGr.UpdateFrame();
 }
