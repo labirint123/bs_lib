@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     window.setVerticalSyncEnabled(1);
 
     DebugScene deb;
+    deb.Resize(sf::Vector2f(window.getSize().x, window.getSize().y));
     while (window.isOpen() || !bs::IsProgrammEnd)
     {
         sf::Event e;
@@ -50,7 +51,7 @@ int main(int argc, char *argv[])
             }
             else if (e.type == sf::Event::Resized)
             {
-                deb.Resize({window.getSize().x, window.getSize().y});
+                deb.Resize(sf::Vector2f(window.getSize().x, window.getSize().y));
             }
             deb.HandleEvent(e, window);
         }

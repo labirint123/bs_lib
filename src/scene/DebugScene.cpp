@@ -34,17 +34,17 @@ DebugScene::DebugScene()
                                {
                                    alloc[i] = i;
                                }
-                           } 
-                        });
+                           } });
 }
 
 void DebugScene::Resize(sf::Vector2f NewSize)
 {
     DefaultView.setSize(NewSize);
     DefaultView.setCenter({NewSize.x / 2, NewSize.y / 2});
-    WidgetsGr.setPosition(GetAlignedPosition(NewSize, {0, 0},
-                                             {WidgetsGr.getBounds().getSize().x, WidgetsGr.getBounds().getSize().y},
-                                             WidgetsGr.getPosition(), Aligns::Center));
+    sf::Vector2i pos(GetAlignedPosition(NewSize, {0, 0},
+                                        {WidgetsGr.getBounds().getSize().x, WidgetsGr.getBounds().getSize().y},
+                                        WidgetsGr.getPosition(), Aligns::Center));
+    WidgetsGr.setPosition(sf::Vector2f(static_cast<float>(pos.x), static_cast<float>(pos.y)));
 }
 
 void DebugScene::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)

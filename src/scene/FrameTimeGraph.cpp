@@ -1,6 +1,6 @@
 #include "FrameTimeGraph.h"
+#include <sstream>
 #include <iomanip>
-
 
 FrameTimeGraph::FrameTimeGraph()
 {
