@@ -64,7 +64,7 @@ void ProgressBar::draw(sf::RenderTarget& target, sf::RenderStates states) const
         maskShape.setCornerRadius(body.getTopLeftRadius());
         maskRenderer.setMask(maskShape);
         maskRenderer.drawMasked(curr);
-        maskRenderer.display(target, getPosition());
+        maskRenderer.display(target, states.transform.transformPoint({0,0}));
     }
     else
     {
