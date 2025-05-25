@@ -20,9 +20,8 @@ protected:
     sf::Vector2f Scale = {1.f, 1.f};
     sf::Vector2f Origin = {0.f, 0.f};
 
-    sf::Transform getTransform() const;
-
 public:
+    sf::Transform getTransform() const;
     // Signals
     Signal<sf::Vector2f> onPositionChanged;
     Signal<float> onRotationChanged;

@@ -73,19 +73,19 @@ auto GetSize(const T &item)
 
 //  SET SIZE
 
-inline sf::Vector2f SetSize(sf::Sprite &sprite, sf::Vector2f size)
+inline void SetSize(sf::Sprite &sprite, sf::Vector2f size)
 {
     sf::Vector2f prevSize = GetSize(sprite);
     sf::Vector2f scale = {size.x / prevSize.x, size.y / prevSize.y};
     sprite.scale(scale);
 }
-inline sf::Vector2f SetSize(sf::Text &text, sf::Vector2f size)
+inline void SetSize(sf::Text &text, sf::Vector2f size)
 {
     sf::Vector2f prevSize = GetSize(text);
     sf::Vector2f scale = {size.x / prevSize.x, size.y / prevSize.y};
     text.scale(scale);
 }
-inline sf::Vector2f SetSize(sf::Shape *shape, sf::Vector2f size)
+inline void SetSize(sf::Shape *shape, sf::Vector2f size)
 {
     sf::Vector2f prevSize = GetSize(shape);
     sf::Vector2f scale = {size.x / prevSize.x, size.y / prevSize.y};

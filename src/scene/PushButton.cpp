@@ -118,7 +118,8 @@ void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &win
     if (!view || !mHitbox || !IsEnabled)
         return;
 
-    if (!IsEnabled) Log("hi");
+    if (!IsEnabled)
+        Log("hi");
     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *view);
     bool nowHovered = mHitbox->contains(mousePos);
 
@@ -162,31 +163,62 @@ void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &win
     }
 }
 
+void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform t)
+{
+    if (!view || !mHitbox || !IsEnabled)
+        return;
+
+    sf::Vector2f worldPos = window.mapPixelToCoords(
+        sf::Mouse::getPosition(window),
+        *view);
+
+    sf::Vector2f localPos = t.getInverse().transformPoint(worldPos);
+
+    bool nowHovered = mHitbox->contains(localPos);
+    if (nowHovered != isHovered)
+    {
+        isHovered = nowHovered;
+        onHovered.emit(isHovered);
+    }
+
+    if (event.type == sf::Event::MouseButtonPressed &&
+        event.mouseButton.button == sf::Mouse::Left &&
+        isHovered)
+    {
+        isPressed = true;
+        onClick.emit(true);
+    }
+
+    if (event.type == sf::Event::MouseButtonReleased &&
+        event.mouseButton.button == sf::Mouse::Left)
+    {
+        onRelease.emit(true);
+        if (isPressed && isHovered)
+            onClick.emit(false);
+        isPressed = false;
+    }
+
+    if (isPressed && isHovered && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        onHold.emit(true);
+}
+
 void PushButton::setDefaultSignalBehavior(bool enable)
 {
     if (enable && !IsDefaultSignalsEnabled)
     {
         onHoveredDefId = onHovered.connect([this](bool hover)
-        {
-            base.setFillColor(hover ? HoverFillColor : DefaultFillColor);
-        });
+                                           { base.setFillColor(hover ? HoverFillColor : DefaultFillColor); });
 
         onClickDefId = onClick.connect([this](bool down)
-        {
-            base.setFillColor(down ? PressedFillColor : HoverFillColor);
-        });
+                                       { base.setFillColor(down ? PressedFillColor : HoverFillColor); });
 
         onReleaseDefId = onRelease.connect([this](bool)
-        {
-            base.setFillColor(DefaultFillColor);
-        });
+                                           { base.setFillColor(DefaultFillColor); });
 
         onEnabledDefId = onEnabled.connect([this](bool enabled)
-        {
-            base.setFillColor(enabled
-                ? DefaultFillColor
-                : DefaultDisabledFillColor);
-        });
+                                           { base.setFillColor(enabled
+                                                                   ? DefaultFillColor
+                                                                   : DefaultDisabledFillColor); });
 
         IsDefaultSignalsEnabled = true;
     }

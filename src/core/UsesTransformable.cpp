@@ -82,4 +82,5 @@ sf::Vector2f UsesTransformable::GetScale()
     {
         return gobj->getScale();
     }
+    return sf::Vector2f();
 }
