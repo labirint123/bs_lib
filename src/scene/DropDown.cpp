@@ -32,7 +32,11 @@ void DropDown::UpdateList()
         BodyText.setString(PlaseHolderString);
         Align(BodyText, TopBody, Aligns::Center);
     }
-
+    else
+    {
+        BodyText.setString(Items[selected_item()].first.getString());
+        Align(BodyText, TopBody, Aligns::Center);
+    }
     if (!Items.empty())
     {
         size_t index = 0;
@@ -107,19 +111,37 @@ void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& windo
 
         sf::Vector2f mousePos = t ? t->getInverse().transformPoint(worldPos) : worldPos;
 
-        for (int i = 0; i < Items.size(); ++i)
+        if (CanHandleEvents())
         {
-            sf::Vector2f topLeft{0.f, Size.y * (i + 1)};
-            sf::Vector2f bottomRight{Size.x, Size.y * (i + 2)};
-            topLeft = this->getTransform().transformPoint(topLeft);
-            bottomRight = this->getTransform().transformPoint(bottomRight);
-
-            if (mousePos.x > topLeft.x && mousePos.x < bottomRight.x &&
-                mousePos.y > topLeft.y && mousePos.y < bottomRight.y)
+            for (int i = 0; i < Items.size(); ++i)
             {
-                Items[i].first.getSelectedSignal().emit(true); // Код верный
-                break;
+                sf::Vector2f topLeft{0.f, Size.y * (i + 1)};
+                sf::Vector2f bottomRight{Size.x, Size.y * (i + 2)};
+                topLeft = this->getTransform().transformPoint(topLeft);
+                bottomRight = this->getTransform().transformPoint(bottomRight);
+
+                if (mousePos.x > topLeft.x && mousePos.x < bottomRight.x &&
+                    mousePos.y > topLeft.y && mousePos.y < bottomRight.y)
+                {
+                    if (selected_item() >= 0)
+                        Items[selected_item()].first.getSelectedSignal().emit(false);
+                    SelectItem(i);
+                    Items[i].first.getSelectedSignal().emit(true);
+                    break;
+                }
             }
+        }
+        sf::Vector2f topLeft2{0.f, 0.f};
+        sf::Vector2f bottomRight2 = Size;
+        topLeft2 = this->getTransform().transformPoint(topLeft2);
+        bottomRight2 = this->getTransform().transformPoint(bottomRight2);
+        if (mousePos.x > topLeft2.x && mousePos.x < bottomRight2.x &&
+            mousePos.y > topLeft2.y && mousePos.y < bottomRight2.y)
+        {
+            if (opend)
+                close();
+            else
+                open();
         }
     }
 }
@@ -141,6 +163,45 @@ int DropDown::AddItem(std::string str)
     return Items.size() - 1;
 }
 
+bool DropDown::RemoveItem(unsigned int index)
+{
+    Log("hi");
+    return 1;
+}
+
+bool DropDown::CanHandleEvents()
+{
+    // anim
+    return opend;
+}
+
+void DropDown::open()
+{
+    opend = 1;
+    // anim
+}
+
+void DropDown::close()
+{
+    opend = 0;
+    // anim
+}
+
+bool DropDown::isOpen() const
+{
+    return opend;
+}
+
+bool DropDown::SelectItem(unsigned int index)
+{
+    if (index >= Items.size())
+        return false;
+
+    this->SelectedItem = index;
+    UpdateList();
+    return true;
+}
+
 void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if (!isVisible)
@@ -148,12 +209,13 @@ void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
     states.transform *= getTransform();
     target.draw(TopBody, states);
     target.draw(BodyText, states);
-    if (Items.size() > 0)
+    // anim
+    if (Items.size() > 0 && opend)
     {
         target.draw(BottomBody, states);
         for (auto item : Items)
         {
-            target.draw(*item.second, states); // кидает исключение при Items.size() > 0
+            target.draw(*item.second, states);
         }
     }
 }

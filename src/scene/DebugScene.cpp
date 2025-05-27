@@ -34,15 +34,17 @@ DebugScene::DebugScene()
             else
                 pr.SetValue(pr.GetValue() + 10);
 
-            std::string label = std::to_string(dd.items_count());
+            std::string label = "item " + std::to_string(dd.items_count());
 
             Item it(label);
 
 
-
-            dd.GetItemSignal( dd.AddItem(label)).connect([label](bool selected)
+            dd.GetItemSignal(dd.AddItem(label)).connect([label](bool selected)
             {
+                Log("===========");
                 Log(label);
+                if (selected) Log("selected");
+                else Log("UNselected");
             });
         }
     });

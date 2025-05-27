@@ -26,7 +26,7 @@ protected:
     sf::Text BodyText;
     RoundedRectangleShape TopBody;
     RoundedRectangleShape BottomBody;
-    bool opend = 0;
+    bool opend = 1;
     bool CanHandleEvents();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
@@ -34,7 +34,7 @@ public:
     void open();
     void close();
     bool isOpen() const;
-    bool SelectItem();
+    bool SelectItem(unsigned int index);
     void UpdateList();
 
 
