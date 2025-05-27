@@ -24,7 +24,6 @@ PushButton::PushButton()
     add(base);
     add(Text);
 }
-
 PushButton::~PushButton()
 {
     delete mHitbox;
@@ -113,66 +112,17 @@ RoundedRectangleShape PushButton::GetBase() const
     return base;
 }
 
-void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
+void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t)
 {
     if (!view || !mHitbox || !IsEnabled)
         return;
 
-    if (!IsEnabled)
-        Log("hi");
-    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), *view);
-    bool nowHovered = mHitbox->contains(mousePos);
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, *view);
 
-    if (nowHovered != isHovered)
-    {
-        isHovered = nowHovered;
-        // Log(std::string("Hovered: ") + (isHovered ? "true" : "false"));
-        onHovered.emit(isHovered);
-    }
-
-    if (event.type == sf::Event::MouseButtonPressed &&
-        event.mouseButton.button == sf::Mouse::Left)
-    {
-        if (isHovered)
-        {
-            isPressed = true;
-            // Log("Click: true");
-            onClick.emit(true);
-        }
-    }
-
-    if (event.type == sf::Event::MouseButtonReleased &&
-        event.mouseButton.button == sf::Mouse::Left)
-    {
-        // Log("Release");
-        onRelease.emit(true);
-
-        if (isPressed && isHovered)
-        {
-            // Log("Click: false");
-            onClick.emit(false);
-        }
-
-        isPressed = false;
-    }
-
-    if (isPressed && isHovered && sf::Mouse::isButtonPressed(sf::Mouse::Left))
-    {
-        // Log("Hold");
-        onHold.emit(true);
-    }
-}
-
-void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform t)
-{
-    if (!view || !mHitbox || !IsEnabled)
-        return;
-
-    sf::Vector2f worldPos = window.mapPixelToCoords(
-        sf::Mouse::getPosition(window),
-        *view);
-
-    sf::Vector2f localPos = t.getInverse().transformPoint(worldPos);
+    sf::Vector2f localPos = t
+        ? t->getInverse().transformPoint(worldPos)
+        : worldPos;
 
     bool nowHovered = mHitbox->contains(localPos);
     if (nowHovered != isHovered)
@@ -193,13 +143,19 @@ void PushButton::HandleEvent(const sf::Event &event, const sf::RenderWindow &win
         event.mouseButton.button == sf::Mouse::Left)
     {
         onRelease.emit(true);
+
         if (isPressed && isHovered)
             onClick.emit(false);
+
         isPressed = false;
     }
 
-    if (isPressed && isHovered && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (isPressed &&
+        isHovered &&
+        sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
         onHold.emit(true);
+    }
 }
 
 void PushButton::setDefaultSignalBehavior(bool enable)

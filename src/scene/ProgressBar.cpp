@@ -52,7 +52,7 @@ void ProgressBar::setSize(sf::Vector2f size)
     ValueChanged.emit(currentVal);
 }
 
-void ProgressBar::HandleEvent(const sf::Event &event, const sf::RenderWindow &window) {}
+void ProgressBar::HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t) {}
 
 void ProgressBar::draw(sf::RenderTarget &target, sf::RenderStates states) const
 {

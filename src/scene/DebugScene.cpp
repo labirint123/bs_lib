@@ -60,7 +60,7 @@ void DebugScene::Resize(sf::Vector2f NewSize)
 void DebugScene::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
 {
     MemGr.HandleEvent(event, window);
-    pb.HandleEvent(event, window, WidgetsGr.getTransform());
+    pb.HandleEvent(event, window, &WidgetsGr.getTransform());
     pr.HandleEvent(event, window);
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
     {

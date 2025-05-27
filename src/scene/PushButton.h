@@ -52,8 +52,8 @@ public:
     ~PushButton();
 
     // Event Handling
-    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
-    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform t);
+    // void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
     void setDefaultSignalBehavior(bool enable);
     void SetEnabled(bool Enabled);
     bool Enabled() { return IsEnabled; }

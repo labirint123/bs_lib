@@ -143,7 +143,7 @@ void GraphWidget::ClearData()
     dirty = true;
 }
 
-void GraphWidget::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
+void GraphWidget::HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t)
 {
     if (!IsMovable)
         return;

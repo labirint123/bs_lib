@@ -35,7 +35,7 @@ public:
     void UpdateList();
 
     void SetPlaceHolderString(std::string str);
-    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
     void setFont(sf::Font &font);
 
     int AddItem(Item &item);

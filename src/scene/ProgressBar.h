@@ -38,6 +38,6 @@ public:
     sf::Vector2f getSize() const { return getBounds().getSize(); }
     void setSize(sf::Vector2f size);
 
-    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 };

@@ -18,7 +18,7 @@ public:
     void Update();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
     void ClearData();
-    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
+    void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
 
     bool IsMovable = 1;
 protected:
