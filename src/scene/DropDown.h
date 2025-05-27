@@ -26,19 +26,24 @@ protected:
     sf::Text BodyText;
     RoundedRectangleShape TopBody;
     RoundedRectangleShape BottomBody;
-
-
+    bool opend = 0;
+    bool CanHandleEvents();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 public:
-
+    void open();
+    void close();
+    bool isOpen() const;
+    bool SelectItem();
     void UpdateList();
+
 
     void SetPlaceHolderString(std::string str);
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
     void setFont(sf::Font &font);
 
     int AddItem(std::string str);
+    bool RemoveItem(unsigned int index);
     int selected_item() const;
     int items_count() const;
     Signal<bool>& GetItemSignal(unsigned int index);
