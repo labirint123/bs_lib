@@ -19,22 +19,32 @@ DebugScene::DebugScene()
     add(FrameGr);
     pb.setPosition({0, 0});
     pr.setPosition({0, pb.getSize().y + 10});
+
     dd.setPosition({0, pr.getPosition().y + pr.getSize().y + 10});
+    dd.SetPlaceHolderString("PlaceHolder");
+
 
     pb.onClick.connect([this](bool down)
-                       {
-                           if (pr.GetValue() >= pr.GetMaxValue() && down)
-                               this->pr.SetValue(0);
-                           else if (down)
-                               this->pr.SetValue(this->pr.GetValue() + 10);
-                           int *alloc = new int[999999];
-                           if (down)
-                           {
-                               for (size_t i = 0; i < 999999; i++)
-                               {
-                                   alloc[i] = i;
-                               }
-                           } });
+    {
+        if (down)
+        {
+            if (pr.GetValue() >= pr.GetMaxValue())
+                pr.SetValue(0);
+            else
+                pr.SetValue(pr.GetValue() + 10);
+
+            std::string label = std::to_string(dd.items_count());
+
+            Signal<bool> a;
+            Item it(a, label);
+            dd.AddItem(it);
+
+            a.connect([label](bool selected)
+            {
+                Log(label);
+            });
+        }
+    });
 }
 
 void DebugScene::Resize(sf::Vector2f NewSize)
@@ -47,7 +57,7 @@ void DebugScene::Resize(sf::Vector2f NewSize)
     WidgetsGr.setPosition(sf::Vector2f(static_cast<float>(pos.x), static_cast<float>(pos.y)));
 }
 
-void DebugScene::HandleEvent(const sf::Event &event, const sf::RenderWindow &window)
+void DebugScene::HandleEvent(const sf::Event& event, const sf::RenderWindow& window)
 {
     MemGr.HandleEvent(event, window);
     pb.HandleEvent(event, window, WidgetsGr.getTransform());

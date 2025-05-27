@@ -1,10 +1,17 @@
 #pragma once
 #include "Widget.h"
 #include "RoundedRectangleShape.hpp"
+#include "Item.h"
+#include "signal.h"
 
 class DropDown : public Widget
 {
 protected:
+    std::vector<std::pair<Item, sf::Text*>> Items;
+    int SelectedItem = -1;
+
+    std::string PlaseHolderString;
+
     sf::Vector2f Size{150, 30};
     unsigned int CharacterSize = 20;
     float OutlineThickness = 2;
@@ -18,12 +25,22 @@ protected:
     sf::Font font;
     sf::Text BodyText;
     RoundedRectangleShape TopBody;
+    RoundedRectangleShape BottomBody;
+
 
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
 public:
+
+    void UpdateList();
+
     void SetPlaceHolderString(std::string str);
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window);
-    void setFont(sf::Font font);
+    void setFont(sf::Font &font);
+
+    int AddItem(Item &item);
+    int AddItem(std::string str, Signal<bool> &selected);
+    int selected_item() const;
+    int items_count() const;
     DropDown();
 };
