@@ -228,7 +228,6 @@ inline void Align(ItemT &item, const TargetT &target, Aligns align)
         itemPos,
         align);
     
-    Log(sf::Vector2f(static_cast<int>(aligned.x - offset.x), static_cast<int>(aligned.y - offset.y)));
     item.setPosition(sf::Vector2f(static_cast<int>(aligned.x - offset.x), static_cast<int>(aligned.y - offset.y)));
 }
 
