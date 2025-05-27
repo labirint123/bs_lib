@@ -5,10 +5,12 @@
 class Item
 {
 public:
-    Item(Signal<bool> &selected, std::string string);
+    Item(std::string string);
+    Item();
     std::string getString();
     Signal<bool>& getSelectedSignal();
     unsigned int getId();
+
 private:
     Signal<bool> selected;
     std::string string;

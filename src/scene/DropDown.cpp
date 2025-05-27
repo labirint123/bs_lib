@@ -52,8 +52,8 @@ void DropDown::UpdateList()
 
             sf::FloatRect bounds = text->getLocalBounds();
             text->setOrigin(
-                std::round(bounds.left + bounds.width  / 2.f),
-                std::round(bounds.top  + bounds.height / 2.f)
+                std::round(bounds.left + bounds.width / 2.f),
+                std::round(bounds.top + bounds.height / 2.f)
             );
 
 
@@ -64,7 +64,7 @@ void DropDown::UpdateList()
             ++index;
         }
 
-        BottomBody.setSize({ Size.x, Size.y * Items.size() });
+        BottomBody.setSize({Size.x, Size.y * Items.size()});
     }
 }
 
@@ -79,6 +79,16 @@ int DropDown::items_count() const
     return Items.size();
 }
 
+Signal<bool>& DropDown::GetItemSignal(unsigned int index)
+{
+    if (index >= Items.size())
+    {
+        Log("Signal<bool>& DropDown::GetItemSignal(unsigned int index)\nOut of Items range");
+        throw("Signal<bool>& DropDown::GetItemSignal(unsigned int index)\nOut of Items range");
+    }
+    return Items[index].first.getSelectedSignal();
+}
+
 void DropDown::SetPlaceHolderString(std::string str)
 {
     PlaseHolderString = str;
@@ -87,6 +97,31 @@ void DropDown::SetPlaceHolderString(std::string str)
 
 void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& window, sf::Transform* t)
 {
+    if (Items.empty())
+        return;
+
+    if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left)
+    {
+        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, *view);
+
+        sf::Vector2f mousePos = t ? t->getInverse().transformPoint(worldPos) : worldPos;
+
+        for (int i = 0; i < Items.size(); ++i)
+        {
+            sf::Vector2f topLeft{0.f, Size.y * (i + 1)};
+            sf::Vector2f bottomRight{Size.x, Size.y * (i + 2)};
+            topLeft = this->getTransform().transformPoint(topLeft);
+            bottomRight = this->getTransform().transformPoint(bottomRight);
+
+            if (mousePos.x > topLeft.x && mousePos.x < bottomRight.x &&
+                mousePos.y > topLeft.y && mousePos.y < bottomRight.y)
+            {
+                Items[i].first.getSelectedSignal().emit(true); // Код верный
+                break;
+            }
+        }
+    }
 }
 
 void DropDown::setFont(sf::Font& font)
@@ -99,18 +134,11 @@ void DropDown::setFont(sf::Font& font)
     }
 }
 
-int DropDown::AddItem(Item& item)
+int DropDown::AddItem(std::string str)
 {
-    this->Items.push_back({item, nullptr});
+    this->Items.push_back({Item(str), nullptr});
     UpdateList();
-    return Items.size();
-}
-
-int DropDown::AddItem(std::string str, Signal<bool>& selected)
-{
-    this->Items.push_back({Item(selected, str), nullptr});
-    UpdateList();
-    return Items.size();
+    return Items.size() - 1;
 }
 
 void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const

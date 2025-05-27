@@ -38,9 +38,9 @@ public:
     void HandleEvent(const sf::Event &event, const sf::RenderWindow &window, sf::Transform* t = nullptr);
     void setFont(sf::Font &font);
 
-    int AddItem(Item &item);
-    int AddItem(std::string str, Signal<bool> &selected);
+    int AddItem(std::string str);
     int selected_item() const;
     int items_count() const;
+    Signal<bool>& GetItemSignal(unsigned int index);
     DropDown();
 };

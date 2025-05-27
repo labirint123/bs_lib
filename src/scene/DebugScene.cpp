@@ -12,8 +12,8 @@ DebugScene::DebugScene()
     pb.SetView(DefaultView);
 
     add(MemGr);
-    WidgetsGr.add(pb);
     WidgetsGr.add(pr);
+    WidgetsGr.add(pb);
     WidgetsGr.add(dd);
     add(WidgetsGr);
     add(FrameGr);
@@ -22,6 +22,7 @@ DebugScene::DebugScene()
 
     dd.setPosition({0, pr.getPosition().y + pr.getSize().y + 10});
     dd.SetPlaceHolderString("PlaceHolder");
+    dd.SetView(DefaultView);
 
 
     pb.onClick.connect([this](bool down)
@@ -35,11 +36,11 @@ DebugScene::DebugScene()
 
             std::string label = std::to_string(dd.items_count());
 
-            Signal<bool> a;
-            Item it(a, label);
-            dd.AddItem(it);
+            Item it(label);
 
-            a.connect([label](bool selected)
+
+
+            dd.GetItemSignal( dd.AddItem(label)).connect([label](bool selected)
             {
                 Log(label);
             });
@@ -62,6 +63,8 @@ void DebugScene::HandleEvent(const sf::Event& event, const sf::RenderWindow& win
     MemGr.HandleEvent(event, window);
     pb.HandleEvent(event, window, &WidgetsGr.getTransform());
     pr.HandleEvent(event, window);
+    dd.HandleEvent(event, window, &WidgetsGr.getTransform());
+
     if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
     {
         pb.SetEnabled(!pb.Enabled());

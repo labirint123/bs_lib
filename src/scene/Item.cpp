@@ -1,9 +1,13 @@
 #include "Item.h"
 
-Item::Item(Signal<bool>& selected, std::string string)
+Item::Item(std::string string)
 {
     this->string = string;
-    this->selected = selected;
+}
+
+Item::Item()
+{
+
 }
 
 std::string Item::getString()
