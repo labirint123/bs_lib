@@ -13,7 +13,7 @@ DropDown::DropDown()
     BottomBody.setCornerRadius(CornerRadius);
     BottomBody.setFillColor(FillColor);
     BottomBody.setOutlineThickness(OutlineThickness);
-    BottomBody.setPosition({0, Size.y});
+    BottomBody.setPosition({0, Size.y + OutlineThickness});
 
     BodyText.setCharacterSize(CharacterSize);
     BodyText.setStyle(sf::Text::Bold);
@@ -37,15 +37,14 @@ void DropDown::UpdateList()
         BodyText.setString(Items[selected_item()].first.getString());
         Align(BodyText, TopBody, Aligns::Center);
     }
+
     if (!Items.empty())
     {
-        size_t index = 0;
-        for (auto& item_r : Items)
+        for (size_t i = 0; i < Items.size(); ++i)
         {
-            auto& text = item_r.second;
-            auto& item = item_r.first;
-
-            if (text == nullptr)
+            auto& text = Items[i].second;
+            auto& item = Items[i].first;
+            if (!text)
             {
                 text = new sf::Text;
                 text->setCharacterSize(CharacterSize);
@@ -54,21 +53,21 @@ void DropDown::UpdateList()
             }
             text->setString(item.getString());
 
-            sf::FloatRect bounds = text->getLocalBounds();
+            sf::FloatRect b = text->getLocalBounds();
             text->setOrigin(
-                std::round(bounds.left + bounds.width / 2.f),
-                std::round(bounds.top + bounds.height / 2.f)
+                std::round(b.left + b.width / 2.f),
+                std::round(b.top + b.height / 2.f)
             );
 
-
-            float posX = std::round(Size.x / 2.f);
-            float posY = std::round(Size.y * (index + 1) + Size.y / 2.f);
-            text->setPosition(posX, posY);
-
-            ++index;
+            float innerW = Size.x - 2 * OutlineThickness;
+            float off = OutlineThickness;
+            float x = off + innerW / 2.f;
+            float y = off + Size.y * (i + 1) + Size.y / 2.f;
+            text->setPosition(std::round(x), std::round(y));
         }
 
         BottomBody.setSize({Size.x, Size.y * Items.size()});
+        BottomBody.setPosition(0, std::round(Size.y + OutlineThickness));
     }
 }
 
@@ -115,8 +114,8 @@ void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& windo
         {
             for (int i = 0; i < Items.size(); ++i)
             {
-                sf::Vector2f topLeft{0.f, Size.y * (i + 1)};
-                sf::Vector2f bottomRight{Size.x, Size.y * (i + 2)};
+                sf::Vector2f topLeft{0.f, Size.y * (i + 1) + OutlineThickness};
+                sf::Vector2f bottomRight{Size.x, Size.y * (i + 2) + OutlineThickness};
                 topLeft = this->getTransform().transformPoint(topLeft);
                 bottomRight = this->getTransform().transformPoint(bottomRight);
 
@@ -131,8 +130,8 @@ void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& windo
                 }
             }
         }
-        sf::Vector2f topLeft2{0.f, 0.f};
-        sf::Vector2f bottomRight2 = Size;
+        sf::Vector2f topLeft2{0.f, 0.f + OutlineThickness};
+        sf::Vector2f bottomRight2 = {Size.x, Size.y + OutlineThickness};
         topLeft2 = this->getTransform().transformPoint(topLeft2);
         bottomRight2 = this->getTransform().transformPoint(bottomRight2);
         if (mousePos.x > topLeft2.x && mousePos.x < bottomRight2.x &&
