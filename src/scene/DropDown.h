@@ -3,6 +3,7 @@
 #include "RoundedRectangleShape.hpp"
 #include "Item.h"
 #include "signal.h"
+#include "MoveAnim.h"
 
 class DropDown : public Widget
 {
@@ -26,7 +27,9 @@ protected:
     sf::Text BodyText;
     RoundedRectangleShape TopBody;
     RoundedRectangleShape BottomBody;
+    Group BottomGroup;
     bool opend = 1;
+    MoveAnim anim;
     bool CanHandleEvents();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 

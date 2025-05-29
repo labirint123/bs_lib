@@ -23,6 +23,11 @@ DropDown::DropDown()
         font = *bs::DefaultFont;
         BodyText.setFont(font);
     }
+    BottomGroup.add(BottomBody);
+
+    anim.SetAnimationType(Animation::easeInOutCubic);
+    anim.SetDeltaTime(sf::seconds(0.3));
+    anim.SetObj(&BottomGroup);
 }
 
 void DropDown::UpdateList()
@@ -37,6 +42,9 @@ void DropDown::UpdateList()
         BodyText.setString(Items[selected_item()].first.getString());
         Align(BodyText, TopBody, Aligns::Center);
     }
+
+    BottomGroup.clear();
+    BottomGroup.add(BottomBody);
 
     if (!Items.empty())
     {
@@ -64,6 +72,7 @@ void DropDown::UpdateList()
             float x = off + innerW / 2.f;
             float y = off + Size.y * (i + 1) + Size.y / 2.f;
             text->setPosition(std::round(x), std::round(y));
+            BottomGroup.add(*text);
         }
 
         BottomBody.setSize({Size.x, Size.y * Items.size()});
@@ -170,18 +179,22 @@ bool DropDown::RemoveItem(unsigned int index)
 
 bool DropDown::CanHandleEvents()
 {
-    // anim
     return opend;
 }
 
 void DropDown::open()
 {
+    anim.Abort();
+    anim.SetMoveOffset({0, TopBody.getPosition().y + TopBody.getSize().y});
+    anim.Start();
     opend = 1;
+    Log("started");
     // anim
 }
 
 void DropDown::close()
 {
+    BottomGroup.setPosition({0, 0 - BottomBody.getSize().y - TopBody.getSize().y - OutlineThickness * 2});
     opend = 0;
     // anim
 }
@@ -209,12 +222,8 @@ void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(TopBody, states);
     target.draw(BodyText, states);
     // anim
-    if (Items.size() > 0 && opend)
+    if (Items.size() > 0) // && opend
     {
-        target.draw(BottomBody, states);
-        for (auto item : Items)
-        {
-            target.draw(*item.second, states);
-        }
+        target.draw(BottomGroup, states);
     }
 }

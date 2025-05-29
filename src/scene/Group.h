@@ -38,6 +38,16 @@ public:
     void add(sf::VertexArray &o);
     void add(Group &o);
     void add(RoundedRectangleShape &o);
+    // REMOVE
+    void remove(sf::Text &o);
+    void remove(sf::Sprite &o);
+    void remove(sf::RectangleShape &o);
+    void remove(sf::CircleShape &o);
+    void remove(sf::Shape *o);
+    void remove(sf::VertexArray &o);
+    void remove(Group &o);
+    void remove(RoundedRectangleShape &o);
+    void clear();
     // POS
     sf::Vector2f getPosition() const;
     void setPosition(sf::Vector2f pos);

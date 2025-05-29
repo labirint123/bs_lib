@@ -1,7 +1,6 @@
 #include "Group.h"
 #include <algorithm>
 #include "Log.h"
-
 #include "Group.h"
 #include <algorithm>
 #include "Log.h"
@@ -59,6 +58,73 @@ void Group::add(RoundedRectangleShape &o)
 {
     Shapes.push_back(&o);
     drawables.push_back(&o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::Text& o)
+{
+    std::erase(Texts, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::Sprite& o)
+{
+    std::erase(Sprites, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::RectangleShape& o)
+{
+    std::erase(Shapes, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::CircleShape& o)
+{
+    std::erase(Shapes, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::Shape* o)
+{
+    std::erase(Shapes, o);
+    std::erase(drawables, o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(sf::VertexArray& o)
+{
+    std::erase(VertexArrays, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(Group& o)
+{
+    std::erase(Groups, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::remove(RoundedRectangleShape& o)
+{
+    std::erase(Shapes, &o);
+    std::erase(drawables, &o);
+    onBoundsChanged.emit();
+}
+
+void Group::clear()
+{
+    Texts.clear();
+    Sprites.clear();
+    Shapes.clear();
+    VertexArrays.clear();
+    Groups.clear();
+    drawables.clear();
     onBoundsChanged.emit();
 }
 

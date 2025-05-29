@@ -1,5 +1,5 @@
 #include "MoveAnim.h"
-#include <iostream>
+#include "Log.h"
 
 void MoveAnim::MakeAMove(float UpdatedProgress)
 {
@@ -9,10 +9,11 @@ void MoveAnim::MakeAMove(float UpdatedProgress)
     sf::Vector2f prevMove = moveOffset * this->LastProgress;
     sf::Vector2f delta = totalMove - prevMove;
 
+    this->LastProgress = UpdatedProgress;
     if (std::abs(delta.x) >= 0.5f || std::abs(delta.y) >= 1.5f)
     {
         Move({delta.x, delta.y});
-        this->LastProgress = UpdatedProgress;
+        Log(UpdatedProgress);
     }
 }
 

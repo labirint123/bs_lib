@@ -9,7 +9,7 @@
 #include "ProgressBar.h"
 #include "DebugScene.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     bs core;
     core.bsInit(argc, argv);
@@ -23,7 +23,17 @@ int main(int argc, char *argv[])
             : (sf::Style::Default),
         settings);
     window.setVerticalSyncEnabled(1);
-
+    RoundedRectangleShape r;
+    r.setSize({100, 100});
+    r.setCornerRadius(10);
+    MoveAnim a;
+    Group g;
+    g.add(r);
+    a.SetMoveOffset({10, 100});
+    a.SetObj(&g);
+    a.SetDeltaTime(sf::seconds(5));
+    a.SetAnimationType(Animation::easeInOutCubic);
+    a.Start();
     DebugScene deb;
     deb.Resize(sf::Vector2f(window.getSize().x, window.getSize().y));
     while (window.isOpen() || !bs::IsProgrammEnd)
@@ -59,6 +69,7 @@ int main(int argc, char *argv[])
         window.clear(sf::Color(20, 20, 20));
         window.draw(deb);
         deb.AfterDraw();
+        window.draw(g);
         window.display();
     }
 

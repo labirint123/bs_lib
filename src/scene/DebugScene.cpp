@@ -67,23 +67,24 @@ void DebugScene::HandleEvent(const sf::Event& event, const sf::RenderWindow& win
     pb.HandleEvent(event, window, &t);
     pr.HandleEvent(event, window);
     dd.HandleEvent(event, window, &t);
-
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D)
+    if (event.type == sf::Event::KeyPressed)
     {
-        pb.SetEnabled(!pb.Enabled());
-    }
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V)
-    {
-        pb.SetVisibility(!pb.IsVisible());
-        pr.SetVisibility(!pr.IsVisible());
-    }
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Add)
-    {
-        pr.SetValue(pr.GetValue() + 1);
-    }
-    if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Subtract)
-    {
-        pr.SetValue(pr.GetValue() - 1);
+        switch (event.key.code)
+        {
+        case sf::Keyboard::D:
+            pb.SetEnabled(!pb.Enabled());
+            break;
+        case sf::Keyboard::V:
+            pb.SetVisibility(!pb.IsVisible());
+            pr.SetVisibility(!pr.IsVisible());
+            break;
+        case sf::Keyboard::Add:
+            pr.SetValue(pr.GetValue() + 1);
+            break;
+        case sf::Keyboard::Subtract:
+            pr.SetValue(pr.GetValue() - 1);
+            break;
+        }
     }
 }
 
