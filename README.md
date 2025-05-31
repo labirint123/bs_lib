@@ -1,7 +1,8 @@
 
-# sfml-engine
-Small library that allows you to make your games easier.
+# BS-lib
+Small Undone library that allows you to make your games easier.
 
+![image](doc/screenshot.png)
 # Features
 
 ## Multi-threaded animation engine
@@ -18,16 +19,21 @@ Small library that allows you to make your games easier.
 - Groups  
 - Signals  
 - TickRateController  
-- Other utilities  
 - Rounded rectangle  
 - Simple logger  
 - resources using bin2c
 - Json Manager
 - Scenes
+- Other utilities
+- PushButton
+- ProgressBar
+- Graph
+- DropDown
 
 ## Debug features
 
-- Easy drawable graph class  
+- Complited Memory Graph
+- Complited FrameTime Graph
 - Cross-platform hardware usage information (for now – only RAM)  
 
 ## How to build
@@ -49,6 +55,8 @@ make -j$(nproc)
 * ~~Scene manager~~
 * ~~hitboxes~~
 * ~~more optimization in graphs~~
-* Easy sound control system
-* base widgets
+* ~~base widgets~~
 * fix issue with roundedrect corner radius subsequence
+* add more signals everywhere
+
+> I don’t plan to continue active development on this project.
