@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/System.hpp>
 #include <vector>
-
+#include "Log.h"
 class Animator;
 class Animation
 {
@@ -18,7 +18,7 @@ public:
 
     int Start();
     bool Start(unsigned int ThreadId);
-    int StartClone();
+    Animation* StartClone();
     void Abort() { isAborted = 1; }
 
     void SetAnimationType(AnimationType type) { this->type = type; }

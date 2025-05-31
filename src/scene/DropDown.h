@@ -30,6 +30,7 @@ protected:
     Group BottomGroup;
     bool opend = 1;
     MoveAnim anim;
+    Animation* animClone = nullptr;
     bool CanHandleEvents();
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 

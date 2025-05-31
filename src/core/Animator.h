@@ -30,7 +30,7 @@ public:
 struct ThreadPoolThread
 {
     std::thread thread;
-    unsigned int TasksCount;
+    unsigned int TasksCount = 0;
     int index;
     std::vector<Animation *> animations;
 

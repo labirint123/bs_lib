@@ -33,9 +33,11 @@ void Animator::StartCicle(const int ThreadIndex)
         {
             if (anims->at(i) == nullptr){
                 anims->erase(anims->begin() + i);
+                Animator::thread_pool.at(ThreadIndex)->TasksCount--;
                 continue;
             }
-            if (anims->at(i)->timePassed.getElapsedTime().asSeconds() >= anims->at(i)->DeltaTime.asSeconds())
+            if (anims->at(i)->timePassed.getElapsedTime().asSeconds() >= anims->at(i)->DeltaTime.asSeconds()
+                && anims->at(i)->isFinised == 0 && anims->at(i)->isAborted == 0)
             {
                 anims->at(i)->MakeAMove(1);
 

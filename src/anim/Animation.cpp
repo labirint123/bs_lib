@@ -55,9 +55,12 @@ bool Animation::Start(unsigned int ThreadId)
     return false;
 }
 
-int Animation::StartClone()
+Animation* Animation::StartClone()
 {
-    Animation *clone = this->Clone(); 
+    Animation* clone = this->Clone();
+    clone->isAborted = 0;
+    clone->isStarted = 0;
+    clone->LastProgress = 0;
     this->Cloned.push_back(clone);
     int ret = clone->Start();
     for (size_t i = 0; i < Cloned.size(); i++)
@@ -75,5 +78,5 @@ int Animation::StartClone()
         }
     }
 
-    return ret;
+    return clone;
 }

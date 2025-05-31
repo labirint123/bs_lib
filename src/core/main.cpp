@@ -22,18 +22,7 @@ int main(int argc, char* argv[])
             ? (sf::Style::Titlebar | sf::Style::Close)
             : (sf::Style::Default),
         settings);
-    window.setVerticalSyncEnabled(1);
-    RoundedRectangleShape r;
-    r.setSize({100, 100});
-    r.setCornerRadius(10);
-    MoveAnim a;
-    Group g;
-    g.add(r);
-    a.SetMoveOffset({10, 100});
-    a.SetObj(&g);
-    a.SetDeltaTime(sf::seconds(5));
-    a.SetAnimationType(Animation::easeInOutCubic);
-    a.Start();
+    window.setVerticalSyncEnabled(0);
     DebugScene deb;
     deb.Resize(sf::Vector2f(window.getSize().x, window.getSize().y));
     while (window.isOpen() || !bs::IsProgrammEnd)
@@ -69,7 +58,6 @@ int main(int argc, char* argv[])
         window.clear(sf::Color(20, 20, 20));
         window.draw(deb);
         deb.AfterDraw();
-        window.draw(g);
         window.display();
     }
 

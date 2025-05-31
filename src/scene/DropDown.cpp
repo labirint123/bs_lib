@@ -78,6 +78,7 @@ void DropDown::UpdateList()
         BottomBody.setSize({Size.x, Size.y * Items.size()});
         BottomBody.setPosition(0, std::round(Size.y + OutlineThickness));
     }
+    anim.SetObj(&BottomGroup);
 }
 
 
@@ -184,19 +185,32 @@ bool DropDown::CanHandleEvents()
 
 void DropDown::open()
 {
-    anim.Abort();
-    anim.SetMoveOffset({0, TopBody.getPosition().y + TopBody.getSize().y});
-    anim.Start();
+    if (animClone != nullptr)
+    {
+        animClone->Abort();
+    }
+    anim.SetMoveOffset({0, TopBody.getSize().y + BottomBody.getSize().y + OutlineThickness * 2});
+    anim.SetObj(&BottomGroup);
+    animClone = anim.StartClone();
+
+    Log("Open");
     opend = 1;
-    Log("started");
-    // anim
 }
 
 void DropDown::close()
 {
-    BottomGroup.setPosition({0, 0 - BottomBody.getSize().y - TopBody.getSize().y - OutlineThickness * 2});
+    if (animClone != nullptr)
+    {
+        animClone->Abort();
+    }
+    sf::Vector2f finalPos = {0, 0 - BottomBody.getSize().y - TopBody.getSize().y - OutlineThickness * 2};
+    sf::Vector2f DeltaMove = finalPos - BottomGroup.getPosition();
+    anim.SetMoveOffset(DeltaMove);
+    anim.SetObj(&BottomGroup);
+    animClone = anim.StartClone();
+
+    Log("Close");
     opend = 0;
-    // anim
 }
 
 bool DropDown::isOpen() const
