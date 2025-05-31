@@ -189,7 +189,9 @@ void DropDown::open()
     {
         animClone->Abort();
     }
-    anim.SetMoveOffset({0, TopBody.getSize().y + BottomBody.getSize().y + OutlineThickness * 2});
+    sf::Vector2f finalPos = {0, 0};
+    sf::Vector2f DeltaMove = finalPos - BottomGroup.getPosition();
+    anim.SetMoveOffset(DeltaMove);
     anim.SetObj(&BottomGroup);
     animClone = anim.StartClone();
 
