@@ -45,11 +45,15 @@ void DropDown::UpdateList()
 
     BottomGroup.clear();
     BottomGroup.add(BottomBody);
-
+    bool sel = 0;
     if (!Items.empty())
     {
         for (size_t i = 0; i < Items.size(); ++i)
         {
+            if (selected_item() == i)
+            {
+                sel = 1;
+            }
             auto& text = Items[i].second;
             auto& item = Items[i].first;
             if (!text)
@@ -60,6 +64,8 @@ void DropDown::UpdateList()
                 text->setFont(font);
             }
             text->setString(item.getString());
+            if (selected_item() == i)
+                text->setString("");
 
             sf::FloatRect b = text->getLocalBounds();
             text->setOrigin(
@@ -71,11 +77,19 @@ void DropDown::UpdateList()
             float off = OutlineThickness;
             float x = off + innerW / 2.f;
             float y = off + Size.y * (i + 1) + Size.y / 2.f;
+            if (sel)
+                y = off + Size.y * (i) + Size.y / 2.f;
+            else
+                y = off + Size.y * (i + 1) + Size.y / 2.f;
+
             text->setPosition(std::round(x), std::round(y));
             BottomGroup.add(*text);
         }
+        if (SelectedItem == -1)
+            BottomBody.setSize({Size.x, Size.y * Items.size()});
+        else
+            BottomBody.setSize({Size.x, Size.y * (Items.size() - 1)});
 
-        BottomBody.setSize({Size.x, Size.y * Items.size()});
         BottomBody.setPosition(0, std::round(Size.y + OutlineThickness));
     }
     anim.SetObj(&BottomGroup);
