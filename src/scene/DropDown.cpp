@@ -30,7 +30,7 @@ DropDown::DropDown()
     BottomGroup.add(BottomBody);
 
     anim.SetAnimationType(Animation::easeOutCubic);
-    anim.SetDeltaTime(sf::seconds(0.1));
+    anim.SetDeltaTime(sf::seconds(0.2));
     anim.SetObj(&BottomGroup);
 }
 
@@ -328,7 +328,8 @@ void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
         {
             float halfTop = Size.y / 2.f;
             float newBoundary = halfTop;
-            float bottomHeight = BottomBody.getSize().y;
+            float bottomHeight = BottomBody.getSize().y + OutlineThickness * 3;
+            // float bottomHeight = BottomBody.getSize().y + OutlineThickness;
             unsigned texW = static_cast<unsigned>(std::ceil(Size.x + 2 * OutlineThickness));
             unsigned texH = static_cast<unsigned>(std::ceil(bottomHeight + halfTop));
 
