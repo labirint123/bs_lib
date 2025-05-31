@@ -29,8 +29,8 @@ DropDown::DropDown()
     }
     BottomGroup.add(BottomBody);
 
-    anim.SetAnimationType(Animation::easeInOutCubic);
-    anim.SetDeltaTime(sf::seconds(0.3));
+    anim.SetAnimationType(Animation::easeOutCubic);
+    anim.SetDeltaTime(sf::seconds(0.1));
     anim.SetObj(&BottomGroup);
 }
 
@@ -314,27 +314,64 @@ bool DropDown::SelectItem(unsigned int index)
     return true;
 }
 
+
 void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
     if (!isVisible)
         return;
     states.transform *= getTransform();
     sf::RenderStates prevStates = states;
-    if (Items.size() > 0 && (opend || animClone->IsStarted() && (animClone != nullptr && !animClone->IsAborted())))
-    {
-        states.transform *= BottomGroup.getTransform();
 
-        for (auto item : BottomGroup.Shapes)
+    if (Items.size() > 0 && (opend || (animClone && animClone->IsStarted() && !animClone->IsAborted())))
+    {
+        if (animClone && animClone->IsStarted() && !animClone->IsAborted())
         {
-            target.draw(*item, states);
+            float halfTop = Size.y / 2.f;
+            float newBoundary = halfTop;
+            float bottomHeight = BottomBody.getSize().y;
+            unsigned texW = static_cast<unsigned>(std::ceil(Size.x + 2 * OutlineThickness));
+            unsigned texH = static_cast<unsigned>(std::ceil(bottomHeight + halfTop));
+
+            static sf::RenderTexture clipTexture;
+            static sf::Vector2u lastSize{0, 0};
+            if (lastSize.x != texW || lastSize.y != texH)
+            {
+                clipTexture.create(texW, texH);
+                lastSize = {texW, texH};
+            }
+
+            clipTexture.clear(sf::Color::Transparent);
+
+            sf::View clipView(sf::FloatRect(-OutlineThickness, newBoundary, (float)texW, (float)texH));
+            clipTexture.setView(clipView);
+
+            sf::RenderStates rs;
+            rs.transform = BottomGroup.getTransform();
+
+            for (auto item : BottomGroup.Shapes)
+                clipTexture.draw(*item, rs);
+
+            if (DrawHighLight)
+                clipTexture.draw(SelectionHighlight, rs);
+
+            for (auto item : BottomGroup.Texts)
+                clipTexture.draw(*item, rs);
+
+            clipTexture.display();
+
+            sf::Sprite sprite(clipTexture.getTexture());
+            sprite.setPosition(-OutlineThickness, newBoundary);
+            target.draw(sprite, states);
         }
-        if (DrawHighLight)
+        else
         {
-            target.draw(SelectionHighlight, states);
-        }
-        for (auto item : BottomGroup.Texts)
-        {
-            target.draw(*item, states);
+            states.transform *= BottomGroup.getTransform();
+            for (auto item : BottomGroup.Shapes)
+                target.draw(*item, states);
+            if (DrawHighLight)
+                target.draw(SelectionHighlight, states);
+            for (auto item : BottomGroup.Texts)
+                target.draw(*item, states);
         }
     }
 
