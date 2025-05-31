@@ -32,6 +32,9 @@ DropDown::DropDown()
     anim.SetAnimationType(Animation::easeOutCubic);
     anim.SetDeltaTime(sf::seconds(0.2));
     anim.SetObj(&BottomGroup);
+
+    add(TopBody);
+    add(BottomGroup);
 }
 
 void DropDown::UpdateList()
@@ -279,7 +282,6 @@ void DropDown::open()
     anim.SetObj(&BottomGroup);
     animClone = anim.StartClone();
 
-    Log("Open");
     opend = 1;
 }
 
@@ -295,7 +297,6 @@ void DropDown::close()
     anim.SetObj(&BottomGroup);
     animClone = anim.StartClone();
 
-    Log("Close");
     opend = 0;
 }
 

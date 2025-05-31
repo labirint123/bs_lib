@@ -39,7 +39,7 @@ public:
         gobj = o;
         tobj = nullptr;
     }
-
+protected:
     sf::Transformable *GetTransformable() const { return tobj; }
     void Move(sf::Vector2f offset);
     void SetPosition(sf::Vector2f pos);
