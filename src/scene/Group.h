@@ -5,6 +5,8 @@
 #include "Signal.h"
 #include "RoundedRectangleShape.hpp"
 
+
+class DropDown;
 class Group : public sf::Drawable
 {
 protected:
@@ -72,4 +74,5 @@ public:
 
 protected:
     void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
+    friend DropDown;
 };

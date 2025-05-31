@@ -18,15 +18,18 @@ protected:
     float OutlineThickness = 2;
     float CornerRadius = 10;
     sf::Color TextColor = sf::Color::White;
-    sf::Color FillColor = sf::Color(50, 50, 50, 200);
-    sf::Color DisabledFillColor = sf::Color(30, 30, 30, 200);
-    sf::Color HoverFillColor = sf::Color(70, 70, 70, 200);
-    sf::Color PressedFillColor = sf::Color(30, 30, 30, 200);
+    sf::Color FillColor = sf::Color(50, 50, 50);
+    sf::Color DisabledFillColor = sf::Color(30, 30, 30);
+    sf::Color HoverFillColor = sf::Color(70, 70, 70);
+    sf::Color PressedFillColor = sf::Color(30, 30, 30);
 
     sf::Font font;
     sf::Text BodyText;
     RoundedRectangleShape TopBody;
     RoundedRectangleShape BottomBody;
+    RoundedRectangleShape SelectionHighlight;
+    bool DrawHighLight = false;
+
     Group BottomGroup;
     bool opend = 1;
     MoveAnim anim;

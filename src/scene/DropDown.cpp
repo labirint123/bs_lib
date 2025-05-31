@@ -15,6 +15,10 @@ DropDown::DropDown()
     BottomBody.setOutlineThickness(OutlineThickness);
     BottomBody.setPosition({0, Size.y + OutlineThickness});
 
+    SelectionHighlight.setSize(Size);
+    SelectionHighlight.setCornerRadius(CornerRadius);
+    SelectionHighlight.setFillColor(HoverFillColor);
+
     BodyText.setCharacterSize(CharacterSize);
     BodyText.setStyle(sf::Text::Bold);
 
@@ -95,7 +99,6 @@ void DropDown::UpdateList()
     anim.SetObj(&BottomGroup);
 }
 
-
 int DropDown::selected_item() const
 {
     return SelectedItem;
@@ -124,12 +127,66 @@ void DropDown::SetPlaceHolderString(std::string str)
 
 void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& window, sf::Transform* t)
 {
-    if (Items.empty())
-        return;
-
     sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
     sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, *view);
     sf::Vector2f mousePos = t ? t->getInverse().transformPoint(worldPos) : worldPos;
+
+    // HOWER
+    // TOP
+    sf::Vector2f topLeft2{0.f, 0.f};
+    sf::Vector2f bottomRight2 = {Size.x, Size.y};
+    topLeft2 = this->getTransform().transformPoint(topLeft2);
+    bottomRight2 = this->getTransform().transformPoint(bottomRight2);
+    if (mousePos.x > topLeft2.x && mousePos.x < bottomRight2.x &&
+        mousePos.y > topLeft2.y && mousePos.y < bottomRight2.y)
+        TopBody.setFillColor(HoverFillColor);
+    else
+        TopBody.setFillColor(FillColor);
+    // BOTTOM
+    {
+        bool sel = 0;
+        for (int i = 0; i < Items.size(); ++i)
+        {
+            if (selected_item() == i)
+            {
+                sel = 1;
+                continue;
+            }
+            sf::Vector2f topLeft{0.f, Size.y * (i + 1) + OutlineThickness};
+            sf::Vector2f bottomRight{Size.x, Size.y * (i + 2) + OutlineThickness};
+
+            if (sel)
+            {
+                topLeft = {0.f, Size.y * (i) + OutlineThickness};
+                bottomRight = {Size.x, Size.y * (i + 1) + OutlineThickness};
+            }
+
+            topLeft = this->getTransform().transformPoint(topLeft);
+            bottomRight = this->getTransform().transformPoint(bottomRight);
+
+            if (mousePos.x > topLeft.x && mousePos.x < bottomRight.x &&
+                mousePos.y > topLeft.y && mousePos.y < bottomRight.y)
+            {
+                sf::Vector2f topLeftPrev{0.f, Size.y * (i + 1) + OutlineThickness};
+                if (sel)
+                    topLeftPrev = {0.f, Size.y * (i) + OutlineThickness};
+                SelectionHighlight.setPosition(topLeftPrev);
+                DrawHighLight = 1;
+                break;
+            }
+            else
+            {
+                DrawHighLight = 0;
+            }
+        }
+    }
+
+
+    // CLICK
+
+    if (Items.empty())
+        return;
+
 
     if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left)
     {
@@ -166,8 +223,9 @@ void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& windo
                 }
             }
         }
-        sf::Vector2f topLeft2{0.f, 0.f + OutlineThickness};
-        sf::Vector2f bottomRight2 = {Size.x, Size.y + OutlineThickness};
+
+        sf::Vector2f topLeft2{0.f, 0.f};
+        sf::Vector2f bottomRight2 = {Size.x, Size.y};
         topLeft2 = this->getTransform().transformPoint(topLeft2);
         bottomRight2 = this->getTransform().transformPoint(bottomRight2);
         if (mousePos.x > topLeft2.x && mousePos.x < bottomRight2.x &&
@@ -261,11 +319,25 @@ void DropDown::draw(sf::RenderTarget& target, sf::RenderStates states) const
     if (!isVisible)
         return;
     states.transform *= getTransform();
-    target.draw(TopBody, states);
-    target.draw(BodyText, states);
-    // anim
-    if (Items.size() > 0) // && opend
+    sf::RenderStates prevStates = states;
+    if (Items.size() > 0 && (opend || animClone->IsStarted() && (animClone != nullptr && !animClone->IsAborted())))
     {
-        target.draw(BottomGroup, states);
+        states.transform *= BottomGroup.getTransform();
+
+        for (auto item : BottomGroup.Shapes)
+        {
+            target.draw(*item, states);
+        }
+        if (DrawHighLight)
+        {
+            target.draw(SelectionHighlight, states);
+        }
+        for (auto item : BottomGroup.Texts)
+        {
+            target.draw(*item, states);
+        }
     }
+
+    target.draw(TopBody, prevStates);
+    target.draw(BodyText, prevStates);
 }
