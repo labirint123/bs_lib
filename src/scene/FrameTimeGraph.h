@@ -4,7 +4,11 @@
 class FrameTimeGraph : public GraphWidget
 {
 private:
-    sf::Clock timer;
+    sf::Clock TimerMs;
+    sf::Clock TimerSec;
+    unsigned int Frames = 0;
+    std::string FPSSTR;
+
 public:
     FrameTimeGraph();
     void UpdateFrame();

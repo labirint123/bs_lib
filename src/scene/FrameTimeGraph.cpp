@@ -1,22 +1,30 @@
 #include "FrameTimeGraph.h"
 #include <sstream>
 #include <iomanip>
+#include <windows.h>
 
 FrameTimeGraph::FrameTimeGraph()
 {
-    float *val = new float{0};
+    float* val = new float{0};
     this->SetValue(*val);
-    this->SetLabel("FrameTime");
+    this->SetLabel("FT ms");
 }
 
 void FrameTimeGraph::UpdateFrame()
 {
-    float ms = timer.restart().asSeconds() * 1000;
+    Frames++;
+    if (TimerSec.getElapsedTime() >= sf::seconds(1))
+    {
+        FPSSTR = std::to_string(Frames) + "FPS";
+        Frames = 0;
+        TimerSec.restart();
+    }
+    float ms = TimerMs.restart().asSeconds() * 1000;
     *this->value = ms;
     this->Update();
 
     std::ostringstream oss;
-    oss << std::fixed << std::setprecision(3) << ms; 
+    oss << std::fixed << std::setprecision(3) << ms;
     std::string f = oss.str();
 
     if (auto pos = f.find('.'); pos != std::string::npos)
@@ -26,5 +34,5 @@ void FrameTimeGraph::UpdateFrame()
             f.pop_back();
     }
 
-    this->ValText.setString(f);
+    this->ValText.setString(FPSSTR + "\t" + f);
 }

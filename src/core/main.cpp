@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
             ? (sf::Style::Titlebar | sf::Style::Close)
             : (sf::Style::Default),
         settings);
-    window.setVerticalSyncEnabled(1);
+    window.setVerticalSyncEnabled(0);
     DebugScene deb;
     deb.Resize(sf::Vector2f(window.getSize().x, window.getSize().y));
     while (window.isOpen() || !bs::IsProgrammEnd)
