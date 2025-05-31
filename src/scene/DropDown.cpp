@@ -127,19 +127,31 @@ void DropDown::HandleEvent(const sf::Event& event, const sf::RenderWindow& windo
     if (Items.empty())
         return;
 
+    sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, *view);
+    sf::Vector2f mousePos = t ? t->getInverse().transformPoint(worldPos) : worldPos;
+
     if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left)
     {
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, *view);
-
-        sf::Vector2f mousePos = t ? t->getInverse().transformPoint(worldPos) : worldPos;
-
         if (CanHandleEvents())
         {
+            bool sel = 0;
             for (int i = 0; i < Items.size(); ++i)
             {
+                if (selected_item() == i)
+                {
+                    sel = 1;
+                    continue;
+                }
                 sf::Vector2f topLeft{0.f, Size.y * (i + 1) + OutlineThickness};
                 sf::Vector2f bottomRight{Size.x, Size.y * (i + 2) + OutlineThickness};
+
+                if (sel)
+                {
+                    topLeft = {0.f, Size.y * (i) + OutlineThickness};
+                    bottomRight = {Size.x, Size.y * (i + 1) + OutlineThickness};
+                }
+
                 topLeft = this->getTransform().transformPoint(topLeft);
                 bottomRight = this->getTransform().transformPoint(bottomRight);
 
