@@ -43,8 +43,8 @@ foreach(FILE ${ALL_SRC_FILES})
 endforeach()
 
 # === Create main executable ===
-add_executable(sfml-engine ${SRC_FILES} ${GENERATED_SOURCES} tools/json/json.hpp)
-add_dependencies(sfml-engine embed_resources)
+add_executable(BS_lib ${SRC_FILES} ${GENERATED_SOURCES} tools/json/json.hpp)
+add_dependencies(BS_lib embed_resources)
 
 # === SFML setup ===
 set(SFML_DIR "C:/libs/SFML-2.6.2/lib/cmake/SFML")
@@ -52,7 +52,7 @@ set(SFML_BIN_DIR "C:/libs/SFML-2.6.2/bin")
 
 find_package(SFML 2.6.2 REQUIRED COMPONENTS graphics window system audio)
 
-target_link_libraries(sfml-engine
+target_link_libraries(BS_lib
     sfml-graphics
     sfml-window
     sfml-system
@@ -61,9 +61,9 @@ target_link_libraries(sfml-engine
 
 # === Copy SFML DLLs on Windows after build ===
 if(WIN32)
-    add_custom_command(TARGET sfml-engine POST_BUILD
+    add_custom_command(TARGET BS_lib POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${SFML_BIN_DIR} $<TARGET_FILE_DIR:sfml-engine>
+        ${SFML_BIN_DIR} $<TARGET_FILE_DIR:BS_lib>
     )
 endif()
 
